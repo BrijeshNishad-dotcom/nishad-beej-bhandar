@@ -7,7 +7,7 @@ export const revalidate = 0; // Disable cache so changes reflect immediately
 export async function generateMetadata(): Promise<Metadata> {
   const settingsList = await prisma.setting.findMany();
   const settings: Record<string, string> = {};
-  settingsList.forEach(s => {
+  settingsList.forEach((s: { key: string; value: string }) => {
     settings[s.key] = s.value;
   });
 
@@ -38,7 +38,7 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function HomePage() {
   const settingsList = await prisma.setting.findMany();
   const settings: Record<string, string> = {};
-  settingsList.forEach(s => {
+  settingsList.forEach((s: { key: string; value: string }) => {
     settings[s.key] = s.value;
   });
 
