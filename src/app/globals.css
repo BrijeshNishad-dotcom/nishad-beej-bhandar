@@ -1,26 +1,74 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@theme {
+  --color-agri-green-50: #f1f8e9;
+  --color-agri-green-100: #dcedc8;
+  --color-agri-green-200: #c5e1a5;
+  --color-agri-green-500: #4caf50;
+  --color-agri-green-600: #43a047;
+  --color-agri-green-700: #388e3c;
+  --color-agri-green-800: #2e7d32;
+  --color-agri-green-900: #1b5e20;
+  
+  --color-agri-yellow-50: #fffde7;
+  --color-agri-yellow-100: #fff9c4;
+  --color-agri-yellow-200: #fff59d;
+  --color-agri-yellow-500: #fbc02d;
+  --color-agri-yellow-600: #f9a825;
+  --color-agri-yellow-700: #f57f17;
+  
+  --color-agri-bg: #f9fbe7;
+  --color-agri-dark: #1f2c16;
+  
+  --font-sans: "Inter", "Noto Sans Devanagari", sans-serif;
+  --font-display: "Poppins", "Outfit", "Noto Sans Devanagari", sans-serif;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: #fbfdf9; /* Soft cream/earthy off-white */
+  color: #1f2c16; /* Deep earthy dark green-gray */
+  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+}
+
+/* Glassmorphism headers & elements */
+.glass {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+}
+
+.glass-dark {
+  background: rgba(31, 44, 22, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Custom premium hover shadows */
+.shadow-hover {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.shadow-hover:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px -10px rgba(46, 125, 50, 0.15);
+}
+
+/* Custom scrollbar for desktop */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #f1f8e9;
+}
+::-webkit-scrollbar-thumb {
+  background: #c5e1a5;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #aed581;
 }

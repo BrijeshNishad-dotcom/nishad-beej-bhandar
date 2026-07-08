@@ -1,0 +1,136 @@
+datasource db {
+  provider = "postgresql"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Category {
+  id          Int          @id @default(autoincrement())
+  name        String
+  slug        String       @unique
+  icon        String?      // Icon name or emoji (e.g. "🌾", "🌽")
+  seeds       Seed[]
+  fertilizers Fertilizer[]
+  pesticides  Pesticide[]
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+}
+
+model Seed {
+  id                Int      @id @default(autoincrement())
+  name              String
+  variety           String
+  company           String
+  cropType          String   // e.g. "Kharif", "Rabi", "Zaid"
+  description       String
+  price             Float
+  discountPrice     Float?
+  stock             Int      @default(0)
+  imageUrl          String?
+  status            String   @default("ACTIVE") // ACTIVE, INACTIVE, OUT_OF_STOCK
+  germination       Float?   // Germination % (e.g. 85.0)
+  seedRate          String?  // Seed rate per acre (e.g. "5-6 kg/acre")
+  maturityDuration  String?  // Sowing to maturity duration (e.g. "120-130 days")
+  yield             String?  // Yield per acre (e.g. "20-25 Quintals/acre")
+  benefits          String?  // Key benefits, comma-separated or text
+  usageInstructions String?  // Sowing and caring instructions
+  dosage            String?  // Fertilizer/treatment dosage
+  categoryId        Int
+  category          Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+}
+
+model Fertilizer {
+  id            Int      @id @default(autoincrement())
+  name          String
+  company       String
+  weight        String   // e.g. "50 kg", "1 kg"
+  price         Float
+  discountPrice Float?
+  stock         Int      @default(0)
+  imageUrl      String?
+  description   String
+  status        String   @default("ACTIVE")
+  categoryId    Int
+  category      Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model Pesticide {
+  id                   Int      @id @default(autoincrement())
+  name                 String
+  targetDisease        String   // Target pests/diseases (e.g. "Insects", "Fungus")
+  company              String
+  price                Float
+  discountPrice        Float?
+  stock                Int      @default(0)
+  imageUrl             String?
+  description          String
+  status               String   @default("ACTIVE")
+  pesticideType        String?  // Insecticide, Fungicide, Herbicide, etc.
+  activeIngredient     String?
+  formulation          String?  // EC, SC, WP, etc.
+  targetCrop           String?
+  dosage               String?
+  applicationMethod    String?
+  waitingPeriod        String?  // Pre-Harvest Interval (PHI)
+  toxicityClass        String?
+  safetyPrecautions    String?
+  packSize             String?
+  manufacturingCompany String?
+  registrationNumber   String?
+  storageInstructions  String?
+  categoryId           Int
+  category             Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+}
+
+model Enquiry {
+  id        Int      @id @default(autoincrement())
+  name      String
+  mobile    String
+  village   String
+  cropName  String?
+  message   String
+  status    String   @default("PENDING") // PENDING, CONTACTED
+  createdAt DateTime @default(now())
+}
+
+model Banner {
+  id        Int      @id @default(autoincrement())
+  imageUrl  String
+  title     String
+  subtitle  String?
+  link      String?
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+}
+
+model Gallery {
+  id          Int      @id @default(autoincrement())
+  imageUrl    String
+  title       String
+  description String?
+  createdAt   DateTime @default(now())
+}
+
+model Setting {
+  id    Int    @id @default(autoincrement())
+  key   String @unique
+  value String
+}
+
+model Visitor {
+  id        Int      @id @default(autoincrement())
+  ip        String
+  date      String   // Format: YYYY-MM-DD
+  count     Int      @default(1)
+  createdAt DateTime @default(now())
+
+  @@unique([ip, date])
+}

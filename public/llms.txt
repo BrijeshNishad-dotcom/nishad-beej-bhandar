@@ -1,0 +1,43 @@
+# Nishad Beej Bhandar (निषाद बीज भंडार)
+
+Online catalog, agricultural product distributor, and crop advisory service operated by Abhay Nishad (B.Sc Agriculture) based in Rampur, Uttar Pradesh, India.
+
+## Contact Information
+- **Owner/Specialist:** Abhay Nishad (अभय निषाद)
+- **Phone / WhatsApp:** +91-6387634500
+- **Location:** Near Agriculture Office, Main Market Road, Rampur, Uttar Pradesh, India (PIN: 274204)
+- **Store Hours:** Monday - Sunday, 08:00 AM - 08:00 PM
+
+---
+
+## Website Structure & Core Routes
+
+### Public Pages
+- **Homepage (`/`)**: Main landing page highlighting store features, seasonal crop calendars (Kharif, Rabi, Zaid), customer testimonials, and an enquiry/advisory submission form.
+- **Product Catalog (`/products`)**: Browse all seeds, fertilizers, and pesticides. Includes category filters:
+  - `paddy-seeds` (धान के बीज)
+  - `wheat-seeds` (गेहूं के बीज)
+  - `maize-seeds` (मक्का के बीज)
+  - `vegetable-seeds` (सब्जी के बीज)
+  - `mustard-seeds` (सरसों के बीज)
+  - `pulse-seeds` (दलहन के बीज)
+  - `fertilizers` (खाद एवं उर्वरक)
+  - `pesticides` (कीटनाशक दवाइयाँ)
+  - `plant-growth-promoters` (ग्रोथ प्रमोटर / टॉनिक)
+- **Product Details (`/products/[id]?type=[seed|fertilizer|pesticide]`)**: View product specs (price, discount price, variety, weight, target disease, usage dosage) and click to open a pre-filled WhatsApp enquiry link.
+
+### Backend APIs (Public)
+- **Visitor Tracking (`POST /api/visitor`)**: Log daily visits by IP address.
+- **Enquiry Submission (`POST /api/enquiries`)**: Submit agricultural queries and stock requests from the client form to the store database.
+
+---
+
+## Technical Specifications
+- **Framework:** Next.js 16 (App Router with Turbopack compilation)
+- **Database ORM:** Prisma Client (SQLite local development, PostgreSQL ready for production)
+- **SEO Elements:**
+  - Automated dynamic sitemap at `/sitemap.xml`
+  - Crawling rules and sitemap links at `/robots.txt`
+  - Progressive Web App (PWA) manifest configurations at `/manifest.webmanifest`
+  - Structured schema.org markup (Organization, LocalBusiness, FAQPage, BreadcrumbList, Product JSON-LD) integrated on all pages.
+  - High-priority Core Web Vitals optimizations (Image loading, responsive sizes attributes).
