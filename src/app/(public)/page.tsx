@@ -148,7 +148,15 @@ export default async function HomePage() {
     orderBy: { name: 'asc' },
   });
 
-  const categories = categoriesList.map(cat => {
+  const categories = categoriesList.map((cat: {
+    id: number;
+    name: string;
+    slug: string;
+    icon: string | null;
+    seeds: { id: number }[];
+    fertilizers: { id: number }[];
+    pesticides: { id: number }[];
+  }) => {
     const totalProducts = cat.seeds.length + cat.fertilizers.length + cat.pesticides.length;
     return {
       id: cat.id,
