@@ -23,7 +23,7 @@ export const revalidate = 0; // Ensure layout is always dynamic
 export async function generateMetadata(): Promise<Metadata> {
   const settingsList = await prisma.setting.findMany();
   const settings: Record<string, string> = {};
-  settingsList.forEach(s => {
+  settingsList.forEach((s: { key: string; value: string }) => {
     settings[s.key] = s.value;
   });
 
@@ -117,7 +117,7 @@ export default async function RootLayout({
   // Fetch settings dynamically
   const settingsList = await prisma.setting.findMany();
   const settings: Record<string, string> = {};
-  settingsList.forEach(s => {
+  settingsList.forEach((s: { key: string; value: string }) => {
     settings[s.key] = s.value;
   });
 

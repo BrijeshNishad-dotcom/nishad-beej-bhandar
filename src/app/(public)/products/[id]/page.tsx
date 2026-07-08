@@ -18,7 +18,7 @@ export async function generateMetadata(props: PageParams): Promise<Metadata> {
   // Fetch settings dynamically
   const settingsList = await prisma.setting.findMany();
   const settings: Record<string, string> = {};
-  settingsList.forEach(s => {
+  settingsList.forEach((s: { key: string; value: string }) => {
     settings[s.key] = s.value;
   });
   const shopName = settings.shopName || "Nishad Beej Bhandar";

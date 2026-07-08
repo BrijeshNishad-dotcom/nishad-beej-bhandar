@@ -7,7 +7,7 @@ export const revalidate = 0; // Force dynamic rendering for fresh settings/produ
 export async function generateMetadata(): Promise<Metadata> {
   const settingsList = await prisma.setting.findMany();
   const settings: Record<string, string> = {};
-  settingsList.forEach(s => {
+  settingsList.forEach((s: { key: string; value: string }) => {
     settings[s.key] = s.value;
   });
 
