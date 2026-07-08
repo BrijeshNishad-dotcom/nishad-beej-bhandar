@@ -21,11 +21,15 @@ const poppins = Poppins({
 export const revalidate = 0; // Ensure layout is always dynamic
 
 export async function generateMetadata(): Promise<Metadata> {
-  const settingsList = await prisma.setting.findMany();
   const settings: Record<string, string> = {};
-  settingsList.forEach((s: { key: string; value: string }) => {
-    settings[s.key] = s.value;
-  });
+  try {
+    const settingsList = await prisma.setting.findMany();
+    settingsList.forEach((s: { key: string; value: string }) => {
+      settings[s.key] = s.value;
+    });
+  } catch {
+    // DB unavailable — use defaults
+  }
 
   const shopName = settings.shopName || "Nishad Beej Bhandar";
   const heroTitle = settings.heroTitle || "अच्छे बीज, अच्छी फसल की शुरुआत";
@@ -115,11 +119,15 @@ export default async function RootLayout({
   const gaId = process.env.NEXT_PUBLIC_GA_ID;
 
   // Fetch settings dynamically
-  const settingsList = await prisma.setting.findMany();
   const settings: Record<string, string> = {};
-  settingsList.forEach((s: { key: string; value: string }) => {
-    settings[s.key] = s.value;
-  });
+  try {
+    const settingsList = await prisma.setting.findMany();
+    settingsList.forEach((s: { key: string; value: string }) => {
+      settings[s.key] = s.value;
+    });
+  } catch {
+    // DB unavailable — use defaults
+  }
 
   return (
     <html

@@ -36,11 +36,15 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function HomePage() {
-  const settingsList = await prisma.setting.findMany();
   const settings: Record<string, string> = {};
-  settingsList.forEach((s: { key: string; value: string }) => {
-    settings[s.key] = s.value;
-  });
+  try {
+    const settingsList = await prisma.setting.findMany();
+    settingsList.forEach((s: { key: string; value: string }) => {
+      settings[s.key] = s.value;
+    });
+  } catch {
+    // DB unavailable — use defaults
+  }
 
   const shopName = settings.shopName || "Nishad Beej Bhandar";
   const ownerName = settings.ownerName || "Abhay Nishad";
@@ -134,38 +138,44 @@ export default async function HomePage() {
   };
 
   // Fetch dynamic gallery items from the database
-  const galleryItems = await prisma.gallery.findMany({
-    orderBy: { createdAt: 'asc' }, // Maintain creation order
-  });
+  let galleryItems: { id: number; imageUrl: string; title: string; description: string | null; createdAt: Date }[] = [];
+  let categories: { id: number; name: string; slug: string; icon: string; count: number }[] = [];
+  try {
+    galleryItems = await prisma.gallery.findMany({
+      orderBy: { createdAt: 'asc' },
+    });
 
-  // Fetch categories dynamically with product counts
-  const categoriesList = await prisma.category.findMany({
-    include: {
-      seeds: { select: { id: true } },
-      fertilizers: { select: { id: true } },
-      pesticides: { select: { id: true } },
-    },
-    orderBy: { name: 'asc' },
-  });
+    // Fetch categories dynamically with product counts
+    const categoriesList = await prisma.category.findMany({
+      include: {
+        seeds: { select: { id: true } },
+        fertilizers: { select: { id: true } },
+        pesticides: { select: { id: true } },
+      },
+      orderBy: { name: 'asc' },
+    });
 
-  const categories = categoriesList.map((cat: {
-    id: number;
-    name: string;
-    slug: string;
-    icon: string | null;
-    seeds: { id: number }[];
-    fertilizers: { id: number }[];
-    pesticides: { id: number }[];
-  }) => {
-    const totalProducts = cat.seeds.length + cat.fertilizers.length + cat.pesticides.length;
-    return {
-      id: cat.id,
-      name: cat.name,
-      slug: cat.slug,
-      icon: cat.icon || '🌱',
-      count: totalProducts
-    };
-  });
+    categories = categoriesList.map((cat: {
+      id: number;
+      name: string;
+      slug: string;
+      icon: string | null;
+      seeds: { id: number }[];
+      fertilizers: { id: number }[];
+      pesticides: { id: number }[];
+    }) => {
+      const totalProducts = cat.seeds.length + cat.fertilizers.length + cat.pesticides.length;
+      return {
+        id: cat.id,
+        name: cat.name,
+        slug: cat.slug,
+        icon: cat.icon || '🌱',
+        count: totalProducts
+      };
+    });
+  } catch {
+    // DB unavailable — use empty defaults
+  }
 
   return (
     <>
