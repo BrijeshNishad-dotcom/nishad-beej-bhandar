@@ -46,18 +46,23 @@ export default function Footer() {
               <div className="relative h-10 w-10 overflow-hidden rounded-xl shadow-sm">
                 <Image
                   src="/brand-logo.png"
-                  alt={`${settings.shopName} Logo`}
+                  alt="Nishad Beej Bhandar Logo"
                   fill
                   sizes="40px"
                   className="object-contain"
                 />
               </div>
-              <span className="font-display text-lg font-bold text-white">
-                {settings.shopName}
-              </span>
+              <div className="flex flex-col">
+                <span className="font-display text-base font-bold text-white leading-none">
+                  Nishad Beej Bhandar
+                </span>
+                <span className="font-sans text-xs text-agri-yellow-500 font-semibold mt-1">
+                  निषाद बीज भंडार
+                </span>
+              </div>
             </Link>
             <p className="font-sans text-sm text-gray-400 leading-relaxed">
-              {settings.aboutText}
+              {t('footer.aboutText') || settings.aboutText}
             </p>
             <div className="flex space-x-4 pt-2">
               <a
@@ -149,8 +154,9 @@ export default function Footer() {
               <li className="flex items-start space-x-3">
                 <MapPin className="h-5 w-5 text-agri-yellow-500 shrink-0 mt-0.5" />
                 <span>
-                  <strong>{settings.shopName}</strong><br />
-                  {settings.address}
+                  <strong className="block text-white font-bold">Nishad Beej Bhandar</strong>
+                  <span className="text-xs text-gray-400 block mb-1">निषाद बीज भंडार</span>
+                  {t('footer.storeAddress') || settings.address}
                 </span>
               </li>
               <li className="flex items-center space-x-3">
@@ -159,13 +165,15 @@ export default function Footer() {
                   <a href={`tel:${settings.mobileNumber}`} className="hover:text-white text-gray-300 font-bold block">
                     {settings.mobileNumber}
                   </a>
-                  <span className="text-xs">{t('footer.ownerLabel', 'Owner:')} {settings.ownerName}</span>
+                  <span className="text-xs">
+                    {t('footer.ownerLabel', 'Owner:')} {t('hero.ownerName') || settings.ownerName}
+                  </span>
                 </div>
               </li>
               <li className="flex items-start space-x-3">
                 <Clock className="h-5 w-5 text-agri-yellow-500 shrink-0 mt-0.5" />
                 <span className="whitespace-pre-line">
-                  {settings.businessHours}
+                  {t('footer.hours') || settings.businessHours}
                 </span>
               </li>
             </ul>
@@ -175,9 +183,11 @@ export default function Footer() {
 
         {/* Bottom Bar */}
         <div className="border-t border-gray-800 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center text-sm text-gray-500">
-          <p>© {currentYear} {settings.shopName}. {t('footer.allRightsReservedText', 'All Rights Reserved.')}</p>
+          <p>© {currentYear} Nishad Beej Bhandar. {t('footer.allRightsReservedText', 'All Rights Reserved.')}</p>
           <div className="flex space-x-6 mt-4 md:mt-0">
-            <span className="text-xs">{t('footer.guidanceByLabel', 'Expert Guidance by')} {settings.ownerName}</span>
+            <span className="text-xs">
+              {t('footer.guidanceByLabel', 'Expert Guidance by')} {t('hero.ownerName') || settings.ownerName}
+            </span>
             {isAdmin ? (
               <div className="flex items-center space-x-4">
                 <Link href="/admin/dashboard" className="hover:text-white underline text-xs text-agri-yellow-500 font-semibold transition-colors">

@@ -133,6 +133,12 @@ export default function HomeClient({ galleryItems = [], categories }: HomeClient
       'vegetable-seeds': 'categories.vegetable',
       'mustard-seeds': 'categories.mustard',
       'pulse-seeds': 'categories.pulse',
+      'onion-seeds': 'categories.onion',
+      'tomato-seeds': 'categories.tomato',
+      'cucumber-seeds': 'categories.cucumber',
+      'carrot-seeds': 'categories.carrot',
+      'millet-seeds': 'categories.millet',
+      'fodder-seeds': 'categories.fodder',
       'fertilizers': 'categories.fertilizers',
       'urea': 'categories.urea',
       'dap': 'categories.dap',
@@ -269,13 +275,11 @@ export default function HomeClient({ galleryItems = [], categories }: HomeClient
                 <div className="inline-flex items-center bg-agri-green-900/80 border border-agri-yellow-500/50 rounded-2xl px-4 py-2.5 backdrop-blur-sm shadow-lg">
                   <div>
                     <p className="font-display text-sm font-extrabold text-agri-yellow-500 leading-tight tracking-wide">
-                      {i18n.language === 'en' ? t('logo.title') : (settings.shopName || t('logo.title'))}
+                      Nishad Beej Bhandar
                     </p>
-                    {i18n.language === 'hi' && (
-                      <p className="font-sans text-xs font-semibold text-agri-yellow-100 leading-tight mt-0.5">
-                        निषाद बीज भंडार
-                      </p>
-                    )}
+                    <p className="font-sans text-xs font-semibold text-agri-yellow-100 leading-tight mt-0.5">
+                      निषाद बीज भंडार
+                    </p>
                   </div>
                 </div>
               </motion.div>

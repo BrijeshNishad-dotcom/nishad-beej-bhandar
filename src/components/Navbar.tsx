@@ -110,10 +110,10 @@ export default function Navbar() {
               </div>
               <div className="hidden sm:block">
                 <span className="font-display text-base lg:text-lg font-extrabold text-agri-green-900 leading-none block">
-                  {settings.shopName}
+                  Nishad Beej Bhandar
                 </span>
-                <span className="font-sans text-[10px] lg:text-xs text-agri-yellow-700 font-bold block mt-0.5">
-                  {settings.ownerName}
+                <span className="font-sans text-[10px] lg:text-xs text-agri-yellow-700 font-bold block mt-1">
+                  निषाद बीज भंडार
                 </span>
               </div>
             </Link>
@@ -324,10 +324,10 @@ export default function Navbar() {
                     </div>
                     <div>
                       <span className="font-display text-sm font-extrabold text-agri-green-900 leading-none block">
-                        {settings.shopName}
+                        Nishad Beej Bhandar
                       </span>
-                      <span className="font-sans text-[9px] text-agri-yellow-700 font-bold block mt-0.5">
-                        {settings.ownerName}
+                      <span className="font-sans text-[9px] text-agri-yellow-700 font-bold block mt-1">
+                        निषाद बीज भंडार
                       </span>
                     </div>
                   </Link>
