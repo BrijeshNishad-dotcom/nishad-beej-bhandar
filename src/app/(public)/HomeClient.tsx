@@ -220,7 +220,7 @@ export default function HomeClient({ galleryItems = [], categories }: HomeClient
     <div className="overflow-hidden">
       
       {/* 1. Hero Section */}
-      <section className="relative min-h-[90vh] flex items-center bg-black overflow-hidden pt-12">
+      <section className="relative min-h-[90vh] flex items-center bg-black overflow-hidden pt-6 sm:pt-12">
         {/* Background Image with agricultural field overlay */}
         <div className="absolute inset-0 z-0">
           <Image 
@@ -234,11 +234,11 @@ export default function HomeClient({ galleryItems = [], categories }: HomeClient
           <div className="absolute inset-0 bg-gradient-to-r from-agri-dark via-agri-dark/80 to-transparent" />
         </div>
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full py-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full py-10 sm:py-16">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
             
             {/* Left Content */}
-            <div className="lg:col-span-7 space-y-6">
+            <div className="lg:col-span-7 space-y-4 sm:space-y-6">
               <motion.div 
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -256,13 +256,12 @@ export default function HomeClient({ galleryItems = [], categories }: HomeClient
                 transition={{ duration: 0.4, delay: 0.05 }}
                 className="sm:hidden"
               >
-                <div className="inline-flex items-center gap-2.5 bg-agri-green-900/80 border border-agri-yellow-500/50 rounded-2xl px-4 py-2.5 backdrop-blur-sm shadow-lg">
-                  <Leaf className="h-4 w-4 text-agri-yellow-500 shrink-0" />
+                <div className="inline-flex items-center bg-agri-green-900/80 border border-agri-yellow-500/50 rounded-2xl px-4 py-2.5 backdrop-blur-sm shadow-lg">
                   <div>
                     <p className="font-display text-sm font-extrabold text-agri-yellow-500 leading-tight tracking-wide">
                       Nishad Beej Bhandar
                     </p>
-                    <p className="font-sans text-xs font-semibold text-agri-yellow-400 leading-tight mt-0.5">
+                    <p className="font-sans text-xs font-semibold text-agri-yellow-100 leading-tight mt-0.5">
                       निषाद बीज भंडार
                     </p>
                   </div>
