@@ -256,10 +256,9 @@ export default function HomeClient({ galleryItems = [], categories }: HomeClient
                 transition={{ duration: 0.4, delay: 0.05 }}
                 className="sm:hidden"
               >
-                <p className="font-display text-xl font-extrabold text-white leading-tight drop-shadow-lg">
+                <p className="font-display text-lg font-extrabold text-agri-yellow-500 leading-tight drop-shadow-md tracking-wide">
                   {settings.shopName}
                 </p>
-                <div className="mt-1 h-0.5 w-16 rounded-full bg-agri-yellow-500" />
               </motion.div>
 
               <motion.h1 
