@@ -249,6 +249,16 @@ export default function HomeClient({ galleryItems = [], categories }: HomeClient
                 <span>{t('hero.guarantee')}</span>
               </motion.div>
 
+              {/* Mobile-only: shop name shown here since navbar hides it on small screens */}
+              <motion.p
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4, delay: 0.05 }}
+                className="sm:hidden font-display text-sm font-bold text-agri-yellow-400 tracking-wide uppercase"
+              >
+                {settings.shopName}
+              </motion.p>
+
               <motion.h1 
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
