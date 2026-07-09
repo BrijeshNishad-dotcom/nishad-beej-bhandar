@@ -250,14 +250,17 @@ export default function HomeClient({ galleryItems = [], categories }: HomeClient
               </motion.div>
 
               {/* Mobile-only: shop name shown here since navbar hides it on small screens */}
-              <motion.p
+              <motion.div
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.4, delay: 0.05 }}
-                className="sm:hidden font-display text-sm font-bold text-agri-yellow-400 tracking-wide uppercase"
+                className="sm:hidden"
               >
-                {settings.shopName}
-              </motion.p>
+                <p className="font-display text-xl font-extrabold text-white leading-tight drop-shadow-lg">
+                  {settings.shopName}
+                </p>
+                <div className="mt-1 h-0.5 w-16 rounded-full bg-agri-yellow-500" />
+              </motion.div>
 
               <motion.h1 
                 initial={{ opacity: 0, y: 20 }}
