@@ -17,7 +17,7 @@ export default function AdminLoginPage() {
   // Redirect if already logged in
   useEffect(() => {
     if (status === 'authenticated') {
-      router.push('/admin/dashboard');
+      router.replace('/admin/dashboard');
     }
   }, [status, router]);
 
@@ -40,11 +40,10 @@ export default function AdminLoginPage() {
 
       if (res?.error) {
         setError('अमान्य ईमेल या पासवर्ड। कृपया दोबारा जांचें।');
-      } else {
-        if (typeof window !== 'undefined') {
-          sessionStorage.setItem('admin_session_active', 'true');
-        }
-        router.push('/admin/dashboard');
+      } else if (res?.ok) {
+        // Session cookie is now set by NextAuth. Use router.replace so the
+        // login page is removed from history and cannot be navigated back to.
+        router.replace('/admin/dashboard');
       }
     } catch (err) {
       console.error(err);
