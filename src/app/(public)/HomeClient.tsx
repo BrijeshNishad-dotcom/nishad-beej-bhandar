@@ -5,7 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { 
   Sprout, ShieldCheck, Award, ThumbsUp, Users, CheckCircle, 
-  MapPin, Phone, MessageSquare, Clock, Calendar, Star, ChevronRight
+  MapPin, Phone, MessageSquare, Clock, Calendar, Star, ChevronRight, Leaf
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
@@ -249,16 +249,24 @@ export default function HomeClient({ galleryItems = [], categories }: HomeClient
                 <span>{t('hero.guarantee')}</span>
               </motion.div>
 
-              {/* Mobile-only: shop name shown here since navbar hides it on small screens */}
+              {/* Mobile-only: premium brand badge — hidden on sm+ so desktop is untouched */}
               <motion.div
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.4, delay: 0.05 }}
                 className="sm:hidden"
               >
-                <p className="font-display text-lg font-extrabold text-agri-yellow-500 leading-tight drop-shadow-md tracking-wide">
-                  {settings.shopName}
-                </p>
+                <div className="inline-flex items-center gap-2.5 bg-agri-green-900/80 border border-agri-yellow-500/50 rounded-2xl px-4 py-2.5 backdrop-blur-sm shadow-lg">
+                  <Leaf className="h-4 w-4 text-agri-yellow-500 shrink-0" />
+                  <div>
+                    <p className="font-display text-sm font-extrabold text-agri-yellow-500 leading-tight tracking-wide">
+                      Nishad Beej Bhandar
+                    </p>
+                    <p className="font-sans text-xs font-semibold text-agri-yellow-400 leading-tight mt-0.5">
+                      निषाद बीज भंडार
+                    </p>
+                  </div>
+                </div>
               </motion.div>
 
               <motion.h1 
