@@ -33,7 +33,7 @@ interface HomeClientProps {
 
 export default function HomeClient({ galleryItems = [], categories }: HomeClientProps) {
   const settings = useSettings();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
 
   const getInitials = (name: string) => {
     if (!name) return 'AN';
@@ -44,6 +44,16 @@ export default function HomeClient({ galleryItems = [], categories }: HomeClient
   };
 
   const renderHeroTitle = () => {
+    if (i18n.language === 'en') {
+      return (
+        <>
+          {t('hero.heading1') || 'Good Seeds,'}
+          <br />
+          <span className="text-agri-yellow-500">{t('hero.heading2') || 'Beginning of a Good Crop'}</span>
+        </>
+      );
+    }
+
     const title = settings.heroTitle || 'अच्छे बीज, अच्छी फसल की शुरुआत';
     const parts = title.split(',');
     if (parts.length > 1) {
@@ -259,11 +269,13 @@ export default function HomeClient({ galleryItems = [], categories }: HomeClient
                 <div className="inline-flex items-center bg-agri-green-900/80 border border-agri-yellow-500/50 rounded-2xl px-4 py-2.5 backdrop-blur-sm shadow-lg">
                   <div>
                     <p className="font-display text-sm font-extrabold text-agri-yellow-500 leading-tight tracking-wide">
-                      Nishad Beej Bhandar
+                      {i18n.language === 'en' ? t('logo.title') : (settings.shopName || t('logo.title'))}
                     </p>
-                    <p className="font-sans text-xs font-semibold text-agri-yellow-100 leading-tight mt-0.5">
-                      निषाद बीज भंडार
-                    </p>
+                    {i18n.language === 'hi' && (
+                      <p className="font-sans text-xs font-semibold text-agri-yellow-100 leading-tight mt-0.5">
+                        निषाद बीज भंडार
+                      </p>
+                    )}
                   </div>
                 </div>
               </motion.div>
@@ -283,7 +295,7 @@ export default function HomeClient({ galleryItems = [], categories }: HomeClient
                 transition={{ duration: 0.5, delay: 0.2 }}
                 className="font-sans text-base sm:text-lg text-gray-200 max-w-xl leading-relaxed"
               >
-                {settings.heroSubtitle}
+                {i18n.language === 'en' ? t('hero.description') : (settings.heroSubtitle || t('hero.description'))}
               </motion.p>
 
               {/* Owner Badge */}
@@ -297,7 +309,9 @@ export default function HomeClient({ galleryItems = [], categories }: HomeClient
                   {getInitials(settings.ownerName)}
                 </div>
                 <div>
-                  <h4 className="text-sm font-bold text-white">{settings.ownerName}</h4>
+                  <h4 className="text-sm font-bold text-white">
+                    {i18n.language === 'en' ? 'Abhay Nishad' : (t('hero.ownerName') || settings.ownerName)}
+                  </h4>
                   <p className="text-xs text-agri-yellow-500 font-semibold">{t('hero.ownerTitle')}</p>
                 </div>
               </motion.div>
