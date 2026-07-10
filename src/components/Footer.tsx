@@ -56,9 +56,11 @@ export default function Footer() {
                 <span className="font-display text-base font-bold text-white leading-none">
                   Nishad Beej Bhandar
                 </span>
-                <span className="font-sans text-xs text-agri-yellow-500 font-semibold mt-1">
-                  निषाद बीज भंडार
-                </span>
+                {t('logo.subtitle') !== 'Nishad Beej Bhandar' && (
+                  <span className="font-sans text-xs text-agri-yellow-500 font-semibold mt-1">
+                    {t('logo.subtitle')}
+                  </span>
+                )}
               </div>
             </Link>
             <p className="font-sans text-sm text-gray-400 leading-relaxed">
@@ -155,8 +157,10 @@ export default function Footer() {
                 <MapPin className="h-5 w-5 text-agri-yellow-500 shrink-0 mt-0.5" />
                 <span>
                   <strong className="block text-white font-bold">Nishad Beej Bhandar</strong>
-                  <span className="text-xs text-gray-400 block mb-1">निषाद बीज भंडार</span>
-                  {t('footer.storeAddress') || settings.address}
+                  {t('logo.subtitle') !== 'Nishad Beej Bhandar' && (
+                    <span className="text-xs text-gray-400 block mb-1">{t('logo.subtitle')}</span>
+                  )}
+                  {settings.address}
                 </span>
               </li>
               <li className="flex items-center space-x-3">

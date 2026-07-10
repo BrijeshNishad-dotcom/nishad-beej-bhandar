@@ -112,9 +112,11 @@ export default function Navbar() {
                 <span className="font-display text-base lg:text-lg font-extrabold text-agri-green-900 leading-none block">
                   Nishad Beej Bhandar
                 </span>
-                <span className="font-sans text-[10px] lg:text-xs text-agri-yellow-700 font-bold block mt-1">
-                  निषाद बीज भंडार
-                </span>
+                {t('logo.subtitle') !== 'Nishad Beej Bhandar' && (
+                  <span className="font-sans text-[10px] lg:text-xs text-agri-yellow-700 font-bold block mt-1">
+                    {t('logo.subtitle')}
+                  </span>
+                )}
               </div>
             </Link>
 
@@ -326,9 +328,11 @@ export default function Navbar() {
                       <span className="font-display text-sm font-extrabold text-agri-green-900 leading-none block">
                         Nishad Beej Bhandar
                       </span>
-                      <span className="font-sans text-[9px] text-agri-yellow-700 font-bold block mt-1">
-                        निषाद बीज भंडार
-                      </span>
+                      {t('logo.subtitle') !== 'Nishad Beej Bhandar' && (
+                        <span className="font-sans text-[9px] text-agri-yellow-700 font-bold block mt-1">
+                          {t('logo.subtitle')}
+                        </span>
+                      )}
                     </div>
                   </Link>
 
