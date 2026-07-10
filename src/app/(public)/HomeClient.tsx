@@ -9,7 +9,7 @@ import {
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
-import { useSettings } from '@/components/SettingsProvider';
+import { useSettings, getLocalizedAddress } from '@/components/SettingsProvider';
 
 interface GalleryItem {
   id: number;
@@ -762,7 +762,7 @@ export default function HomeClient({ galleryItems = [], categories }: HomeClient
                   <div>
                     <h4 className="text-xs text-gray-400 uppercase font-sans">{t('contact.addressLabel')}</h4>
                     <p className="text-xs sm:text-sm font-semibold text-agri-dark">
-                      {settings.address}
+                      {getLocalizedAddress(settings.address, i18n.language)}
                     </p>
                   </div>
                 </div>

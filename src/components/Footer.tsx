@@ -6,12 +6,12 @@ import Image from 'next/image';
 import { Phone, MapPin, Clock, ArrowRight, MessageSquare, Facebook, Youtube, Lock } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useSession, signOut } from 'next-auth/react';
-import { useSettings } from '@/components/SettingsProvider';
+import { useSettings, getLocalizedAddress } from '@/components/SettingsProvider';
 
 export default function Footer() {
   const settings = useSettings();
   const currentYear = new Date().getFullYear();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { data: session, status } = useSession();
   const [mounted, setMounted] = useState(false);
 
@@ -160,7 +160,7 @@ export default function Footer() {
                   {t('logo.subtitle') !== 'Nishad Beej Bhandar' && (
                     <span className="text-xs text-gray-400 block mb-1">{t('logo.subtitle')}</span>
                   )}
-                  {settings.address}
+                  {getLocalizedAddress(settings.address, i18n.language)}
                 </span>
               </li>
               <li className="flex items-center space-x-3">
