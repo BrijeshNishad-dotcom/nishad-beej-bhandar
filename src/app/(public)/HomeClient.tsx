@@ -314,7 +314,7 @@ export default function HomeClient({ galleryItems = [], categories }: HomeClient
                 </div>
                 <div>
                   <h4 className="text-sm font-bold text-white">
-                    {i18n.language === 'en' ? 'Abhay Nishad' : (t('hero.ownerName') || settings.ownerName)}
+                    {t('hero.ownerName') || settings.ownerName}
                   </h4>
                   <p className="text-xs text-agri-yellow-500 font-semibold">{t('hero.ownerTitle')}</p>
                 </div>
@@ -762,7 +762,7 @@ export default function HomeClient({ galleryItems = [], categories }: HomeClient
                   <div>
                     <h4 className="text-xs text-gray-400 uppercase font-sans">{t('contact.addressLabel')}</h4>
                     <p className="text-xs sm:text-sm font-semibold text-agri-dark">
-                      {settings.address}
+                      {t('contact.addressVal') || settings.address}
                     </p>
                   </div>
                 </div>

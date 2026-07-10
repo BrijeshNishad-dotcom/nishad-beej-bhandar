@@ -3,6 +3,7 @@
 import Image from 'next/image';
 import { useSettings } from '@/components/SettingsProvider';
 import { Leaf } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 /**
  * MobileBrandBanner
@@ -11,9 +12,10 @@ import { Leaf } from 'lucide-react';
  * Rendered invisible on sm+ screens — desktop layout is untouched.
  */
 export default function MobileBrandBanner() {
+  const { t, i18n } = useTranslation();
   const settings = useSettings();
-  const shopName = settings.shopName || 'Nishad Beej Bhandar';
-  const ownerName = settings.ownerName || 'Abhay Nishad';
+  const shopName = i18n.language === 'hi' ? 'निषाद बीज भंडार' : (settings.shopName || 'Nishad Beej Bhandar');
+  const ownerName = t('hero.ownerName') || settings.ownerName || 'Abhay Nishad';
 
   return (
     <div className="sm:hidden w-full bg-gradient-to-r from-agri-green-900 via-agri-green-800 to-agri-dark border-b border-agri-green-700/60">

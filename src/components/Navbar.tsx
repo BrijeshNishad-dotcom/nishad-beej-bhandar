@@ -191,7 +191,7 @@ export default function Navbar() {
                         onClick={() => handleLinkClick('/products')}
                         className="w-full text-left px-4 py-2 text-xs lg:text-sm text-agri-green-800 hover:bg-agri-green-50 font-bold transition-colors cursor-pointer"
                       >
-                        {t('navbar.allProductsMixed')}
+                        {t('navbar.allProducts')}
                       </button>
                     </motion.div>
                   )}
@@ -400,7 +400,7 @@ export default function Navbar() {
                             onClick={() => handleLinkClick('/products')}
                             className="w-full text-left py-2 text-sm font-bold text-agri-green-800 block cursor-pointer"
                           >
-                            {t('navbar.allProductsMixed')}
+                            {t('navbar.allProducts')}
                           </button>
                         </motion.div>
                       )}

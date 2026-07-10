@@ -104,7 +104,7 @@ export default function ProductDetailClient({ product, type }: ProductDetailClie
       : `${t('productDetails.diseaseControl')}: ${product.targetDisease || ''}`;
 
   const whatsappMsg = encodeURIComponent(
-    t('productWhatsappQuery', 'नमस्ते अभय जी, मुझे आपके दुकान पर उपलब्ध "{{name}}" के बारे में अधिक जानकारी चाहिए और मैं इसे खरीदना चाहता हूँ।')
+    t('productDetails.whatsappQuery', 'नमस्ते अभय जी, मुझे आपके दुकान पर उपलब्ध "{{name}}" के बारे में अधिक जानकारी चाहिए और मैं इसे खरीदना चाहता हूँ।')
       .replace('{{name}}', product.name)
       .replace('{{details}}', currentDetails)
   );
@@ -143,8 +143,9 @@ export default function ProductDetailClient({ product, type }: ProductDetailClie
               />
             ) : (
               <div className="flex flex-col items-center justify-center p-6 text-center space-y-2">
-                <span className="font-display font-bold text-sm sm:text-base text-gray-400">No Image Available</span>
-                <span className="font-sans text-xs text-gray-300">इस उत्पाद का चित्र उपलब्ध नहीं है</span>
+                <span className="font-sans text-xs sm:text-sm text-gray-400 font-semibold">
+                  {t('productDetails.imageNotAvailable', 'इस उत्पाद का चित्र उपलब्ध नहीं है')}
+                </span>
               </div>
             )}
             {discountPercent > 0 && (
@@ -335,67 +336,67 @@ export default function ProductDetailClient({ product, type }: ProductDetailClie
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm font-sans">
                 {product.pesticideType && (
                   <div className="flex justify-between border-b border-gray-200/50 pb-2">
-                    <span className="text-gray-500">प्रकार (Type):</span>
+                    <span className="text-gray-500">{t('productDetails.type')}:</span>
                     <span className="font-bold text-agri-dark">{product.pesticideType}</span>
                   </div>
                 )}
                 {product.activeIngredient && (
                   <div className="flex justify-between border-b border-gray-200/50 pb-2">
-                    <span className="text-gray-500">सक्रिय तत्व (Active Ingredient):</span>
+                    <span className="text-gray-500">{t('productDetails.activeIngredient')}:</span>
                     <span className="font-bold text-agri-dark">{product.activeIngredient}</span>
                   </div>
                 )}
                 {product.formulation && (
                   <div className="flex justify-between border-b border-gray-200/50 pb-2">
-                    <span className="text-gray-500">फॉर्मूलेशन (Formulation):</span>
+                    <span className="text-gray-500">{t('productDetails.formulation')}:</span>
                     <span className="font-bold text-agri-dark">{product.formulation}</span>
                   </div>
                 )}
                 {product.targetCrop && (
                   <div className="flex justify-between border-b border-gray-200/50 pb-2">
-                    <span className="text-gray-500">लक्षित फसल (Target Crop):</span>
+                    <span className="text-gray-500">{t('productDetails.targetCrop')}:</span>
                     <span className="font-bold text-agri-dark">{product.targetCrop}</span>
                   </div>
                 )}
                 {product.targetDisease && (
                   <div className="flex justify-between border-b border-gray-200/50 pb-2">
-                    <span className="text-gray-500">लक्षित कीट/रोग (Target Pest/Disease):</span>
+                    <span className="text-gray-500">{t('productDetails.targetDisease')}:</span>
                     <span className="font-bold text-red-600">{product.targetDisease}</span>
                   </div>
                 )}
                 {product.dosage && (
                   <div className="flex justify-between border-b border-gray-200/50 pb-2">
-                    <span className="text-gray-500">खुराक (Dosage):</span>
+                    <span className="text-gray-500">{t('productDetails.dosage')}:</span>
                     <span className="font-bold text-agri-dark">{product.dosage}</span>
                   </div>
                 )}
                 {product.applicationMethod && (
                   <div className="flex justify-between border-b border-gray-200/50 pb-2">
-                    <span className="text-gray-500">छिड़काव विधि (Method):</span>
+                    <span className="text-gray-500">{t('productDetails.applicationMethod')}:</span>
                     <span className="font-bold text-agri-dark">{product.applicationMethod}</span>
                   </div>
                 )}
                 {product.waitingPeriod && (
                   <div className="flex justify-between border-b border-gray-200/50 pb-2">
-                    <span className="text-gray-500">प्रतीक्षा अवधि (PHI):</span>
+                    <span className="text-gray-500">{t('productDetails.waitingPeriod')}:</span>
                     <span className="font-bold text-agri-dark">{product.waitingPeriod}</span>
                   </div>
                 )}
                 {product.toxicityClass && (
                   <div className="flex justify-between border-b border-gray-200/50 pb-2">
-                    <span className="text-gray-500">विषाक्तता वर्ग (Toxicity):</span>
+                    <span className="text-gray-500">{t('productDetails.toxicityClass')}:</span>
                     <span className="font-bold text-agri-dark">{product.toxicityClass}</span>
                   </div>
                 )}
                 {product.packSize && (
                   <div className="flex justify-between border-b border-gray-200/50 pb-2">
-                    <span className="text-gray-500">पैकिंग (Pack Size):</span>
+                    <span className="text-gray-500">{t('productDetails.packSizeSpec')}:</span>
                     <span className="font-bold text-agri-dark">{product.packSize}</span>
                   </div>
                 )}
                 {product.registrationNumber && (
                   <div className="flex justify-between border-b border-gray-200/50 pb-2 col-span-1 sm:col-span-2">
-                    <span className="text-gray-500">पंजीकरण संख्या (Reg No):</span>
+                    <span className="text-gray-500">{t('productDetails.registrationNumber')}:</span>
                     <span className="font-bold text-agri-dark">{product.registrationNumber}</span>
                   </div>
                 )}
@@ -403,14 +404,14 @@ export default function ProductDetailClient({ product, type }: ProductDetailClie
 
               {product.safetyPrecautions && (
                 <div className="pt-2 text-sm">
-                  <span className="font-bold text-red-600 block mb-1">सुरक्षा सावधानियां (Safety Precautions):</span>
+                  <span className="font-bold text-red-600 block mb-1">{t('productDetails.safetyPrecautionsLabel')}:</span>
                   <p className="text-gray-500 text-xs leading-relaxed">{product.safetyPrecautions}</p>
                 </div>
               )}
 
               {product.storageInstructions && (
                 <div className="pt-2 text-sm">
-                  <span className="font-bold text-agri-dark block mb-1">भंडारण निर्देश (Storage Instructions):</span>
+                  <span className="font-bold text-agri-dark block mb-1">{t('productDetails.storageInstructionsLabel')}:</span>
                   <p className="text-gray-500 text-xs leading-relaxed">{product.storageInstructions}</p>
                 </div>
               )}

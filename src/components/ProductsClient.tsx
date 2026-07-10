@@ -203,7 +203,7 @@ export default function ProductsClient({
                 }
 
                 const whatsappMsg = encodeURIComponent(
-                  t('productWhatsappQuery', 'नमस्ते, मुझे {{name}} ({{details}}) के बारे में जानकारी चाहिए।')
+                  t('productsPage.whatsappQuery', 'नमस्ते, मुझे {{name}} ({{details}}) के बारे में जानकारी चाहिए।')
                     .replace('{{name}}', prod.name)
                     .replace('{{details}}', subText)
                 );
@@ -226,8 +226,9 @@ export default function ProductsClient({
                         />
                       ) : (
                         <div className="flex flex-col items-center justify-center p-4 text-center space-y-1">
-                          <span className="font-display font-semibold text-xs sm:text-sm text-gray-400">No Image Available</span>
-                          <span className="font-sans text-[10px] text-gray-300">चित्र उपलब्ध नहीं है</span>
+                          <span className="font-sans text-xs text-gray-400 font-semibold">
+                            {t('productsPage.imageNotAvailable', 'चित्र उपलब्ध नहीं है')}
+                          </span>
                         </div>
                       )}
                       {discountPercent > 0 && (

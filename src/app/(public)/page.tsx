@@ -49,7 +49,7 @@ export default async function HomePage() {
   const shopName = settings.shopName || "Nishad Beej Bhandar";
   const ownerName = settings.ownerName || "Abhay Nishad";
   const mobileNumber = settings.mobileNumber || "6387634500";
-  const address = settings.address || "मुख्य बाजार मार्ग, कृषि कार्यालय के पास, उत्तर प्रदेश";
+  const address = settings.address || "Main Market Road, Near Agriculture Office, Uttar Pradesh, India";
   const businessHours = settings.businessHours || "Monday - Sunday: 8:00 AM - 8:00 PM";
 
   const orgJsonLd = {
