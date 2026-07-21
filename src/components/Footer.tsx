@@ -6,7 +6,7 @@ import Image from 'next/image';
 import { Phone, MapPin, Clock, ArrowRight, MessageSquare, Facebook, Youtube, Lock } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useSession, signOut } from 'next-auth/react';
-import { useSettings, getLocalizedAddress } from '@/components/SettingsProvider';
+import { useSettings, getLocalizedAddress, getLocalizedBusinessHours } from '@/components/SettingsProvider';
 
 export default function Footer() {
   const settings = useSettings();
@@ -170,14 +170,14 @@ export default function Footer() {
                     {settings.mobileNumber}
                   </a>
                   <span className="text-xs">
-                    {t('footer.ownerLabel', 'Owner:')} {t('hero.ownerName') || settings.ownerName}
+                    {t('footer.ownerLabel', 'Owner:')} {settings.ownerName}
                   </span>
                 </div>
               </li>
               <li className="flex items-start space-x-3">
                 <Clock className="h-5 w-5 text-agri-yellow-500 shrink-0 mt-0.5" />
                 <span className="whitespace-pre-line">
-                  {t('footer.hours') || settings.businessHours}
+                  {settings.businessHours}
                 </span>
               </li>
             </ul>
@@ -190,7 +190,7 @@ export default function Footer() {
           <p>© {currentYear} Nishad Beej Bhandar. {t('footer.allRightsReservedText', 'All Rights Reserved.')}</p>
           <div className="flex space-x-6 mt-4 md:mt-0">
             <span className="text-xs">
-              {t('footer.guidanceByLabel', 'Expert Guidance by')} {t('hero.ownerName') || settings.ownerName}
+              {t('footer.guidanceByLabel', 'Expert Guidance by')} {settings.ownerName}
             </span>
             {isAdmin ? (
               <div className="flex items-center space-x-4">

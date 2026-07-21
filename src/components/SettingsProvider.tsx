@@ -8,7 +8,7 @@ export const DEFAULT_SETTINGS: Record<string, string> = {
   mobileNumber: "6387634500",
   whatsappNumber: "6387634500",
   address: "Birlmalpur Road, Korona Chauraha, Sultanpur, Uttar Pradesh, India",
-  businessHours: "Monday - Sunday: 8:00 AM - 8:00 PM",
+  businessHours: "Monday - Sunday: 7:00 AM - 8:00 PM",
   aboutText: "We provide premium quality seeds, highly effective fertilizers, and original pesticides to help Indian farmers maximize their yield. Led by Abhay Nishad, a B.Sc Agriculture graduate, we offer expert scientific guidance and genuine brand-name products.",
   heroTitle: "अच्छे बीज, अच्छी फसल की शुरुआत",
   heroSubtitle: "धान, गेहूं, मक्का, सरसों, और सब्जियों के उन्नत बीज, सर्वोत्तम उर्वरक खाद एवं कीटनाशक दवाइयाँ उचित सरकारी रेट पर उपलब्ध हैं。"
@@ -70,4 +70,8 @@ export function getLocalizedAddress(address: string, lang: string): string {
       .replace(/,\s*,/g, ',');
   }
   return result;
+}
+
+export function getLocalizedBusinessHours(hours: string, lang: string): string {
+  return hours || '';
 }

@@ -50,7 +50,7 @@ export default async function HomePage() {
   const ownerName = settings.ownerName || "Abhay Nishad";
   const mobileNumber = settings.mobileNumber || "6387634500";
   const address = settings.address || "Main Market Road, Near Agriculture Office, Uttar Pradesh, India";
-  const businessHours = settings.businessHours || "Monday - Sunday: 8:00 AM - 8:00 PM";
+  const businessHours = settings.businessHours || "Monday - Sunday: 7:00 AM - 8:00 PM";
 
   const orgJsonLd = {
     '@context': 'https://schema.org',
@@ -101,7 +101,7 @@ export default async function HomePage() {
         'Saturday',
         'Sunday'
       ],
-      'opens': '08:00',
+      'opens': '07:00',
       'closes': '20:00'
     }
   };

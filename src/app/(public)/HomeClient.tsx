@@ -9,7 +9,7 @@ import {
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
-import { useSettings, getLocalizedAddress } from '@/components/SettingsProvider';
+import { useSettings, getLocalizedAddress, getLocalizedBusinessHours } from '@/components/SettingsProvider';
 
 interface GalleryItem {
   id: number;
@@ -314,7 +314,7 @@ export default function HomeClient({ galleryItems = [], categories }: HomeClient
                 </div>
                 <div>
                   <h4 className="text-sm font-bold text-white">
-                    {t('hero.ownerName') || settings.ownerName}
+                    {settings.ownerName}
                   </h4>
                   <p className="text-xs text-agri-yellow-500 font-semibold">{t('hero.ownerTitle')}</p>
                 </div>
@@ -468,7 +468,7 @@ export default function HomeClient({ galleryItems = [], categories }: HomeClient
                 {t('about.label')}
               </span>
               <h2 className="font-display text-3xl sm:text-4xl font-extrabold text-agri-dark">
-                {t('hero.ownerName') || settings.ownerName}
+                {settings.ownerName}
               </h2>
               <div className="h-1.5 w-20 bg-agri-yellow-500 rounded-full" />
               
@@ -739,7 +739,7 @@ export default function HomeClient({ galleryItems = [], categories }: HomeClient
                   </div>
                   <div>
                     <h4 className="text-xs text-gray-400 uppercase font-sans">{t('contact.specialistLabel')}</h4>
-                    <p className="text-sm sm:text-base font-bold text-agri-dark">{t('hero.ownerName') || settings.ownerName}</p>
+                    <p className="text-sm sm:text-base font-bold text-agri-dark">{settings.ownerName}</p>
                   </div>
                 </div>
 
