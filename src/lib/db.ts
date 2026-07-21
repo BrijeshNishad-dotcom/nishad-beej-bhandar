@@ -6,13 +6,21 @@ import path from 'path';
 
 declare global {
   var prisma: PrismaClient | undefined;
+  var pgPool: Pool | undefined;
+}
+
+const databaseUrl = process.env.DATABASE_URL || 'file:./dev.db';
+
+export const pool = globalThis.pgPool ?? new Pool({
+  connectionString: databaseUrl.startsWith('postgresql://') || databaseUrl.startsWith('postgres://') ? databaseUrl : undefined
+});
+
+if (process.env.NODE_ENV !== 'production') {
+  globalThis.pgPool = pool;
 }
 
 const createPrismaClient = (): PrismaClient => {
-  const databaseUrl = process.env.DATABASE_URL || 'file:./dev.db';
-
   if (databaseUrl.startsWith('postgresql://') || databaseUrl.startsWith('postgres://')) {
-    const pool = new Pool({ connectionString: databaseUrl });
     const adapter = new PrismaPg(pool);
     return new PrismaClient({ adapter });
   } else {
@@ -33,3 +41,4 @@ export const prisma = globalThis.prisma ?? createPrismaClient();
 if (process.env.NODE_ENV !== 'production') {
   globalThis.prisma = prisma;
 }
+

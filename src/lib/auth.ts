@@ -1,31 +1,62 @@
 import { NextAuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
+import { pool } from '@/lib/db';
+import bcrypt from 'bcryptjs';
 
 export const authOptions: NextAuthOptions = {
   providers: [
     CredentialsProvider({
-      name: 'Credentials',
+      name: 'Supabase Auth',
       credentials: {
-        email: { label: 'Email', type: 'text', placeholder: 'abhay@nishadbeej.com' },
+        email: { label: 'Email', type: 'email' },
         password: { label: 'Password', type: 'password' },
       },
       async authorize(credentials) {
-        const adminEmail = process.env.ADMIN_EMAIL || 'abhay@nishadbeej.com';
-        const adminPassword = process.env.ADMIN_PASSWORD || 'NishadAgriculture@6387';
-
-        if (
-          credentials?.email === adminEmail &&
-          credentials?.password === adminPassword
-        ) {
-          return {
-            id: 'admin',
-            name: 'Abhay Nishad',
-            email: adminEmail,
-            role: 'ADMIN',
-          };
+        if (!credentials?.email || !credentials?.password) {
+          return null;
         }
 
-        return null;
+        try {
+          // Query Supabase Auth (auth.users) directly for authenticating the admin
+          const { rows } = await pool.query(
+            `SELECT id, email, encrypted_password, raw_app_meta_data, raw_user_meta_data 
+             FROM auth.users 
+             WHERE LOWER(email) = LOWER($1) 
+             LIMIT 1;`,
+            [credentials.email.trim()]
+          );
+
+          if (rows.length === 0) {
+            return null;
+          }
+
+          const user = rows[0];
+          if (!user.encrypted_password) {
+            return null;
+          }
+
+          const isPasswordValid = bcrypt.compareSync(
+            credentials.password,
+            user.encrypted_password
+          );
+
+          if (!isPasswordValid) {
+            return null;
+          }
+
+          const userMetaData = user.raw_user_meta_data || {};
+          const appMetaData = user.raw_app_meta_data || {};
+
+          return {
+            id: user.id,
+            email: user.email,
+            name: userMetaData.name || 'Abhay Nishad',
+            role: appMetaData.role || 'ADMIN',
+          };
+        } catch (error) {
+          console.error('Supabase Auth authentication error:', error);
+          return null;
+        }
       },
     }),
   ],
@@ -44,7 +75,7 @@ export const authOptions: NextAuthOptions = {
       return token;
     },
     async session({ session, token }) {
-      if (session.user) {
+      if (session?.user) {
         (session.user as any).role = token.role;
       }
       return session;
@@ -63,3 +94,4 @@ export const authOptions: NextAuthOptions = {
     },
   },
 };
+
