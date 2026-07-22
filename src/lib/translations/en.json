@@ -34,7 +34,9 @@
     "contact": "Contact Us",
     "whatsapp": "WhatsApp",
     "farmerCardTitle": "Advanced Seeds for Paddy & Wheat",
-    "farmerCardText": "\"With certified seeds from Nishad Beej Bhandar, farmers achieve better germination and record yields every year.\""
+    "farmerCardText": "\"With certified seeds from Nishad Beej Bhandar, farmers achieve better germination and record yields every year.\"",
+    "fieldAlt": "Lush green agricultural field at Nishad Beej Bhandar seed store",
+    "storeAlt": "Quality certified seed bags at Nishad Beej Bhandar store"
   },
   "features": {
     "f1_title": "Premium Quality Seeds",
@@ -93,7 +95,8 @@
     "bullet2": "100% Company Sealed Products",
     "bullet3": "Accurate Scientific Pest & Disease Diagnosis",
     "bullet4": "Fair Rates & Proper Invoices",
-    "button": "Contact for Expert Advice"
+    "button": "Contact for Expert Advice",
+    "ownerAlt": "Shop owner Abhay Nishad (B.Sc Ag) at Nishad Beej Bhandar"
   },
   "benefits": {
     "label": "Farmer Benefits",
@@ -140,7 +143,8 @@
     "zaid_tips": "Prevention: Use neem oil or mild pesticides to protect vegetables from fruit borers and sucking pests."
   },
   "gallery": {
-    "title": "Photo Gallery"
+    "title": "Photo Gallery",
+    "imageSuffix": "Agriculture Field and Stock at Nishad Beej Bhandar"
   },
   "reviews": {
     "label": "Farmer Testimonials",

@@ -27,6 +27,8 @@ export default function SettingsClient({ initialSettings, currentAdminEmail = ''
   const [aboutText, setAboutText] = useState(settings.aboutText || '');
   const [heroTitle, setHeroTitle] = useState(settings.heroTitle || '');
   const [heroSubtitle, setHeroSubtitle] = useState(settings.heroSubtitle || '');
+  const [heroTitleEn, setHeroTitleEn] = useState(settings.heroTitleEn || '');
+  const [heroSubtitleEn, setHeroSubtitleEn] = useState(settings.heroSubtitleEn || '');
 
   // Admin Account Settings States
   const [currentPasswordEmail, setCurrentPasswordEmail] = useState('');
@@ -76,6 +78,8 @@ export default function SettingsClient({ initialSettings, currentAdminEmail = ''
       aboutText,
       heroTitle,
       heroSubtitle,
+      heroTitleEn,
+      heroSubtitleEn,
     };
 
     try {
@@ -337,28 +341,56 @@ export default function SettingsClient({ initialSettings, currentAdminEmail = ''
               <span>होमपेज बैनर टेक्स्ट (Homepage Hero Banner)</span>
             </h3>
 
-            <div>
-              <label className="block text-xs font-bold text-gray-700 mb-1.5">मुख्य हेडिंग (Hero Title) *</label>
-              <input
-                type="text"
-                required
-                value={heroTitle}
-                onChange={(e) => setHeroTitle(e.target.value)}
-                placeholder="जैसे: अच्छे बीज, अच्छी फसल की शुरुआत"
-                className="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm font-sans focus:outline-none focus:border-agri-green-800"
-              />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-xs font-bold text-gray-700 mb-1.5">मुख्य हेडिंग - हिंदी (Hero Title - Hindi) *</label>
+                <input
+                  type="text"
+                  required
+                  value={heroTitle}
+                  onChange={(e) => setHeroTitle(e.target.value)}
+                  placeholder="जैसे: अच्छे बीज, अच्छी फसल की शुरुआत"
+                  className="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm font-sans focus:outline-none focus:border-agri-green-800"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-gray-700 mb-1.5">मुख्य हेडिंग - English (Hero Title - English) *</label>
+                <input
+                  type="text"
+                  required
+                  value={heroTitleEn}
+                  onChange={(e) => setHeroTitleEn(e.target.value)}
+                  placeholder="e.g., Good Seeds, Beginning of a Good Crop"
+                  className="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm font-sans focus:outline-none focus:border-agri-green-800"
+                />
+              </div>
             </div>
 
-            <div>
-              <label className="block text-xs font-bold text-gray-700 mb-1.5">उप-हेडिंग (Hero Subtitle) *</label>
-              <textarea
-                required
-                value={heroSubtitle}
-                onChange={(e) => setHeroSubtitle(e.target.value)}
-                rows={3}
-                placeholder="धान, गेहूं, मक्का, सरसों, सब्जियों के बीज..."
-                className="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm font-sans focus:outline-none focus:border-agri-green-800 resize-none"
-              />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-xs font-bold text-gray-700 mb-1.5">उप-हेडिंग - हिंदी (Hero Subtitle - Hindi) *</label>
+                <textarea
+                  required
+                  value={heroSubtitle}
+                  onChange={(e) => setHeroSubtitle(e.target.value)}
+                  rows={3}
+                  placeholder="धान, गेहूं, मक्का, सरसों, सब्जियों के बीज..."
+                  className="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm font-sans focus:outline-none focus:border-agri-green-800 resize-none"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-gray-700 mb-1.5">उप-हेडिंग - English (Hero Subtitle - English) *</label>
+                <textarea
+                  required
+                  value={heroSubtitleEn}
+                  onChange={(e) => setHeroSubtitleEn(e.target.value)}
+                  rows={3}
+                  placeholder="High-quality seeds for paddy, wheat..."
+                  className="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm font-sans focus:outline-none focus:border-agri-green-800 resize-none"
+                />
+              </div>
             </div>
           </div>
 

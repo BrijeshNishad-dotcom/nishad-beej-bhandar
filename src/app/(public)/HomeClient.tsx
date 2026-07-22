@@ -44,17 +44,10 @@ export default function HomeClient({ galleryItems = [], categories }: HomeClient
   };
 
   const renderHeroTitle = () => {
-    if (i18n.language === 'en') {
-      return (
-        <>
-          {t('hero.heading1') || 'Good Seeds,'}
-          <br />
-          <span className="text-agri-yellow-500">{t('hero.heading2') || 'Beginning of a Good Crop'}</span>
-        </>
-      );
-    }
+    const title = i18n.language === 'hi'
+      ? (settings.heroTitle || `${t('hero.heading1') || 'अच्छे बीज,'} ${t('hero.heading2') || 'अच्छी फसल की शुरुआत'}`)
+      : (settings.heroTitleEn || `${t('hero.heading1') || 'Good Seeds,'} ${t('hero.heading2') || 'Beginning of a Good Crop'}`);
 
-    const title = settings.heroTitle || 'अच्छे बीज, अच्छी फसल की शुरुआत';
     const parts = title.split(',');
     if (parts.length > 1) {
       return (
@@ -241,7 +234,7 @@ export default function HomeClient({ galleryItems = [], categories }: HomeClient
         <div className="absolute inset-0 z-0">
           <Image 
             src="https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1920&q=80" 
-            alt="Indian agricultural green field at Nishad Beej Bhandar seed store"
+            alt={t('hero.fieldAlt')}
             fill
             priority
             sizes="100vw"
@@ -299,7 +292,9 @@ export default function HomeClient({ galleryItems = [], categories }: HomeClient
                 transition={{ duration: 0.5, delay: 0.2 }}
                 className="font-sans text-base sm:text-lg text-gray-200 max-w-xl leading-relaxed"
               >
-                {i18n.language === 'en' ? t('hero.description') : (settings.heroSubtitle || t('hero.description'))}
+                {i18n.language === 'hi' 
+                  ? (settings.heroSubtitle || t('hero.description'))
+                  : (settings.heroSubtitleEn || t('hero.description'))}
               </motion.p>
 
               {/* Owner Badge */}
@@ -362,7 +357,7 @@ export default function HomeClient({ galleryItems = [], categories }: HomeClient
               >
                 <Image
                   src="https://images.unsplash.com/photo-1595974482597-4b8da8879bc5?auto=format&fit=crop&w=800&q=80"
-                  alt="Quality seed bags and agricultural products at Nishad Beej Bhandar store"
+                  alt={t('hero.storeAlt')}
                   fill
                   sizes="(max-width: 1024px) 100vw, 40vw"
                   className="object-cover object-center"
@@ -454,7 +449,7 @@ export default function HomeClient({ galleryItems = [], categories }: HomeClient
               <div className="absolute inset-0 rounded-3xl overflow-hidden border-4 border-white shadow-xl">
                 <Image
                   src={shopFrontImageUrl}
-                  alt="Shop owner Abhay Nishad (B.Sc Ag) at Nishad Beej Bhandar"
+                  alt={t('about.ownerAlt')}
                   fill
                   sizes="(max-width: 1024px) 100vw, 40vw"
                   className="object-cover object-center"
@@ -650,7 +645,7 @@ export default function HomeClient({ galleryItems = [], categories }: HomeClient
               >
                 <Image
                   src={img.url}
-                  alt={`${img.title} - Agriculture Field and Stock at Nishad Beej Bhandar`}
+                  alt={`${img.title} - ${t('gallery.imageSuffix')}`}
                   fill
                   sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, 25vw"
                   className="object-cover object-center group-hover:scale-110 transition-transform duration-500"

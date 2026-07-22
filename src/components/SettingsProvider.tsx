@@ -11,7 +11,9 @@ export const DEFAULT_SETTINGS: Record<string, string> = {
   businessHours: "Monday - Sunday: 7:00 AM - 8:00 PM",
   aboutText: "We provide premium quality seeds, highly effective fertilizers, and original pesticides to help Indian farmers maximize their yield. Led by Abhay Nishad, a B.Sc Agriculture graduate, we offer expert scientific guidance and genuine brand-name products.",
   heroTitle: "अच्छे बीज, अच्छी फसल की शुरुआत",
-  heroSubtitle: "धान, गेहूं, मक्का, सरसों, और सब्जियों के उन्नत बीज, सर्वोत्तम उर्वरक खाद एवं कीटनाशक दवाइयाँ उचित सरकारी रेट पर उपलब्ध हैं。"
+  heroSubtitle: "धान, गेहूं, मक्का, सरसों, और सब्जियों के उन्नत बीज, सर्वोत्तम उर्वरक खाद एवं कीटनाशक दवाइयाँ उचित सरकारी रेट पर उपलब्ध हैं。",
+  heroTitleEn: "Good Seeds, Beginning of a Good Crop",
+  heroSubtitleEn: "High-quality seeds for paddy, wheat, maize, mustard, and vegetables, along with premium fertilizers and top-grade pesticides are available at reasonable prices."
 };
 
 const SettingsContext = createContext<Record<string, string>>(DEFAULT_SETTINGS);

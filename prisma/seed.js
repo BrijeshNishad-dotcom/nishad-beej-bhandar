@@ -92,7 +92,9 @@ async function main() {
     { key: "businessHours", value: "Monday - Sunday: 7:00 AM - 8:00 PM" },
     { key: "aboutText", value: "We provide premium quality seeds, highly effective fertilizers, and original pesticides to help Indian farmers maximize their yield. Led by Abhay Nishad, a B.Sc Agriculture graduate, we offer expert scientific guidance and genuine brand-name products." },
     { key: "heroTitle", value: "अच्छे बीज, अच्छी फसल की शुरुआत" },
-    { key: "heroSubtitle", value: "धान, गेहूं, मक्का, सरसों, सब्जियों के बीज, उर्वरक खाद एवं कीटनाशक दवाइयाँ उचित मूल्य पर उपलब्ध हैं।" }
+    { key: "heroSubtitle", value: "धान, गेहूं, मक्का, सरसों, सब्जियों के बीज, उर्वरक खाद एवं कीटनाशक दवाइयाँ उचित मूल्य पर उपलब्ध हैं।" },
+    { key: "heroTitleEn", value: "Good Seeds, Beginning of a Good Crop" },
+    { key: "heroSubtitleEn", value: "High-quality seeds for paddy, wheat, maize, mustard, and vegetables, along with premium fertilizers and top-grade pesticides are available at reasonable prices." }
   ];
 
   for (const setting of settings) {

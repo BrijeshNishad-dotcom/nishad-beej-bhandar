@@ -46,7 +46,7 @@ export default function Footer() {
               <div className="relative h-10 w-10 overflow-hidden rounded-xl shadow-sm">
                 <Image
                   src="/brand-logo.png"
-                  alt="Nishad Beej Bhandar Logo"
+                  alt={`${t('logo.subtitle')} Logo`}
                   fill
                   sizes="40px"
                   className="object-contain"
