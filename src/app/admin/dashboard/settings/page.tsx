@@ -1,9 +1,14 @@
 import { prisma } from '@/lib/db';
+import { getServerSession } from 'next-auth/next';
+import { authOptions } from '@/lib/auth';
 import SettingsClient from './SettingsClient';
 
 export const revalidate = 0; // Disable cache so setting modifications reflect immediately
 
 export default async function AdminSettingsPage() {
+  const session = await getServerSession(authOptions);
+  const adminEmail = session?.user?.email || '';
+
   const settings = await prisma.setting.findMany();
   
   // Format key-value object
@@ -13,6 +18,6 @@ export default async function AdminSettingsPage() {
   });
 
   return (
-    <SettingsClient initialSettings={config} />
+    <SettingsClient initialSettings={config} currentAdminEmail={adminEmail} />
   );
 }

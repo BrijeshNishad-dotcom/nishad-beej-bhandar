@@ -1,14 +1,17 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { signIn, useSession } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
-import { Leaf, Lock, Mail, AlertCircle, ArrowLeft, Eye, EyeOff } from 'lucide-react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { Leaf, Lock, Mail, AlertCircle, ArrowLeft, Eye, EyeOff, Check } from 'lucide-react';
 import Link from 'next/link';
 
-export default function AdminLoginPage() {
+function AdminLoginForm() {
   const { status } = useSession();
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const message = searchParams.get('message');
+  
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -42,8 +45,6 @@ export default function AdminLoginPage() {
       if (res?.error) {
         setError('अमान्य ईमेल या पासवर्ड। कृपया दोबारा जांचें।');
       } else if (res?.ok) {
-        // Session cookie is now set by NextAuth. Use router.replace so the
-        // login page is removed from history and cannot be navigated back to.
         router.replace('/admin/dashboard');
       }
     } catch (err) {
@@ -95,6 +96,14 @@ export default function AdminLoginPage() {
             एडमिन पोर्टल लॉगिन (Admin Access)
           </p>
         </div>
+
+        {/* Success Message Banner */}
+        {message && (
+          <div className="bg-green-50 text-green-800 border border-green-200 p-4 rounded-xl text-xs font-bold flex items-start space-x-2.5 mb-6">
+            <Check className="h-5 w-5 shrink-0 text-green-600 mt-0.5" />
+            <span>{message}</span>
+          </div>
+        )}
 
         {/* Login Form */}
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -168,5 +177,20 @@ export default function AdminLoginPage() {
 
       </div>
     </div>
+  );
+}
+
+export default function AdminLoginPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-[#f1f8e9] flex items-center justify-center font-sans">
+        <div className="text-center space-y-3">
+          <Leaf className="h-10 w-10 text-agri-green-800 animate-bounce mx-auto" />
+          <p className="text-sm font-semibold text-gray-500">प्रतीक्षा करें...</p>
+        </div>
+      </div>
+    }>
+      <AdminLoginForm />
+    </Suspense>
   );
 }
