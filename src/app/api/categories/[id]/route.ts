@@ -21,7 +21,7 @@ export async function PUT(req: NextRequest, { params }: RouteParams) {
       return NextResponse.json({ error: 'Invalid ID' }, { status: 400 });
     }
 
-    const { name, icon } = await req.json();
+    const { name, nameEn, icon } = await req.json();
     if (!name) {
       return NextResponse.json({ error: 'Category name is required' }, { status: 400 });
     }
@@ -30,7 +30,7 @@ export async function PUT(req: NextRequest, { params }: RouteParams) {
 
     const updatedCategory = await prisma.category.update({
       where: { id: catId },
-      data: { name, slug, icon: icon || '🌱' },
+      data: { name, nameEn: nameEn || null, slug, icon: icon || '🌱' },
     });
 
     return NextResponse.json({ success: true, category: updatedCategory });

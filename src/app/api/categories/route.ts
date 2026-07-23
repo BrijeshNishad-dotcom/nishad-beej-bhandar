@@ -24,7 +24,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { name, icon } = await req.json();
+    const { name, nameEn, icon } = await req.json();
     if (!name || !name.trim()) {
       return NextResponse.json({ error: 'Category name is required and cannot be empty' }, { status: 400 });
     }
@@ -39,7 +39,7 @@ export async function POST(req: NextRequest) {
     }
 
     const newCategory = await prisma.category.create({
-      data: { name, slug, icon: icon || '🌱' },
+      data: { name, nameEn: nameEn || null, slug, icon: icon || '🌱' },
     });
 
     return NextResponse.json({ success: true, category: newCategory });

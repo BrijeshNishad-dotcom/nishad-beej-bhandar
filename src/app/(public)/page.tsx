@@ -1,6 +1,8 @@
 import HomeClient from './HomeClient';
 import { Metadata } from 'next';
 import { prisma } from '@/lib/db';
+import { getSettings } from '@/lib/settings';
+import { DEFAULT_SETTINGS } from '@/components/SettingsProvider';
 import { cookies } from 'next/headers';
 
 export const revalidate = 0; // Disable cache so changes reflect immediately
@@ -10,16 +12,12 @@ export async function generateMetadata(): Promise<Metadata> {
   const language = cookieStore.get('language')?.value || 'hi';
   const isEn = language === 'en';
 
-  const settingsList = await prisma.setting.findMany();
-  const settings: Record<string, string> = {};
-  settingsList.forEach((s: { key: string; value: string }) => {
-    settings[s.key] = s.value;
-  });
+  const settings = await getSettings();
 
-  const shopName = isEn ? (settings.shopNameEn || "Nishad Beej Bhandar") : (settings.shopName || "निषाद बीज भंडार");
-  const heroTitle = isEn ? (settings.heroTitleEn || "Good Seeds, Beginning of a Good Crop") : (settings.heroTitle || "अच्छे बीज, अच्छी फसल की शुरुआत");
-  const heroSubtitle = isEn ? (settings.heroSubtitleEn || "High-quality seeds for paddy, wheat, maize, mustard, and vegetables, along with premium fertilizers and top-grade pesticides are available at reasonable prices.") : (settings.heroSubtitle || "धान, गेहूं, मक्का, सरसों, और सब्जियों के उन्नत बीज, सर्वोत्तम उर्वरक खाद एवं उच्च गुणवत्ता वाली कीटनाशक दवाइयाँ उचित सरकारी रेट पर उपलब्ध हैं।");
-  const ownerName = isEn ? (settings.ownerNameEn || "Abhay Nishad (B.Sc Agriculture)") : (settings.ownerName || "अभय निषाद (B.Sc Agriculture)");
+  const shopName = isEn ? (settings.shopNameEn || DEFAULT_SETTINGS.shopNameEn) : (settings.shopName || DEFAULT_SETTINGS.shopName);
+  const heroTitle = isEn ? (settings.heroTitleEn || DEFAULT_SETTINGS.heroTitleEn) : (settings.heroTitle || DEFAULT_SETTINGS.heroTitle);
+  const heroSubtitle = isEn ? (settings.heroSubtitleEn || DEFAULT_SETTINGS.heroSubtitleEn) : (settings.heroSubtitle || DEFAULT_SETTINGS.heroSubtitle);
+  const ownerName = isEn ? (settings.ownerNameEn || DEFAULT_SETTINGS.ownerNameEn) : (settings.ownerName || DEFAULT_SETTINGS.ownerName);
 
   const title = isEn 
     ? `${shopName} - ${heroTitle} | Certified Agriculture Seeds & Fertilizers Store`
@@ -53,28 +51,20 @@ export default async function HomePage() {
   const language = cookieStore.get('language')?.value || 'hi';
   const isEn = language === 'en';
 
-  const settings: Record<string, string> = {};
-  try {
-    const settingsList = await prisma.setting.findMany();
-    settingsList.forEach((s: { key: string; value: string }) => {
-      settings[s.key] = s.value;
-    });
-  } catch {
-    // DB unavailable — use defaults
-  }
+  const settings = await getSettings();
 
-  const shopName = isEn ? (settings.shopNameEn || "Nishad Beej Bhandar") : (settings.shopName || "निषाद बीज भंडार");
-  const ownerName = isEn ? (settings.ownerNameEn || "Abhay Nishad") : (settings.ownerName || "अभय निषाद");
-  const mobileNumber = settings.mobileNumber || "6387634500";
-  const address = isEn ? (settings.addressEn || "Main Market Road, Near Agriculture Office, Uttar Pradesh, India") : (settings.address || "मुख्य बाजार मार्ग, कृषि कार्यालय के पास, उत्तर प्रदेश, भारत");
-  const businessHours = isEn ? (settings.businessHoursEn || "Monday - Sunday: 7:00 AM - 8:00 PM") : (settings.businessHours || "सोमवार - रविवार: सुबह 7:00 बजे - रात 8:00 बजे");
+  const shopName = isEn ? (settings.shopNameEn || DEFAULT_SETTINGS.shopNameEn) : (settings.shopName || DEFAULT_SETTINGS.shopName);
+  const ownerName = isEn ? (settings.ownerNameEn || DEFAULT_SETTINGS.ownerNameEn) : (settings.ownerName || DEFAULT_SETTINGS.ownerName);
+  const mobileNumber = settings.mobileNumber || DEFAULT_SETTINGS.mobileNumber;
+  const address = isEn ? (settings.addressEn || DEFAULT_SETTINGS.addressEn) : (settings.address || DEFAULT_SETTINGS.address);
+  const businessHours = isEn ? (settings.businessHoursEn || DEFAULT_SETTINGS.businessHoursEn) : (settings.businessHours || DEFAULT_SETTINGS.businessHours);
 
   const orgJsonLd = {
     '@context': 'https://schema.org',
     '@type': 'Organization',
     'name': shopName,
     'url': 'https://nishadbeejbhandar.com',
-    'logo': 'https://nishadbeejbhandar.com/android-chrome-512x512.png',
+    'logo': `https://nishadbeejbhandar.com${settings.logoPath || DEFAULT_SETTINGS.logoPath}`,
     'contactPoint': {
       '@type': 'ContactPoint',
       'telephone': `+91-${mobileNumber}`,
@@ -89,7 +79,7 @@ export default async function HomePage() {
     '@type': 'LocalBusiness',
     'name': shopName,
     'image': [
-      'https://nishadbeejbhandar.com/android-chrome-512x512.png'
+      `https://nishadbeejbhandar.com${settings.logoPath || DEFAULT_SETTINGS.logoPath}`
     ],
     'telephone': `+91-${mobileNumber}`,
     'priceRange': '$$',
@@ -183,9 +173,9 @@ export default async function HomePage() {
     ]
   };
 
-  // Fetch dynamic gallery items from the database
+  // Fetch dynamic gallery items and categories from database
   let galleryItems: { id: number; imageUrl: string; title: string; description: string | null; createdAt: Date }[] = [];
-  let categories: { id: number; name: string; slug: string; icon: string; count: number }[] = [];
+  let categories: { id: number; name: string; nameEn: string | null; slug: string; icon: string; count: number }[] = [];
   try {
     galleryItems = await prisma.gallery.findMany({
       orderBy: { createdAt: 'asc' },
@@ -204,6 +194,7 @@ export default async function HomePage() {
     categories = categoriesList.map((cat: {
       id: number;
       name: string;
+      nameEn: string | null;
       slug: string;
       icon: string | null;
       seeds: { id: number }[];
@@ -214,6 +205,7 @@ export default async function HomePage() {
       return {
         id: cat.id,
         name: cat.name,
+        nameEn: cat.nameEn || null,
         slug: cat.slug,
         icon: cat.icon || '🌱',
         count: totalProducts

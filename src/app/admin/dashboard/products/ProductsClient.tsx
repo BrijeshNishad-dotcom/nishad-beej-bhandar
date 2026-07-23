@@ -10,12 +10,14 @@ import {
 type Category = {
   id: number;
   name: string;
+  nameEn?: string | null;
   slug: string;
 };
 
 type Product = {
   id: number;
   name: string;
+  nameEn?: string | null;
   company: string;
   price: number;
   discountPrice?: number | null;
@@ -27,6 +29,7 @@ type Product = {
   type: 'seed' | 'fertilizer' | 'pesticide';
   // Seed fields
   variety?: string;
+  varietyEn?: string | null;
   cropType?: string;
   description?: string;
   germination?: number | null;
@@ -40,6 +43,7 @@ type Product = {
   weight?: string;
   // Pesticide
   targetDisease?: string;
+  targetDiseaseEn?: string | null;
   pesticideType?: string | null;
   activeIngredient?: string | null;
   formulation?: string | null;
@@ -89,6 +93,7 @@ export default function ProductsClient({ initialProducts, categories }: Products
 
   // Form Fields
   const [name, setName] = useState('');
+  const [nameEn, setNameEn] = useState('');
   const [company, setCompany] = useState('');
   const [categoryId, setCategoryId] = useState('');
   const [price, setPrice] = useState('');
@@ -99,6 +104,7 @@ export default function ProductsClient({ initialProducts, categories }: Products
   
   // Seed specific fields
   const [variety, setVariety] = useState('');
+  const [varietyEn, setVarietyEn] = useState('');
   const [cropType, setCropType] = useState('Kharif');
   const [germination, setGermination] = useState('');
   const [seedRate, setSeedRate] = useState('');
@@ -113,6 +119,7 @@ export default function ProductsClient({ initialProducts, categories }: Products
   
   // Pesticide specific fields
   const [targetDisease, setTargetDisease] = useState('');
+  const [targetDiseaseEn, setTargetDiseaseEn] = useState('');
   const [pesticideType, setPesticideType] = useState('Insecticide');
   const [activeIngredient, setActiveIngredient] = useState('');
   const [formulation, setFormulation] = useState('EC');
@@ -132,6 +139,7 @@ export default function ProductsClient({ initialProducts, categories }: Products
     
     // Reset form values
     setName('');
+    setNameEn('');
     setCompany('');
     const filteredCats = getFilteredCategories(type);
     setCategoryId(filteredCats[0]?.id.toString() || '');
@@ -141,6 +149,7 @@ export default function ProductsClient({ initialProducts, categories }: Products
     setImageUrl('');
     setDescription('');
     setVariety('');
+    setVarietyEn('');
     setCropType('Kharif');
     setGermination('');
     setSeedRate('');
@@ -151,6 +160,7 @@ export default function ProductsClient({ initialProducts, categories }: Products
     setDosage('');
     setWeight('');
     setTargetDisease('');
+    setTargetDiseaseEn('');
     setPesticideType('Insecticide');
     setActiveIngredient('');
     setFormulation('EC');
@@ -174,6 +184,7 @@ export default function ProductsClient({ initialProducts, categories }: Products
     
     // Prefill fields
     setName(prod.name || '');
+    setNameEn(prod.nameEn || '');
     setCompany(prod.company || '');
     setCategoryId(prod.categoryId.toString() || '');
     setPrice(prod.price.toString() || '');
@@ -184,6 +195,7 @@ export default function ProductsClient({ initialProducts, categories }: Products
     
     if (prod.type === 'seed') {
       setVariety(prod.variety || '');
+      setVarietyEn(prod.varietyEn || '');
       setCropType(prod.cropType || 'Kharif');
       setGermination(prod.germination?.toString() || '');
       setSeedRate(prod.seedRate || '');
@@ -196,6 +208,7 @@ export default function ProductsClient({ initialProducts, categories }: Products
       setWeight(prod.weight || '');
     } else if (prod.type === 'pesticide') {
       setTargetDisease(prod.targetDisease || '');
+      setTargetDiseaseEn(prod.targetDiseaseEn || '');
       setPesticideType(prod.pesticideType || 'Insecticide');
       setActiveIngredient(prod.activeIngredient || '');
       setFormulation(prod.formulation || 'EC');
@@ -253,6 +266,7 @@ export default function ProductsClient({ initialProducts, categories }: Products
     const payload: any = {
       type: productType,
       name,
+      nameEn: nameEn || null,
       company,
       categoryId,
       price,
@@ -264,6 +278,7 @@ export default function ProductsClient({ initialProducts, categories }: Products
 
     if (productType === 'seed') {
       payload.variety = variety;
+      payload.varietyEn = varietyEn || null;
       payload.cropType = cropType;
       payload.germination = germination || null;
       payload.seedRate = seedRate;
@@ -276,6 +291,7 @@ export default function ProductsClient({ initialProducts, categories }: Products
       payload.weight = weight;
     } else if (productType === 'pesticide') {
       payload.targetDisease = targetDisease;
+      payload.targetDiseaseEn = targetDiseaseEn || null;
       payload.pesticideType = pesticideType;
       payload.activeIngredient = activeIngredient;
       payload.formulation = formulation;
@@ -574,15 +590,26 @@ export default function ProductsClient({ initialProducts, categories }: Products
             <form onSubmit={handleFormSubmit} className="space-y-6">
               
               {/* Row 1: Common parameters */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div>
-                  <label className="block text-xs font-bold text-gray-700 mb-1.5">उत्पाद का नाम (Name) *</label>
+                  <label className="block text-xs font-bold text-gray-700 mb-1.5">उत्पाद का नाम - हिंदी (Name - Hindi) *</label>
                   <input
                     type="text"
                     required
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     placeholder="जैसे: Bayer Arize 6444 Gold"
+                    className="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm font-sans focus:outline-none focus:border-agri-green-800"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-gray-700 mb-1.5">Product Name - English *</label>
+                  <input
+                    type="text"
+                    required
+                    value={nameEn}
+                    onChange={(e) => setNameEn(e.target.value)}
+                    placeholder="e.g. Bayer Arize 6444 Gold"
                     className="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm font-sans focus:outline-none focus:border-agri-green-800"
                   />
                 </div>
@@ -718,14 +745,24 @@ export default function ProductsClient({ initialProducts, categories }: Products
                     बीज विशिष्टता (Seed Specifications)
                   </h4>
                   
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
                     <div>
-                      <label className="block text-xs font-bold text-gray-700 mb-1.5">हाइब्रिड/उन्नत किस्म (Variety)</label>
+                      <label className="block text-xs font-bold text-gray-700 mb-1.5">हाइब्रिड/किस्म (Variety) - हिंदी</label>
                       <input
                         type="text"
                         value={variety}
                         onChange={(e) => setVariety(e.target.value)}
                         placeholder="जैसे: हाइब्रिड धान"
+                        className="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm font-sans focus:outline-none focus:border-agri-green-800"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-bold text-gray-700 mb-1.5">Variety - English</label>
+                      <input
+                        type="text"
+                        value={varietyEn}
+                        onChange={(e) => setVarietyEn(e.target.value)}
+                        placeholder="e.g. Hybrid Paddy"
                         className="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm font-sans focus:outline-none focus:border-agri-green-800"
                       />
                     </div>
@@ -899,7 +936,7 @@ export default function ProductsClient({ initialProducts, categories }: Products
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                     <div>
                       <label className="block text-xs font-bold text-gray-700 mb-1.5">लक्षित फसल (Target Crop)</label>
                       <input
@@ -911,12 +948,22 @@ export default function ProductsClient({ initialProducts, categories }: Products
                       />
                     </div>
                     <div>
-                      <label className="block text-xs font-bold text-gray-700 mb-1.5">लक्षित रोग/कीट (Target Pests/Diseases)</label>
+                      <label className="block text-xs font-bold text-gray-700 mb-1.5">लक्षित रोग - हिंदी (Target Pests) *</label>
                       <input
                         type="text"
                         value={targetDisease}
                         onChange={(e) => setTargetDisease(e.target.value)}
-                        placeholder="जैसे: तना छेदक, पत्ती लपेटक, फंगस"
+                        placeholder="जैसे: तना छेदक, फंगस"
+                        className="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm font-sans focus:outline-none focus:border-agri-green-800"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-bold text-gray-700 mb-1.5">Target Pests - English</label>
+                      <input
+                        type="text"
+                        value={targetDiseaseEn}
+                        onChange={(e) => setTargetDiseaseEn(e.target.value)}
+                        placeholder="e.g. Stem Borer, Fungus"
                         className="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm font-sans focus:outline-none focus:border-agri-green-800"
                       />
                     </div>

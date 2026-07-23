@@ -7,10 +7,12 @@ import {
   LayoutDashboard, ShoppingBag, FolderOpen, MailOpen, 
   Image as ImageIcon, Settings, Globe
 } from 'lucide-react';
+import { useLocalizedSettings } from '@/components/SettingsProvider';
 import AdminLogoutButton from '@/components/AdminLogoutButton';
 
 export default function AdminSidebar() {
   const { t } = useTranslation();
+  const settings = useLocalizedSettings();
 
   const menuItems = [
     { name: t('admin.overview', 'Overview'), href: '/admin/dashboard', icon: LayoutDashboard },
@@ -28,7 +30,7 @@ export default function AdminSidebar() {
         <Link href="/admin/dashboard" className="flex items-center space-x-2.5">
           <div className="relative h-10 w-10 overflow-hidden rounded-lg shadow-sm">
             <Image
-              src="/brand-logo.png"
+              src={settings.logoPath}
               alt="Nishad Beej Bhandar Logo"
               fill
               sizes="40px"

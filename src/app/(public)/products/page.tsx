@@ -1,5 +1,7 @@
 import { Metadata } from 'next';
 import { prisma } from '@/lib/db';
+import { getSettings } from '@/lib/settings';
+import { DEFAULT_SETTINGS } from '@/components/SettingsProvider';
 import ProductsClient from '@/components/ProductsClient';
 import { cookies } from 'next/headers';
 
@@ -10,13 +12,9 @@ export async function generateMetadata(): Promise<Metadata> {
   const language = cookieStore.get('language')?.value || 'hi';
   const isEn = language === 'en';
 
-  const settingsList = await prisma.setting.findMany();
-  const settings: Record<string, string> = {};
-  settingsList.forEach((s: { key: string; value: string }) => {
-    settings[s.key] = s.value;
-  });
+  const settings = await getSettings();
 
-  const shopName = isEn ? (settings.shopNameEn || "Nishad Beej Bhandar") : (settings.shopName || "निषाद बीज भंडार");
+  const shopName = isEn ? (settings.shopNameEn || DEFAULT_SETTINGS.shopNameEn) : (settings.shopName || DEFAULT_SETTINGS.shopName);
 
   const title = isEn
     ? `Agricultural Products Catalog - Seeds, Fertilizers & Pesticides | ${shopName}`
@@ -90,6 +88,7 @@ export default async function ProductsPage(props: { searchParams: SearchParams }
   const formattedSeeds = seeds.map(s => ({
     id: s.id,
     name: s.name,
+    nameEn: s.nameEn || null,
     company: s.company,
     price: s.price,
     discountPrice: s.discountPrice,
@@ -97,13 +96,16 @@ export default async function ProductsPage(props: { searchParams: SearchParams }
     imageUrl: s.imageUrl,
     type: 'seed',
     categoryName: s.category.name,
+    categoryNameEn: s.category.nameEn || null,
     categorySlug: s.category.slug,
     variety: s.variety,
+    varietyEn: s.varietyEn || null,
   }));
 
   const formattedFertilizers = fertilizers.map(f => ({
     id: f.id,
     name: f.name,
+    nameEn: f.nameEn || null,
     company: f.company,
     price: f.price,
     discountPrice: f.discountPrice,
@@ -111,6 +113,7 @@ export default async function ProductsPage(props: { searchParams: SearchParams }
     imageUrl: f.imageUrl,
     type: 'fertilizer',
     categoryName: f.category.name,
+    categoryNameEn: f.category.nameEn || null,
     categorySlug: f.category.slug,
     weight: f.weight,
   }));
@@ -118,6 +121,7 @@ export default async function ProductsPage(props: { searchParams: SearchParams }
   const formattedPesticides = pesticides.map(p => ({
     id: p.id,
     name: p.name,
+    nameEn: p.nameEn || null,
     company: p.company,
     price: p.price,
     discountPrice: p.discountPrice,
@@ -125,8 +129,10 @@ export default async function ProductsPage(props: { searchParams: SearchParams }
     imageUrl: p.imageUrl,
     type: 'pesticide',
     categoryName: p.category.name,
+    categoryNameEn: p.category.nameEn || null,
     categorySlug: p.category.slug,
     targetDisease: p.targetDisease,
+    targetDiseaseEn: p.targetDiseaseEn || null,
   }));
 
   const products = [...formattedSeeds, ...formattedFertilizers, ...formattedPesticides];

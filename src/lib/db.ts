@@ -10,9 +10,13 @@ declare global {
 }
 
 const databaseUrl = process.env.DATABASE_URL || 'file:./dev.db';
+const isDev = process.env.NODE_ENV !== 'production';
 
 export const pool = globalThis.pgPool ?? new Pool({
-  connectionString: databaseUrl.startsWith('postgresql://') || databaseUrl.startsWith('postgres://') ? databaseUrl : undefined
+  connectionString: databaseUrl.startsWith('postgresql://') || databaseUrl.startsWith('postgres://') ? databaseUrl : undefined,
+  max: isDev ? 1 : 4, // Keep connection count very low in dev to prevent Supabase limit exhaustion
+  idleTimeoutMillis: 2000, // Close idle connections after 2 seconds to free up sockets
+  connectionTimeoutMillis: 5000, // Fail fast if unreachable rather than hanging
 });
 
 if (process.env.NODE_ENV !== 'production') {

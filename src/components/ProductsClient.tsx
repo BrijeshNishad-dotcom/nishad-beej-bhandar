@@ -8,11 +8,11 @@ import { MessageSquare, Eye, Search, Leaf, AlertCircle } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import Breadcrumbs from '@/components/Breadcrumbs';
 import { useLocalizedSettings } from '@/components/SettingsProvider';
-import { formatTerm } from '@/lib/translation';
 
 interface Category {
   id: number;
   name: string;
+  nameEn?: string | null;
   slug: string;
   icon: string | null;
 }
@@ -20,6 +20,7 @@ interface Category {
 interface Product {
   id: number;
   name: string;
+  nameEn?: string | null;
   company: string;
   price: number;
   discountPrice: number | null;
@@ -27,10 +28,13 @@ interface Product {
   imageUrl: string | null;
   type: string;
   categoryName: string;
+  categoryNameEn?: string | null;
   categorySlug: string;
   variety?: string | null;
+  varietyEn?: string | null;
   weight?: string | null;
   targetDisease?: string | null;
+  targetDiseaseEn?: string | null;
 }
 
 interface ProductsClientProps {
@@ -51,7 +55,11 @@ export default function ProductsClient({
   const router = useRouter();
   const [searchVal, setSearchVal] = useState(searchQuery || '');
 
-  const getTranslatedCategoryName = (slug: string, defaultName: string) => {
+  const getTranslatedCategoryName = (slug: string, defaultName: string, nameEn?: string | null) => {
+    const isEn = i18n.language === 'en';
+    if (isEn && nameEn) {
+      return nameEn;
+    }
     const keyMap: { [key: string]: string } = {
       'paddy-seeds': 'categories.paddy',
       'wheat-seeds': 'categories.wheat',
@@ -160,7 +168,7 @@ export default function ProductsClient({
                       : 'text-gray-600 hover:bg-agri-green-50 hover:text-agri-green-800'
                   }`}
                 >
-                  <span>{cat.icon} {getTranslatedCategoryName(cat.slug, cat.name)}</span>
+                  <span>{cat.icon} {getTranslatedCategoryName(cat.slug, cat.name, cat.nameEn)}</span>
                 </Link>
               ))}
             </div>
@@ -190,22 +198,28 @@ export default function ProductsClient({
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {products.map((prod) => {
+                const isEn = i18n.language === 'en';
+                const productName = isEn ? (prod.nameEn || prod.name) : prod.name;
+                const categoryName = isEn ? (prod.categoryNameEn || prod.categoryName) : prod.categoryName;
+                const varietyName = isEn ? (prod.varietyEn || prod.variety) : prod.variety;
+                const targetDiseaseName = isEn ? (prod.targetDiseaseEn || prod.targetDisease) : prod.targetDisease;
+
                 const discountPercent = prod.discountPrice 
                   ? Math.round(((prod.price - prod.discountPrice) / prod.price) * 100)
                   : 0;
 
-                let subText = prod.company;
+                let subText = '';
                 if (prod.type === 'seed') {
-                  subText = prod.variety ? `${t('productsPage.variety')}${formatTerm(prod.variety, i18n.language)}` : prod.company;
+                  subText = varietyName ? `${t('productsPage.variety')}${varietyName}` : prod.company;
                 } else if (prod.type === 'fertilizer') {
-                  subText = prod.weight ? `${t('productsPage.packaging')}${formatTerm(prod.weight, i18n.language)}` : prod.company;
+                  subText = prod.weight ? `${t('productsPage.packaging')}${prod.weight}` : prod.company;
                 } else if (prod.type === 'pesticide') {
-                  subText = prod.targetDisease ? `${t('productsPage.diseaseControl')}${formatTerm(prod.targetDisease, i18n.language)}` : prod.company;
+                  subText = targetDiseaseName ? `${t('productsPage.diseaseControl')}${targetDiseaseName}` : prod.company;
                 }
 
                 const whatsappMsg = encodeURIComponent(
                   t('productsPage.whatsappQuery', 'नमस्ते, मुझे {{name}} ({{details}}) के बारे में जानकारी चाहिए।')
-                    .replace('{{name}}', prod.name)
+                    .replace('{{name}}', productName)
                     .replace('{{details}}', subText)
                 );
                 const whatsappUrl = `https://wa.me/91${settings.whatsappNumber}?text=${whatsappMsg}`;
@@ -238,7 +252,7 @@ export default function ProductsClient({
                         </span>
                       )}
                       <span className="absolute top-3 right-3 bg-agri-green-900/80 text-white text-[10px] font-bold font-sans px-2 py-0.5 rounded-full backdrop-blur-sm z-10">
-                        {getTranslatedCategoryName(prod.categorySlug, prod.categoryName)}
+                        {getTranslatedCategoryName(prod.categorySlug, prod.categoryName, prod.categoryNameEn)}
                       </span>
                     </div>
 
@@ -249,7 +263,7 @@ export default function ProductsClient({
                           {prod.company}
                         </span>
                         <h3 className="font-display font-bold text-sm sm:text-base text-agri-dark line-clamp-2 min-h-[44px]">
-                          {prod.name}
+                          {productName}
                         </h3>
                         <p className="font-sans text-xs text-gray-500 mt-2 italic">
                           {subText}

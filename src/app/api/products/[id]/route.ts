@@ -114,7 +114,9 @@ export async function PUT(req: NextRequest, { params }: RouteParams) {
         where: { id: prodId },
         data: {
           name: data.name,
+          nameEn: data.nameEn || null,
           variety: data.variety || '',
+          varietyEn: data.varietyEn || null,
           company: data.company || '',
           cropType: data.cropType || 'Kharif',
           description: data.description || '',
@@ -138,6 +140,7 @@ export async function PUT(req: NextRequest, { params }: RouteParams) {
         where: { id: prodId },
         data: {
           name: data.name,
+          nameEn: data.nameEn || null,
           company: data.company || '',
           weight: data.weight || '',
           price: priceVal,
@@ -155,7 +158,9 @@ export async function PUT(req: NextRequest, { params }: RouteParams) {
         where: { id: prodId },
         data: {
           name: data.name,
+          nameEn: data.nameEn || null,
           targetDisease: data.targetDisease || '',
+          targetDiseaseEn: data.targetDiseaseEn || null,
           company: data.company || '',
           price: priceVal,
           discountPrice: discPriceVal,

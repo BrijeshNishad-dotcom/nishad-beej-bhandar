@@ -4,8 +4,8 @@ import Script from "next/script";
 import "./globals.css";
 import AuthProvider from "@/components/SessionProvider";
 import LanguageProvider from "@/components/LanguageProvider";
-import SettingsProvider from "@/components/SettingsProvider";
-import { prisma } from "@/lib/db";
+import SettingsProvider, { DEFAULT_SETTINGS } from "@/components/SettingsProvider";
+import { getSettings } from "@/lib/settings";
 import { cookies } from "next/headers";
 
 const inter = Inter({
@@ -26,21 +26,13 @@ export async function generateMetadata(): Promise<Metadata> {
   const language = cookieStore.get('language')?.value || 'hi';
   const isEn = language === 'en';
 
-  const settings: Record<string, string> = {};
-  try {
-    const settingsList = await prisma.setting.findMany();
-    settingsList.forEach((s: { key: string; value: string }) => {
-      settings[s.key] = s.value;
-    });
-  } catch {
-    // DB unavailable — use defaults
-  }
+  const settings = await getSettings();
 
-  const shopName = isEn ? (settings.shopNameEn || "Nishad Beej Bhandar") : (settings.shopName || "निषाद बीज भंडार");
-  const heroTitle = isEn ? (settings.heroTitleEn || "Good Seeds, Beginning of a Good Crop") : (settings.heroTitle || "अच्छे बीज, अच्छी फसल की शुरुआत");
-  const ownerName = isEn ? (settings.ownerNameEn || "Abhay Nishad (B.Sc Ag)") : (settings.ownerName || "अभय निषाद");
-  const mobileNumber = settings.mobileNumber || "6387634500";
-  const heroSubtitle = isEn ? (settings.heroSubtitleEn || "High-quality seeds for paddy, wheat, maize, mustard, and vegetables, along with premium fertilizers and top-grade pesticides are available at reasonable prices.") : (settings.heroSubtitle || "धान, गेहूं, मक्का, सरसों, और सब्जियों के उन्नत बीज, सर्वोत्तम उर्वरक खाद एवं कीटनाशक दवाइयाँ उचित सरकारी रेट पर उपलब्ध हैं।");
+  const shopName = isEn ? (settings.shopNameEn || DEFAULT_SETTINGS.shopNameEn) : (settings.shopName || DEFAULT_SETTINGS.shopName);
+  const heroTitle = isEn ? (settings.heroTitleEn || DEFAULT_SETTINGS.heroTitleEn) : (settings.heroTitle || DEFAULT_SETTINGS.heroTitle);
+  const ownerName = isEn ? (settings.ownerNameEn || DEFAULT_SETTINGS.ownerNameEn) : (settings.ownerName || DEFAULT_SETTINGS.ownerName);
+  const mobileNumber = settings.mobileNumber || DEFAULT_SETTINGS.mobileNumber;
+  const heroSubtitle = isEn ? (settings.heroSubtitleEn || DEFAULT_SETTINGS.heroSubtitleEn) : (settings.heroSubtitle || DEFAULT_SETTINGS.heroSubtitle);
 
   return {
     title: {
@@ -72,7 +64,7 @@ export async function generateMetadata(): Promise<Metadata> {
       siteName: shopName,
       images: [
         {
-          url: "/android-chrome-512x512.png",
+          url: settings.logoPath || "/android-chrome-512x512.png",
           width: 512,
           height: 512,
           alt: `${shopName} Logo`,
@@ -85,7 +77,7 @@ export async function generateMetadata(): Promise<Metadata> {
       card: "summary_large_image",
       title: `${shopName} - ${heroTitle}`,
       description: heroSubtitle,
-      images: ["/android-chrome-512x512.png"],
+      images: [settings.logoPath || "/android-chrome-512x512.png"],
     },
     verification: {
       google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION || "",
@@ -125,16 +117,8 @@ export default async function RootLayout({
   const cookieStore = await cookies();
   const language = cookieStore.get('language')?.value || 'hi';
 
-  // Fetch settings dynamically
-  const settings: Record<string, string> = {};
-  try {
-    const settingsList = await prisma.setting.findMany();
-    settingsList.forEach((s: { key: string; value: string }) => {
-      settings[s.key] = s.value;
-    });
-  } catch {
-    // DB unavailable — use defaults
-  }
+  // Fetch settings dynamically using Server Helper
+  const settings = await getSettings();
 
   return (
     <html

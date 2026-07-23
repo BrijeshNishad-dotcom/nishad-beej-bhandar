@@ -6,6 +6,7 @@ import { Plus, Edit2, Trash2, X, Check, RefreshCw, Sparkles } from 'lucide-react
 type Category = {
   id: number;
   name: string;
+  nameEn?: string | null;
   slug: string;
   icon?: string | null;
   createdAt: Date;
@@ -22,12 +23,14 @@ export default function CategoriesClient({ initialCategories }: CategoriesClient
   
   // Form fields
   const [name, setName] = useState('');
+  const [nameEn, setNameEn] = useState('');
   const [icon, setIcon] = useState('🌱');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const openAddForm = () => {
     setEditingCategory(null);
     setName('');
+    setNameEn('');
     setIcon('🌱');
     setIsFormOpen(true);
   };
@@ -35,6 +38,7 @@ export default function CategoriesClient({ initialCategories }: CategoriesClient
   const openEditForm = (cat: Category) => {
     setEditingCategory(cat);
     setName(cat.name);
+    setNameEn(cat.nameEn || '');
     setIcon(cat.icon || '🌱');
     setIsFormOpen(true);
   };
@@ -47,7 +51,7 @@ export default function CategoriesClient({ initialCategories }: CategoriesClient
     }
 
     setIsSubmitting(true);
-    const payload = { name, icon };
+    const payload = { name, nameEn: nameEn || null, icon };
 
     try {
       let res;
@@ -147,7 +151,7 @@ export default function CategoriesClient({ initialCategories }: CategoriesClient
               </div>
               <div>
                 <span className="font-display font-extrabold text-base text-agri-dark block">
-                  {cat.name}
+                  {cat.name} {cat.nameEn ? `/ ${cat.nameEn}` : ''}
                 </span>
                 <span className="font-sans text-xs text-gray-400 block mt-0.5">
                   Slug: {cat.slug}
@@ -202,13 +206,25 @@ export default function CategoriesClient({ initialCategories }: CategoriesClient
             {/* Form */}
             <form onSubmit={handleFormSubmit} className="space-y-4">
               <div>
-                <label className="block text-xs font-bold text-gray-700 mb-1.5">श्रेणी का नाम (Category Name) *</label>
+                <label className="block text-xs font-bold text-gray-700 mb-1.5">श्रेणी का नाम - हिंदी (Category Name - Hindi) *</label>
                 <input
                   type="text"
                   required
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  placeholder="जैसे: Vegetable Seeds, Millet Seeds"
+                  placeholder="जैसे: सब्जी के बीज"
+                  className="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm font-sans focus:outline-none focus:border-agri-green-800"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-gray-700 mb-1.5">Category Name - English *</label>
+                <input
+                  type="text"
+                  required
+                  value={nameEn}
+                  onChange={(e) => setNameEn(e.target.value)}
+                  placeholder="e.g. Vegetable Seeds"
                   className="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm font-sans focus:outline-none focus:border-agri-green-800"
                 />
               </div>

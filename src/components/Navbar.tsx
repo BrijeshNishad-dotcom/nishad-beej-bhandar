@@ -101,7 +101,7 @@ export default function Navbar() {
             <Link href="/" className="flex items-center space-x-2 group shrink-0">
               <div className="relative h-10 w-10 overflow-hidden transition-all duration-300 group-hover:scale-105 shadow-sm rounded-xl">
                 <Image
-                  src="/brand-logo.png"
+                  src={settings.logoPath}
                   alt={`${settings.shopName} Logo`}
                   fill
                   sizes="40px"
@@ -316,7 +316,7 @@ export default function Navbar() {
                   <Link href="/" onClick={() => setIsOpen(false)} className="flex items-center space-x-2 group">
                     <div className="relative h-10 w-10 overflow-hidden rounded-xl shadow-sm">
                       <Image
-                        src="/brand-logo.png"
+                        src={settings.logoPath}
                         alt={`${settings.shopName} Logo`}
                         fill
                         sizes="40px"

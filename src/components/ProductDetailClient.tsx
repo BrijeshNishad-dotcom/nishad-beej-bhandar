@@ -11,13 +11,16 @@ import { formatTerm } from '@/lib/translation';
 interface Category {
   id: number;
   name: string;
+  nameEn?: string | null;
   slug: string;
 }
 
 interface Product {
   id: number;
   name: string;
+  nameEn?: string | null;
   variety?: string | null;
+  varietyEn?: string | null;
   company: string;
   cropType?: string | null;
   description: string;
@@ -35,6 +38,7 @@ interface Product {
   category: Category;
   weight?: string | null;
   targetDisease?: string | null;
+  targetDiseaseEn?: string | null;
   pesticideType?: string | null;
   activeIngredient?: string | null;
   formulation?: string | null;
@@ -58,7 +62,11 @@ export default function ProductDetailClient({ product, type }: ProductDetailClie
   const settings = useLocalizedSettings();
   const { t, i18n } = useTranslation();
 
-  const getTranslatedCategoryName = (slug: string, defaultName: string) => {
+  const getTranslatedCategoryName = (slug: string, defaultName: string, nameEn?: string | null) => {
+    const isEn = i18n.language === 'en';
+    if (isEn && nameEn) {
+      return nameEn;
+    }
     const keyMap: { [key: string]: string } = {
       'paddy-seeds': 'categories.paddy',
       'wheat-seeds': 'categories.wheat',
@@ -94,26 +102,31 @@ export default function ProductDetailClient({ product, type }: ProductDetailClie
   const isFertilizer = type === 'fertilizer';
   const isPesticide = type === 'pesticide';
 
+  const isEn = i18n.language === 'en';
+  const productName = isEn ? (product.nameEn || product.name) : product.name;
+  const varietyName = isEn ? (product.varietyEn || product.variety) : product.variety;
+  const targetDiseaseName = isEn ? (product.targetDiseaseEn || product.targetDisease) : product.targetDisease;
+
   const discountPercent = product.discountPrice
     ? Math.round(((product.price - product.discountPrice) / product.price) * 100)
     : 0;
 
   const currentDetails = isSeed 
-    ? (product.variety ? `${t('productDetails.variety')}: ${formatTerm(product.variety, i18n.language)}` : product.company)
+    ? (varietyName ? `${t('productDetails.variety')}: ${varietyName}` : product.company)
     : isFertilizer
-      ? `${t('productDetails.packaging')}: ${formatTerm(product.weight, i18n.language)}`
-      : `${t('productDetails.diseaseControl')}: ${formatTerm(product.targetDisease, i18n.language)}`;
+      ? `${t('productDetails.packaging')}: ${product.weight}`
+      : `${t('productDetails.diseaseControl')}: ${targetDiseaseName}`;
 
   const whatsappMsg = encodeURIComponent(
     t('productDetails.whatsappQuery', 'नमस्ते अभय जी, मुझे आपके दुकान पर उपलब्ध "{{name}}" के बारे में अधिक जानकारी चाहिए और मैं इसे खरीदना चाहता हूँ।')
-      .replace('{{name}}', product.name)
+      .replace('{{name}}', productName)
       .replace('{{details}}', currentDetails)
   );
   const whatsappUrl = `https://wa.me/91${settings.whatsappNumber}?text=${whatsappMsg}`;
 
   const breadcrumbItems = [
     { label: t('breadcrumbs.products'), href: '/products' },
-    { label: product.name }
+    { label: productName }
   ];
 
   return (
@@ -179,7 +192,7 @@ export default function ProductDetailClient({ product, type }: ProductDetailClie
           {/* Company and Category Header */}
           <div className="flex items-center space-x-2">
             <span className="bg-agri-green-800 text-white text-xs font-bold font-sans px-2.5 py-0.5 rounded-full">
-              {getTranslatedCategoryName(product.category.slug, product.category.name)}
+              {getTranslatedCategoryName(product.category.slug, product.category.name, product.category.nameEn)}
             </span>
             <span className="text-sm text-gray-400 font-sans">
               {t('productDetails.manufacturer')}{product.company}
@@ -189,21 +202,21 @@ export default function ProductDetailClient({ product, type }: ProductDetailClie
           {/* Product Title */}
           <div>
             <h1 className="font-display text-2xl sm:text-3xl font-extrabold text-agri-dark">
-              {product.name}
+              {productName}
             </h1>
-            {isSeed && product.variety && (
+            {isSeed && varietyName && (
               <p className="font-sans text-sm font-semibold text-agri-yellow-700 mt-1">
-                {t('productDetails.variety')}: {formatTerm(product.variety, i18n.language)}
+                {t('productDetails.variety')}: {varietyName}
               </p>
             )}
             {isFertilizer && product.weight && (
               <p className="font-sans text-sm font-semibold text-agri-yellow-700 mt-1">
-                {t('productDetails.packaging')}: {formatTerm(product.weight, i18n.language)}
+                {t('productDetails.packaging')}: {product.weight}
               </p>
             )}
-            {isPesticide && product.targetDisease && (
+            {isPesticide && targetDiseaseName && (
               <p className="font-sans text-sm font-semibold text-red-600 mt-1">
-                {t('productDetails.diseaseControl')}: {formatTerm(product.targetDisease, i18n.language)}
+                {t('productDetails.diseaseControl')}: {targetDiseaseName}
               </p>
             )}
           </div>
@@ -391,7 +404,7 @@ export default function ProductDetailClient({ product, type }: ProductDetailClie
                 {product.targetDisease && (
                   <div className="flex justify-between border-b border-gray-200/50 pb-2">
                     <span className="text-gray-500">{t('productDetails.targetDisease')}:</span>
-                    <span className="font-bold text-red-600">{formatTerm(product.targetDisease, i18n.language)}</span>
+                    <span className="font-bold text-red-600">{targetDiseaseName}</span>
                   </div>
                 )}
                 {product.dosage && (

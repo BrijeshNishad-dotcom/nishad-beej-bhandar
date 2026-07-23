@@ -45,7 +45,7 @@ export default function Footer() {
             <Link href="/" className="flex items-center space-x-2">
               <div className="relative h-10 w-10 overflow-hidden rounded-xl shadow-sm">
                 <Image
-                  src="/brand-logo.png"
+                  src={settings.logoPath}
                   alt={`${t('logo.subtitle')} Logo`}
                   fill
                   sizes="40px"
@@ -81,7 +81,7 @@ export default function Footer() {
                 <Phone className="h-5 w-5" />
               </a>
               <a
-                href="https://facebook.com"
+                href={settings.facebookUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-9 h-9 rounded-full bg-agri-green-900/50 hover:bg-agri-green-800 flex items-center justify-center text-blue-400 hover:text-white transition-colors"
@@ -91,7 +91,7 @@ export default function Footer() {
                 <Facebook className="h-5 w-5" />
               </a>
               <a
-                href="https://youtube.com"
+                href={settings.youtubeUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-9 h-9 rounded-full bg-agri-green-900/50 hover:bg-agri-green-800 flex items-center justify-center text-red-500 hover:text-white transition-colors"

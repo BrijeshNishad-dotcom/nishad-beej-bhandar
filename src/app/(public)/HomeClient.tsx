@@ -21,6 +21,7 @@ interface GalleryItem {
 interface HomeCategory {
   id: number;
   name: string;
+  nameEn?: string | null;
   slug: string;
   icon: string;
   count: number;
@@ -116,7 +117,11 @@ export default function HomeClient({ galleryItems = [], categories }: HomeClient
     }
   };
 
-  const getTranslatedCategoryName = (slug: string, defaultName: string) => {
+  const getTranslatedCategoryName = (slug: string, defaultName: string, nameEn?: string | null) => {
+    const isEn = i18n.language === 'en';
+    if (isEn && nameEn) {
+      return nameEn;
+    }
     const keyMap: { [key: string]: string } = {
       'paddy-seeds': 'categories.paddy',
       'wheat-seeds': 'categories.wheat',
@@ -415,7 +420,7 @@ export default function HomeClient({ galleryItems = [], categories }: HomeClient
                   {cat.icon}
                 </div>
                 <h3 className="font-display text-base sm:text-lg font-bold text-agri-dark">
-                  {getTranslatedCategoryName(cat.slug, cat.name)}
+                  {getTranslatedCategoryName(cat.slug, cat.name, cat.nameEn)}
                 </h3>
                 <span className="text-xs text-gray-400 block mt-1">{getCategoryCountText(cat.slug, cat.count)}</span>
                 <Link

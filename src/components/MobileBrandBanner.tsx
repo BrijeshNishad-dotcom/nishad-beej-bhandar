@@ -23,7 +23,7 @@ export default function MobileBrandBanner() {
         {/* Logo mark */}
         <div className="relative h-9 w-9 shrink-0 overflow-hidden rounded-xl shadow-md ring-1 ring-white/20">
           <Image
-            src="/brand-logo.png"
+            src={settings.logoPath}
             alt={`${shopName} Logo`}
             fill
             sizes="36px"

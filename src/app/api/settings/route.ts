@@ -6,14 +6,12 @@ import { revalidatePath } from 'next/cache';
 
 export const dynamic = 'force-dynamic';
 
+import { getSettings } from '@/lib/settings';
+
 // GET: Fetch all settings as key-value pairs
 export async function GET() {
   try {
-    const settings = await prisma.setting.findMany();
-    const config: Record<string, string> = {};
-    settings.forEach((s) => {
-      config[s.key] = s.value;
-    });
+    const config = await getSettings();
     return NextResponse.json({ settings: config });
   } catch (error: any) {
     console.error('Settings fetch error:', error);
@@ -30,6 +28,7 @@ export async function PUT(req: NextRequest) {
     }
 
     const body = await req.json(); // Expected format: { key1: value1, key2: value2 }
+    console.log("PUT /api/settings received body:", body);
 
     const updates = Object.entries(body).map(([key, value]) => {
       return prisma.setting.upsert({

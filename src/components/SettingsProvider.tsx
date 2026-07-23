@@ -19,7 +19,10 @@ export const DEFAULT_SETTINGS: Record<string, string> = {
   heroTitle: "अच्छे बीज, अच्छी फसल की शुरुआत",
   heroSubtitle: "धान, गेहूं, मक्का, सरसों, और सब्जियों के उन्नत बीज, सर्वोत्तम उर्वरक खाद एवं कीटनाशक दवाइयाँ उचित सरकारी रेट पर उपलब्ध हैं।",
   heroTitleEn: "Good Seeds, Beginning of a Good Crop",
-  heroSubtitleEn: "High-quality seeds for paddy, wheat, maize, mustard, and vegetables, along with premium fertilizers and top-grade pesticides are available at reasonable prices."
+  heroSubtitleEn: "High-quality seeds for paddy, wheat, maize, mustard, and vegetables, along with premium fertilizers and top-grade pesticides are available at reasonable prices.",
+  logoPath: "/brand-logo.png",
+  facebookUrl: "https://facebook.com",
+  youtubeUrl: "https://youtube.com",
 };
 
 const SettingsContext = createContext<Record<string, string>>(DEFAULT_SETTINGS);
@@ -57,5 +60,8 @@ export function useLocalizedSettings() {
     heroSubtitle: isHi ? (settings.heroSubtitle || DEFAULT_SETTINGS.heroSubtitle) : (settings.heroSubtitleEn || DEFAULT_SETTINGS.heroSubtitleEn),
     mobileNumber: settings.mobileNumber || DEFAULT_SETTINGS.mobileNumber,
     whatsappNumber: settings.whatsappNumber || DEFAULT_SETTINGS.whatsappNumber,
+    logoPath: settings.logoPath || DEFAULT_SETTINGS.logoPath,
+    facebookUrl: settings.facebookUrl || DEFAULT_SETTINGS.facebookUrl,
+    youtubeUrl: settings.youtubeUrl || DEFAULT_SETTINGS.youtubeUrl,
   };
 }

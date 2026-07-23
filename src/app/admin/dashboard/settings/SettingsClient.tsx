@@ -2,11 +2,13 @@
 
 import { useState } from 'react';
 import { signOut } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 import { 
   Save, RefreshCw, Check, Sparkles, AlertCircle, 
   Image as ImageIcon, Lock, Mail, Eye, EyeOff, ShieldCheck, Key 
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { DEFAULT_SETTINGS } from '@/components/SettingsProvider';
 
 type SettingsClientProps = {
   initialSettings: Record<string, string>;
@@ -14,6 +16,7 @@ type SettingsClientProps = {
 };
 
 export default function SettingsClient({ initialSettings, currentAdminEmail = '' }: SettingsClientProps) {
+  const router = useRouter();
   const { i18n } = useTranslation();
   const isEn = i18n.language === 'en';
   const [settings, setSettings] = useState<Record<string, string>>(initialSettings);
@@ -21,22 +24,25 @@ export default function SettingsClient({ initialSettings, currentAdminEmail = ''
   // Shop Settings States
   const [isSavingShop, setIsSavingShop] = useState(false);
   const [shopSaveStatus, setShopSaveStatus] = useState<'idle' | 'success' | 'error'>('idle');
-  const [shopName, setShopName] = useState(settings.shopName || '');
-  const [shopNameEn, setShopNameEn] = useState(settings.shopNameEn || '');
-  const [ownerName, setOwnerName] = useState(settings.ownerName || '');
-  const [ownerNameEn, setOwnerNameEn] = useState(settings.ownerNameEn || '');
-  const [mobileNumber, setMobileNumber] = useState(settings.mobileNumber || '');
-  const [whatsappNumber, setWhatsappNumber] = useState(settings.whatsappNumber || '');
-  const [address, setAddress] = useState(settings.address || '');
-  const [addressEn, setAddressEn] = useState(settings.addressEn || '');
-  const [businessHours, setBusinessHours] = useState(settings.businessHours || '');
-  const [businessHoursEn, setBusinessHoursEn] = useState(settings.businessHoursEn || '');
-  const [aboutText, setAboutText] = useState(settings.aboutText || '');
-  const [aboutTextEn, setAboutTextEn] = useState(settings.aboutTextEn || '');
-  const [heroTitle, setHeroTitle] = useState(settings.heroTitle || '');
-  const [heroSubtitle, setHeroSubtitle] = useState(settings.heroSubtitle || '');
-  const [heroTitleEn, setHeroTitleEn] = useState(settings.heroTitleEn || '');
-  const [heroSubtitleEn, setHeroSubtitleEn] = useState(settings.heroSubtitleEn || '');
+  const [shopName, setShopName] = useState(settings.shopName || DEFAULT_SETTINGS.shopName || '');
+  const [shopNameEn, setShopNameEn] = useState(settings.shopNameEn || DEFAULT_SETTINGS.shopNameEn || '');
+  const [ownerName, setOwnerName] = useState(settings.ownerName || DEFAULT_SETTINGS.ownerName || '');
+  const [ownerNameEn, setOwnerNameEn] = useState(settings.ownerNameEn || DEFAULT_SETTINGS.ownerNameEn || '');
+  const [mobileNumber, setMobileNumber] = useState(settings.mobileNumber || DEFAULT_SETTINGS.mobileNumber || '');
+  const [whatsappNumber, setWhatsappNumber] = useState(settings.whatsappNumber || DEFAULT_SETTINGS.whatsappNumber || '');
+  const [address, setAddress] = useState(settings.address || DEFAULT_SETTINGS.address || '');
+  const [addressEn, setAddressEn] = useState(settings.addressEn || DEFAULT_SETTINGS.addressEn || '');
+  const [businessHours, setBusinessHours] = useState(settings.businessHours || DEFAULT_SETTINGS.businessHours || '');
+  const [businessHoursEn, setBusinessHoursEn] = useState(settings.businessHoursEn || DEFAULT_SETTINGS.businessHoursEn || '');
+  const [aboutText, setAboutText] = useState(settings.aboutText || DEFAULT_SETTINGS.aboutText || '');
+  const [aboutTextEn, setAboutTextEn] = useState(settings.aboutTextEn || DEFAULT_SETTINGS.aboutTextEn || '');
+  const [heroTitle, setHeroTitle] = useState(settings.heroTitle || DEFAULT_SETTINGS.heroTitle || '');
+  const [heroSubtitle, setHeroSubtitle] = useState(settings.heroSubtitle || DEFAULT_SETTINGS.heroSubtitle || '');
+  const [heroTitleEn, setHeroTitleEn] = useState(settings.heroTitleEn || DEFAULT_SETTINGS.heroTitleEn || '');
+  const [heroSubtitleEn, setHeroSubtitleEn] = useState(settings.heroSubtitleEn || DEFAULT_SETTINGS.heroSubtitleEn || '');
+  const [logoPath, setLogoPath] = useState(settings.logoPath || DEFAULT_SETTINGS.logoPath || '');
+  const [facebookUrl, setFacebookUrl] = useState(settings.facebookUrl || DEFAULT_SETTINGS.facebookUrl || '');
+  const [youtubeUrl, setYoutubeUrl] = useState(settings.youtubeUrl || DEFAULT_SETTINGS.youtubeUrl || '');
 
   // Admin Account Settings States
   const [currentPasswordEmail, setCurrentPasswordEmail] = useState('');
@@ -111,6 +117,9 @@ export default function SettingsClient({ initialSettings, currentAdminEmail = ''
       heroSubtitle,
       heroTitleEn,
       heroSubtitleEn,
+      logoPath,
+      facebookUrl,
+      youtubeUrl,
     };
 
     try {
@@ -123,6 +132,7 @@ export default function SettingsClient({ initialSettings, currentAdminEmail = ''
       if (res.ok) {
         setShopSaveStatus('success');
         setSettings(payload);
+        router.refresh();
       } else {
         setShopSaveStatus('error');
       }
@@ -483,6 +493,52 @@ export default function SettingsClient({ initialSettings, currentAdminEmail = ''
                   rows={3}
                   placeholder="High-quality seeds for paddy, wheat..."
                   className="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm font-sans focus:outline-none focus:border-agri-green-800 resize-none"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Logo & Social Links Sub-section */}
+          <div className="space-y-4 pt-4 border-t border-gray-100">
+            <h3 className="font-display font-bold text-sm text-agri-green-800 flex items-center">
+              <Sparkles className="h-4.5 w-4.5 mr-1.5 shrink-0" />
+              <span>{isEn ? 'Brand Logo & Social Links' : 'ब्रांड लोगो और सोशल मीडिया लिंक'}</span>
+            </h3>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div>
+                <label className="block text-xs font-bold text-gray-700 mb-1.5">{isEn ? 'Logo Image Path' : 'लोगो छवि पथ'}</label>
+                <input
+                  type="text"
+                  required
+                  value={logoPath}
+                  onChange={(e) => setLogoPath(e.target.value)}
+                  placeholder="/brand-logo.png"
+                  className="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm font-sans focus:outline-none focus:border-agri-green-800"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-gray-700 mb-1.5">{isEn ? 'Facebook Page URL' : 'फेसबुक पेज यूआरएल'}</label>
+                <input
+                  type="url"
+                  required
+                  value={facebookUrl}
+                  onChange={(e) => setFacebookUrl(e.target.value)}
+                  placeholder="https://facebook.com"
+                  className="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm font-sans focus:outline-none focus:border-agri-green-800"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-gray-700 mb-1.5">{isEn ? 'YouTube Channel URL' : 'यूट्यूब चैनल यूआरएल'}</label>
+                <input
+                  type="url"
+                  required
+                  value={youtubeUrl}
+                  onChange={(e) => setYoutubeUrl(e.target.value)}
+                  placeholder="https://youtube.com"
+                  className="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm font-sans focus:outline-none focus:border-agri-green-800"
                 />
               </div>
             </div>

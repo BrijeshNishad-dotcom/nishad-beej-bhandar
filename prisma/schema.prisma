@@ -9,6 +9,7 @@ generator client {
 model Category {
   id          Int          @id @default(autoincrement())
   name        String
+  nameEn      String?
   slug        String       @unique
   icon        String?      // Icon name or emoji (e.g. "🌾", "🌽")
   seeds       Seed[]
@@ -21,7 +22,9 @@ model Category {
 model Seed {
   id                Int      @id @default(autoincrement())
   name              String
+  nameEn            String?
   variety           String
+  varietyEn         String?
   company           String
   cropType          String   // e.g. "Kharif", "Rabi", "Zaid"
   description       String
@@ -46,6 +49,7 @@ model Seed {
 model Fertilizer {
   id            Int      @id @default(autoincrement())
   name          String
+  nameEn        String?
   company       String
   weight        String   // e.g. "50 kg", "1 kg"
   price         Float
@@ -63,7 +67,9 @@ model Fertilizer {
 model Pesticide {
   id                   Int      @id @default(autoincrement())
   name                 String
+  nameEn               String?
   targetDisease        String   // Target pests/diseases (e.g. "Insects", "Fungus")
+  targetDiseaseEn      String?
   company              String
   price                Float
   discountPrice        Float?

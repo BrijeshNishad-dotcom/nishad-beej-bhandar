@@ -121,7 +121,9 @@ export async function POST(req: NextRequest) {
       newProduct = await prisma.seed.create({
         data: {
           name: data.name,
+          nameEn: data.nameEn || null,
           variety: data.variety || '',
+          varietyEn: data.varietyEn || null,
           company: data.company || '',
           cropType: data.cropType || 'Kharif',
           description: data.description || '',
@@ -144,6 +146,7 @@ export async function POST(req: NextRequest) {
       newProduct = await prisma.fertilizer.create({
         data: {
           name: data.name,
+          nameEn: data.nameEn || null,
           company: data.company || '',
           weight: data.weight || '',
           price: priceVal,
@@ -160,7 +163,9 @@ export async function POST(req: NextRequest) {
       newProduct = await prisma.pesticide.create({
         data: {
           name: data.name,
+          nameEn: data.nameEn || null,
           targetDisease: data.targetDisease || '',
+          targetDiseaseEn: data.targetDiseaseEn || null,
           company: data.company || '',
           price: priceVal,
           discountPrice: discPriceVal,
