@@ -1,27 +1,40 @@
 import { Metadata } from 'next';
 import { prisma } from '@/lib/db';
 import ProductsClient from '@/components/ProductsClient';
+import { cookies } from 'next/headers';
 
 export const revalidate = 0; // Force dynamic rendering for fresh settings/products
 
 export async function generateMetadata(): Promise<Metadata> {
+  const cookieStore = await cookies();
+  const language = cookieStore.get('language')?.value || 'hi';
+  const isEn = language === 'en';
+
   const settingsList = await prisma.setting.findMany();
   const settings: Record<string, string> = {};
   settingsList.forEach((s: { key: string; value: string }) => {
     settings[s.key] = s.value;
   });
 
-  const shopName = settings.shopName || "Nishad Beej Bhandar";
+  const shopName = isEn ? (settings.shopNameEn || "Nishad Beej Bhandar") : (settings.shopName || "निषाद बीज भंडार");
+
+  const title = isEn
+    ? `Agricultural Products Catalog - Seeds, Fertilizers & Pesticides | ${shopName}`
+    : `कृषि उत्पाद सूची - बीज, खाद और कीटनाशक दवाइयाँ | ${shopName}`;
+
+  const description = isEn
+    ? `Browse premium quality paddy, wheat, vegetable seeds, genuine fertilizers, and branded pesticides available at ${shopName} at reasonable prices.`
+    : `हमारे यहाँ उपलब्ध उच्च गुणवत्ता वाले धान, गेहूं, मक्का, सरसों व सब्जी के उन्नत हाइब्रिड बीज, रासायनिक और जैविक खाद, एवं ब्रांडेड कंपनियों की कीटनाशक दवाइयाँ देखें।`;
 
   return {
-    title: `कृषि उत्पाद सूची - बीज, खाद और कीटनाशक दवाइयाँ | ${shopName}`,
-    description: 'हमारे यहाँ उपलब्ध उच्च गुणवत्ता वाले धान, गेहूं, मक्का, सरसों व सब्जी के उन्नत हाइब्रिड बीज, रासायनिक और जैविक खाद, एवं ब्रांडेड कंपनियों की कीटनाशक दवाइयाँ देखें।',
+    title,
+    description,
     alternates: {
       canonical: '/products',
     },
     openGraph: {
-      title: `कृषि उत्पाद सूची - बीज, खाद और कीटनाशक दवाइयाँ | ${shopName}`,
-      description: 'उन्नत हाइब्रिड बीज, रासायनिक व जैविक खाद, और रोग सुरक्षा के लिए उत्तम कीटनाशक दवाइयाँ। उचित सरकारी रेट पर उपलब्ध हैं।',
+      title,
+      description,
       url: 'https://nishadbeejbhandar.com/products',
     }
   };

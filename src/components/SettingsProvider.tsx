@@ -1,17 +1,23 @@
 'use client';
 
 import React, { createContext, useContext } from 'react';
+import { useTranslation } from 'react-i18next';
 
 export const DEFAULT_SETTINGS: Record<string, string> = {
-  shopName: "Nishad Beej Bhandar",
-  ownerName: "Abhay Nishad",
+  shopName: "निषाद बीज भंडार",
+  shopNameEn: "Nishad Beej Bhandar",
+  ownerName: "अभय निषाद",
+  ownerNameEn: "Abhay Nishad",
   mobileNumber: "6387634500",
   whatsappNumber: "6387634500",
-  address: "Birlmalpur Road, Korona Chauraha, Sultanpur, Uttar Pradesh, India",
-  businessHours: "Monday - Sunday: 7:00 AM - 8:00 PM",
-  aboutText: "We provide premium quality seeds, highly effective fertilizers, and original pesticides to help Indian farmers maximize their yield. Led by Abhay Nishad, a B.Sc Agriculture graduate, we offer expert scientific guidance and genuine brand-name products.",
+  address: "बिरमलपुर रोड, कोरोना चौराहा, सुल्तानपुर, उत्तर प्रदेश, भारत",
+  addressEn: "Birlmalpur Road, Korona Chauraha, Sultanpur, Uttar Pradesh, India",
+  businessHours: "सोमवार - रविवार: सुबह 7:00 बजे - रात 8:00 बजे",
+  businessHoursEn: "Monday - Sunday: 7:00 AM - 8:00 PM",
+  aboutText: "हम भारतीय किसानों को उनकी उपज बढ़ाने में मदद करने के लिए उत्कृष्ट गुणवत्ता वाले बीज, अत्यधिक प्रभावी उर्वरक और असली कीटनाशक प्रदान करते हैं। कृषि स्नातक (B.Sc Agriculture) अभय निषाद के नेतृत्व में, हम वैज्ञानिक मार्गदर्शन और असली ब्रांडेड उत्पाद प्रदान करते हैं।",
+  aboutTextEn: "We provide premium quality seeds, highly effective fertilizers, and original pesticides to help Indian farmers maximize their yield. Led by Abhay Nishad, a B.Sc Agriculture graduate, we offer expert scientific guidance and genuine brand-name products.",
   heroTitle: "अच्छे बीज, अच्छी फसल की शुरुआत",
-  heroSubtitle: "धान, गेहूं, मक्का, सरसों, और सब्जियों के उन्नत बीज, सर्वोत्तम उर्वरक खाद एवं कीटनाशक दवाइयाँ उचित सरकारी रेट पर उपलब्ध हैं。",
+  heroSubtitle: "धान, गेहूं, मक्का, सरसों, और सब्जियों के उन्नत बीज, सर्वोत्तम उर्वरक खाद एवं कीटनाशक दवाइयाँ उचित सरकारी रेट पर उपलब्ध हैं।",
   heroTitleEn: "Good Seeds, Beginning of a Good Crop",
   heroSubtitleEn: "High-quality seeds for paddy, wheat, maize, mustard, and vegetables, along with premium fertilizers and top-grade pesticides are available at reasonable prices."
 };
@@ -36,44 +42,20 @@ export function useSettings() {
   return useContext(SettingsContext);
 }
 
-export function getLocalizedAddress(address: string, lang: string): string {
-  if (!address) return '';
-  let result = address;
-  if (lang === 'hi') {
-    result = result
-      .replace(/Birlmalpur Road/g, 'बिरमलपुर रोड')
-      .replace(/Birlmalpur/g, 'बिरमलपुर')
-      .replace(/Korona Chauraha/g, 'कोरोना चौराहा')
-      .replace(/Korona/g, 'कोरोना')
-      .replace(/Chauraha/g, 'चौराहा')
-      .replace(/Sultanpur/g, 'सुल्तानपुर')
-      .replace(/Uttar Pradesh/g, 'उत्तर प्रदेश')
-      .replace(/India/g, 'भारत')
-      .replace(/Main Market Road/g, 'मुख्य बाजार मार्ग')
-      .replace(/Main Market/g, 'मुख्य बाजार')
-      .replace(/Near Agriculture Office/g, 'कृषि कार्यालय के पास')
-      .replace(/-\s*/g, ', ')
-      .replace(/,\s*,/g, ',');
-  } else {
-    // English mode
-    result = result
-      .replace(/बिरमलपुर रोड/g, 'Birlmalpur Road')
-      .replace(/बिरमलपुर/g, 'Birlmalpur')
-      .replace(/कोरोना चौराहा/g, 'Korona Chauraha')
-      .replace(/कोरोना/g, 'Korona')
-      .replace(/चौराहा/g, 'Chauraha')
-      .replace(/सुल्तानपुर/g, 'Sultanpur')
-      .replace(/उत्तर प्रदेश/g, 'Uttar Pradesh')
-      .replace(/भारत/g, 'India')
-      .replace(/मुख्य बाजार मार्ग/g, 'Main Market Road')
-      .replace(/मुख्य बाजार/g, 'Main Market')
-      .replace(/कृषि कार्यालय के पास/g, 'Near Agriculture Office')
-      .replace(/-\s*/g, ', ')
-      .replace(/,\s*,/g, ',');
-  }
-  return result;
-}
+export function useLocalizedSettings() {
+  const settings = useContext(SettingsContext);
+  const { i18n } = useTranslation();
+  const isHi = i18n.language === 'hi';
 
-export function getLocalizedBusinessHours(hours: string, lang: string): string {
-  return hours || '';
+  return {
+    shopName: isHi ? (settings.shopName || DEFAULT_SETTINGS.shopName) : (settings.shopNameEn || DEFAULT_SETTINGS.shopNameEn),
+    ownerName: isHi ? (settings.ownerName || DEFAULT_SETTINGS.ownerName) : (settings.ownerNameEn || DEFAULT_SETTINGS.ownerNameEn),
+    address: isHi ? (settings.address || DEFAULT_SETTINGS.address) : (settings.addressEn || DEFAULT_SETTINGS.addressEn),
+    businessHours: isHi ? (settings.businessHours || DEFAULT_SETTINGS.businessHours) : (settings.businessHoursEn || DEFAULT_SETTINGS.businessHoursEn),
+    aboutText: isHi ? (settings.aboutText || DEFAULT_SETTINGS.aboutText) : (settings.aboutTextEn || DEFAULT_SETTINGS.aboutTextEn),
+    heroTitle: isHi ? (settings.heroTitle || DEFAULT_SETTINGS.heroTitle) : (settings.heroTitleEn || DEFAULT_SETTINGS.heroTitleEn),
+    heroSubtitle: isHi ? (settings.heroSubtitle || DEFAULT_SETTINGS.heroSubtitle) : (settings.heroSubtitleEn || DEFAULT_SETTINGS.heroSubtitleEn),
+    mobileNumber: settings.mobileNumber || DEFAULT_SETTINGS.mobileNumber,
+    whatsappNumber: settings.whatsappNumber || DEFAULT_SETTINGS.whatsappNumber,
+  };
 }

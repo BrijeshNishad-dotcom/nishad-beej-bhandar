@@ -84,13 +84,18 @@ async function main() {
   // 3. Create Website Settings
   console.log("Creating settings...");
   const settings = [
-    { key: "shopName", value: "Nishad Beej Bhandar (निषाद बीज भंडार)" },
-    { key: "ownerName", value: "Abhay Nishad (B.Sc Ag)" },
+    { key: "shopName", value: "निषाद बीज भंडार" },
+    { key: "shopNameEn", value: "Nishad Beej Bhandar" },
+    { key: "ownerName", value: "अभय निषाद" },
+    { key: "ownerNameEn", value: "Abhay Nishad (B.Sc Ag)" },
     { key: "mobileNumber", value: "6387634500" },
     { key: "whatsappNumber", value: "6387634500" },
-    { key: "address", value: "Main Market Road, Near Agriculture Office, Uttar Pradesh, India" },
-    { key: "businessHours", value: "Monday - Sunday: 7:00 AM - 8:00 PM" },
-    { key: "aboutText", value: "We provide premium quality seeds, highly effective fertilizers, and original pesticides to help Indian farmers maximize their yield. Led by Abhay Nishad, a B.Sc Agriculture graduate, we offer expert scientific guidance and genuine brand-name products." },
+    { key: "address", value: "मुख्य बाजार मार्ग, कृषि कार्यालय के पास, उत्तर प्रदेश, भारत" },
+    { key: "addressEn", value: "Main Market Road, Near Agriculture Office, Uttar Pradesh, India" },
+    { key: "businessHours", value: "सोमवार - रविवार: सुबह 7:00 बजे - रात 8:00 बजे" },
+    { key: "businessHoursEn", value: "Monday - Sunday: 7:00 AM - 8:00 PM" },
+    { key: "aboutText", value: "हम भारतीय किसानों को उनकी उपज बढ़ाने में मदद करने के लिए उत्कृष्ट गुणवत्ता वाले बीज, अत्यधिक प्रभावी उर्वरक और असली कीटनाशक प्रदान करते हैं। कृषि स्नातक (B.Sc Agriculture) अभय निषाद के नेतृत्व में, हम वैज्ञानिक मार्गदर्शन और असली ब्रांडेड उत्पाद प्रदान करते हैं।" },
+    { key: "aboutTextEn", value: "We provide premium quality seeds, highly effective fertilizers, and original pesticides to help Indian farmers maximize their yield. Led by Abhay Nishad, a B.Sc Agriculture graduate, we offer expert scientific guidance and genuine brand-name products." },
     { key: "heroTitle", value: "अच्छे बीज, अच्छी फसल की शुरुआत" },
     { key: "heroSubtitle", value: "धान, गेहूं, मक्का, सरसों, सब्जियों के बीज, उर्वरक खाद एवं कीटनाशक दवाइयाँ उचित मूल्य पर उपलब्ध हैं।" },
     { key: "heroTitleEn", value: "Good Seeds, Beginning of a Good Crop" },

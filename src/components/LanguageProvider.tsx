@@ -26,9 +26,11 @@ export default function LanguageProvider({ children }: { children: React.ReactNo
     if (savedLang && (savedLang === 'hi' || savedLang === 'en')) {
       setLanguageState(savedLang);
       i18n.changeLanguage(savedLang);
+      document.cookie = `language=${savedLang}; path=/; max-age=31536000; SameSite=Lax`;
     } else {
       localStorage.setItem('language', 'hi');
       i18n.changeLanguage('hi');
+      document.cookie = `language=hi; path=/; max-age=31536000; SameSite=Lax`;
     }
     setIsMounted(true);
   }, [i18n]);
@@ -36,6 +38,7 @@ export default function LanguageProvider({ children }: { children: React.ReactNo
   const setLanguage = (lang: Language) => {
     setLanguageState(lang);
     localStorage.setItem('language', lang);
+    document.cookie = `language=${lang}; path=/; max-age=31536000; SameSite=Lax`;
     i18n.changeLanguage(lang);
   };
 

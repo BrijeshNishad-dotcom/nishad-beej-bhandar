@@ -10,7 +10,7 @@ import {
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { useLanguage } from '@/components/LanguageProvider';
-import { useSettings } from '@/components/SettingsProvider';
+import { useLocalizedSettings } from '@/components/SettingsProvider';
 
 // Premium WhatsApp SVG Icon
 const WhatsAppIcon = (props: React.SVGProps<SVGSVGElement>) => (
@@ -20,7 +20,7 @@ const WhatsAppIcon = (props: React.SVGProps<SVGSVGElement>) => (
 );
 
 export default function Navbar() {
-  const settings = useSettings();
+  const settings = useLocalizedSettings();
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [isProductsOpen, setIsProductsOpen] = useState(false);
@@ -32,7 +32,7 @@ export default function Navbar() {
   const pathname = usePathname();
   const router = useRouter();
 
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { language, setLanguage } = useLanguage();
 
 
@@ -110,13 +110,8 @@ export default function Navbar() {
               </div>
               <div className="hidden sm:block">
                 <span className="font-display text-base lg:text-lg font-extrabold text-agri-green-900 leading-none block">
-                  Nishad Beej Bhandar
+                  {settings.shopName}
                 </span>
-                {t('logo.subtitle') !== 'Nishad Beej Bhandar' && (
-                  <span className="font-sans text-[10px] lg:text-xs text-agri-yellow-700 font-bold block mt-1">
-                    {t('logo.subtitle')}
-                  </span>
-                )}
               </div>
             </Link>
 
@@ -232,13 +227,17 @@ export default function Navbar() {
               
               {/* WhatsApp Button */}
               <a
-                href={`https://wa.me/91${settings.whatsappNumber}?text=Hello%20${encodeURIComponent(settings.shopName)},%20I%20have%20an%20enquiry...`}
+                href={`https://wa.me/91${settings.whatsappNumber}?text=${encodeURIComponent(
+                  i18n.language === 'hi' 
+                    ? `नमस्ते ${settings.shopName}, मुझे पूछताछ करनी है...`
+                    : `Hello ${settings.shopName}, I have an enquiry...`
+                )}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="bg-[#25D366] hover:bg-[#20ba5a] text-white p-2 rounded-full shadow-sm hover:shadow transition-all hover:scale-105 active:scale-95 duration-200"
                 title="Chat on WhatsApp"
               >
-                <WhatsAppIcon className="h-4 w-4 lg:h-4.5 lg:w-4.5" />
+                <WhatsAppIcon className="h-4.5 w-4.5" />
               </a>
 
               {/* Call Store Button */}
@@ -326,13 +325,8 @@ export default function Navbar() {
                     </div>
                     <div>
                       <span className="font-display text-sm font-extrabold text-agri-green-900 leading-none block">
-                        Nishad Beej Bhandar
+                        {settings.shopName}
                       </span>
-                      {t('logo.subtitle') !== 'Nishad Beej Bhandar' && (
-                        <span className="font-sans text-[9px] text-agri-yellow-700 font-bold block mt-1">
-                          {t('logo.subtitle')}
-                        </span>
-                      )}
                     </div>
                   </Link>
 
@@ -432,7 +426,7 @@ export default function Navbar() {
                   {/* Mobile Drawer Language Switcher */}
                   <div className="pt-2.5 border-t border-gray-100 flex items-center justify-between px-3.5 py-2.5">
                     <span className="text-xs font-bold text-gray-500 flex items-center space-x-1.5">
-                      <span>🌐 Language / भाषा:</span>
+                      <span>{i18n.language === 'hi' ? '🌐 भाषा:' : '🌐 Language:'}</span>
                     </span>
                     <div className="flex items-center space-x-1.5 bg-gray-50 border border-gray-200 rounded-full px-3 py-1.5 text-xs font-bold">
                       <button

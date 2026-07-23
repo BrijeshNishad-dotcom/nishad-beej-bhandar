@@ -7,7 +7,8 @@ import { useRouter } from 'next/navigation';
 import { MessageSquare, Eye, Search, Leaf, AlertCircle } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import Breadcrumbs from '@/components/Breadcrumbs';
-import { useSettings } from '@/components/SettingsProvider';
+import { useLocalizedSettings } from '@/components/SettingsProvider';
+import { formatTerm } from '@/lib/translation';
 
 interface Category {
   id: number;
@@ -45,8 +46,8 @@ export default function ProductsClient({
   selectedCategory,
   searchQuery,
 }: ProductsClientProps) {
-  const settings = useSettings();
-  const { t } = useTranslation();
+  const settings = useLocalizedSettings();
+  const { t, i18n } = useTranslation();
   const router = useRouter();
   const [searchVal, setSearchVal] = useState(searchQuery || '');
 
@@ -195,11 +196,11 @@ export default function ProductsClient({
 
                 let subText = prod.company;
                 if (prod.type === 'seed') {
-                  subText = prod.variety ? `${t('productsPage.variety')}${prod.variety}` : prod.company;
+                  subText = prod.variety ? `${t('productsPage.variety')}${formatTerm(prod.variety, i18n.language)}` : prod.company;
                 } else if (prod.type === 'fertilizer') {
-                  subText = prod.weight ? `${t('productsPage.packaging')}${prod.weight}` : prod.company;
+                  subText = prod.weight ? `${t('productsPage.packaging')}${formatTerm(prod.weight, i18n.language)}` : prod.company;
                 } else if (prod.type === 'pesticide') {
-                  subText = prod.targetDisease ? `${t('productsPage.diseaseControl')}${prod.targetDisease}` : prod.company;
+                  subText = prod.targetDisease ? `${t('productsPage.diseaseControl')}${formatTerm(prod.targetDisease, i18n.language)}` : prod.company;
                 }
 
                 const whatsappMsg = encodeURIComponent(

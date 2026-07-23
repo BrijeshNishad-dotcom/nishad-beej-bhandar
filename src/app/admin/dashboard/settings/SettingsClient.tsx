@@ -6,6 +6,7 @@ import {
   Save, RefreshCw, Check, Sparkles, AlertCircle, 
   Image as ImageIcon, Lock, Mail, Eye, EyeOff, ShieldCheck, Key 
 } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 type SettingsClientProps = {
   initialSettings: Record<string, string>;
@@ -13,18 +14,25 @@ type SettingsClientProps = {
 };
 
 export default function SettingsClient({ initialSettings, currentAdminEmail = '' }: SettingsClientProps) {
+  const { i18n } = useTranslation();
+  const isEn = i18n.language === 'en';
   const [settings, setSettings] = useState<Record<string, string>>(initialSettings);
   
   // Shop Settings States
   const [isSavingShop, setIsSavingShop] = useState(false);
   const [shopSaveStatus, setShopSaveStatus] = useState<'idle' | 'success' | 'error'>('idle');
   const [shopName, setShopName] = useState(settings.shopName || '');
+  const [shopNameEn, setShopNameEn] = useState(settings.shopNameEn || '');
   const [ownerName, setOwnerName] = useState(settings.ownerName || '');
+  const [ownerNameEn, setOwnerNameEn] = useState(settings.ownerNameEn || '');
   const [mobileNumber, setMobileNumber] = useState(settings.mobileNumber || '');
   const [whatsappNumber, setWhatsappNumber] = useState(settings.whatsappNumber || '');
   const [address, setAddress] = useState(settings.address || '');
+  const [addressEn, setAddressEn] = useState(settings.addressEn || '');
   const [businessHours, setBusinessHours] = useState(settings.businessHours || '');
+  const [businessHoursEn, setBusinessHoursEn] = useState(settings.businessHoursEn || '');
   const [aboutText, setAboutText] = useState(settings.aboutText || '');
+  const [aboutTextEn, setAboutTextEn] = useState(settings.aboutTextEn || '');
   const [heroTitle, setHeroTitle] = useState(settings.heroTitle || '');
   const [heroSubtitle, setHeroSubtitle] = useState(settings.heroSubtitle || '');
   const [heroTitleEn, setHeroTitleEn] = useState(settings.heroTitleEn || '');
@@ -45,6 +53,24 @@ export default function SettingsClient({ initialSettings, currentAdminEmail = ''
   const [showPasswordConfirm, setShowPasswordConfirm] = useState(false);
   const [passwordStatus, setPasswordStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [passwordError, setPasswordError] = useState('');
+
+  // Helper to translate server-side Hindi errors in English mode
+  const translateServerError = (err: string | null | undefined, isEnglish: boolean) => {
+    if (!err || !isEnglish) return err || '';
+    const map: Record<string, string> = {
+      'अनधिकृत प्रवेश (Unauthorized)': 'Unauthorized access.',
+      'वर्तमान पासवर्ड आवश्यक है।': 'Current password is required.',
+      'उपयोगकर्ता नहीं मिला।': 'User not found.',
+      'गलत वर्तमान पासवर्ड।': 'Incorrect current password.',
+      'कृपया एक मान्य ईमेल पता दर्ज करें।': 'Please enter a valid email address.',
+      'नया ईमेल वर्तमान ईमेल के समान नहीं हो सकता।': 'New email cannot be the same as the current email.',
+      'यह ईमेल पहले से ही किसी अन्य खाते द्वारा उपयोग में है।': 'This email is already in use by another account.',
+      'पासवर्ड और पुष्टि पासवर्ड मेल नहीं खाते।': 'New password and confirmation do not match.',
+      'नया पासवर्ड कम से कम 8 वर्णों का होना चाहिए और उसमें कम से कम एक अपरकेस अक्षर, एक लोअरकेस अक्षर, एक अंक और एक विशेष वर्ण होना चाहिए।':
+        'New password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one number, and one special character.'
+    };
+    return map[err] || err;
+  };
 
   // Validate Email
   const validateEmailFormat = (email: string) => {
@@ -70,12 +96,17 @@ export default function SettingsClient({ initialSettings, currentAdminEmail = ''
 
     const payload = {
       shopName,
+      shopNameEn,
       ownerName,
+      ownerNameEn,
       mobileNumber,
       whatsappNumber,
       address,
+      addressEn,
       businessHours,
+      businessHoursEn,
       aboutText,
+      aboutTextEn,
       heroTitle,
       heroSubtitle,
       heroTitleEn,
@@ -110,19 +141,19 @@ export default function SettingsClient({ initialSettings, currentAdminEmail = ''
     setEmailStatus('loading');
 
     if (!currentPasswordEmail) {
-      setEmailError('वर्तमान पासवर्ड दर्ज करना आवश्यक है।');
+      setEmailError(isEn ? 'Current password is required.' : 'वर्तमान पासवर्ड दर्ज करना आवश्यक है।');
       setEmailStatus('error');
       return;
     }
 
     if (!newEmail || !validateEmailFormat(newEmail)) {
-      setEmailError('कृपया एक वैध ईमेल पता दर्ज करें।');
+      setEmailError(isEn ? 'Please enter a valid email address.' : 'कृपया एक वैध ईमेल पता दर्ज करें।');
       setEmailStatus('error');
       return;
     }
 
     if (newEmail.trim().toLowerCase() === currentAdminEmail.toLowerCase()) {
-      setEmailError('नया ईमेल वर्तमान ईमेल के समान नहीं हो सकता।');
+      setEmailError(isEn ? 'New email cannot be the same as current email.' : 'नया ईमेल वर्तमान ईमेल के समान नहीं हो सकता।');
       setEmailStatus('error');
       return;
     }
@@ -140,7 +171,7 @@ export default function SettingsClient({ initialSettings, currentAdminEmail = ''
 
       const data = await res.json();
       if (!res.ok) {
-        setEmailError(data.error || 'ईमेल अपडेट करने में तकनीकी समस्या आई।');
+        setEmailError(translateServerError(data.error, isEn) || (isEn ? 'Failed to update email.' : 'ईमेल अपडेट करने में तकनीकी समस्या आई।'));
         setEmailStatus('error');
         return;
       }
@@ -155,7 +186,7 @@ export default function SettingsClient({ initialSettings, currentAdminEmail = ''
 
     } catch (err) {
       console.error(err);
-      setEmailError('नेटवर्क त्रुटि। कृपया बाद में प्रयास करें।');
+      setEmailError(isEn ? 'Network error. Please try again later.' : 'नेटवर्क त्रुटि। कृपया बाद में प्रयास करें।');
       setEmailStatus('error');
     }
   };
@@ -167,19 +198,19 @@ export default function SettingsClient({ initialSettings, currentAdminEmail = ''
     setPasswordStatus('loading');
 
     if (!currentPasswordPass) {
-      setPasswordError('वर्तमान पासवर्ड दर्ज करना आवश्यक है।');
+      setPasswordError(isEn ? 'Current password is required.' : 'वर्तमान पासवर्ड दर्ज करना आवश्यक है।');
       setPasswordStatus('error');
       return;
     }
 
     if (!newPassword || !validatePasswordStrength(newPassword)) {
-      setPasswordError('नया पासवर्ड कम से कम 8 वर्णों का होना चाहिए और उसमें कम से कम एक अपरकेस अक्षर, एक लोअरकेस अक्षर, एक अंक और एक विशेष वर्ण होना चाहिए।');
+      setPasswordError(isEn ? 'Password must be at least 8 characters and contain uppercase, lowercase, numeric, and special characters.' : 'नया पासवर्ड कम से कम 8 वर्णों का होना चाहिए और उसमें कम से कम एक अपरकेस अक्षर, एक लोअरकेस अक्षर, एक अंक और एक विशेष वर्ण होना चाहिए।');
       setPasswordStatus('error');
       return;
     }
 
     if (newPassword !== confirmPassword) {
-      setPasswordError('नया पासवर्ड और पुष्टि पासवर्ड मेल नहीं खाते।');
+      setPasswordError(isEn ? 'New password and confirmation do not match.' : 'नया पासवर्ड और पुष्टि पासवर्ड मेल नहीं खाते।');
       setPasswordStatus('error');
       return;
     }
@@ -198,7 +229,7 @@ export default function SettingsClient({ initialSettings, currentAdminEmail = ''
 
       const data = await res.json();
       if (!res.ok) {
-        setPasswordError(data.error || 'पासवर्ड अपडेट करने में तकनीकी समस्या आई।');
+        setPasswordError(translateServerError(data.error, isEn) || (isEn ? 'Failed to update password.' : 'पासवर्ड अपडेट करने में तकनीकी समस्या आई।'));
         setPasswordStatus('error');
         return;
       }
@@ -213,7 +244,7 @@ export default function SettingsClient({ initialSettings, currentAdminEmail = ''
 
     } catch (err) {
       console.error(err);
-      setPasswordError('नेटवर्क त्रुटि। कृपया बाद में प्रयास करें।');
+      setPasswordError(isEn ? 'Network error. Please try again later.' : 'नेटवर्क त्रुटि। कृपया बाद में प्रयास करें।');
       setPasswordStatus('error');
     }
   };
@@ -224,10 +255,10 @@ export default function SettingsClient({ initialSettings, currentAdminEmail = ''
       {/* Header */}
       <div>
         <h1 className="font-display text-2xl sm:text-3xl font-extrabold text-agri-dark">
-          वेबसाइट सेटिंग्स (Shop & Security Settings)
+          {isEn ? 'Shop & Security Settings' : 'वेबसाइट सेटिंग्स'}
         </h1>
         <p className="font-sans text-sm text-gray-500 mt-1">
-          दुकान की जानकारी एवं एडमिन क्रेडेंशियल प्रबंधित करें
+          {isEn ? 'Manage shop details and administrator credentials' : 'दुकान की जानकारी एवं एडमिन क्रेडेंशियल प्रबंधित करें'}
         </p>
       </div>
 
@@ -236,38 +267,65 @@ export default function SettingsClient({ initialSettings, currentAdminEmail = ''
         <div className="border-b border-gray-100 pb-4">
           <h2 className="font-display font-extrabold text-lg text-agri-dark flex items-center">
             <Sparkles className="h-5 w-5 text-agri-yellow-500 mr-2" />
-            <span>दुकान सेटिंग्स (Shop Settings)</span>
+            <span>{isEn ? 'Shop Settings' : 'दुकान सेटिंग्स'}</span>
           </h2>
-          <p className="text-xs text-gray-400 mt-0.5">दुकान का नाम, संपर्क विवरण और होमपेज बैनर बदलें</p>
+          <p className="text-xs text-gray-400 mt-0.5">
+            {isEn ? 'Modify shop name, contact details, and homepage banner text' : 'दुकान का नाम, संपर्क विवरण और होमपेज बैनर बदलें'}
+          </p>
         </div>
 
         <form onSubmit={handleShopSubmit} className="space-y-6">
           {/* Shop Details Sub-section */}
           <div className="space-y-4">
             <h3 className="font-display font-bold text-sm text-agri-green-800">
-              दुकान एवं सम्पर्क विवरण (Shop Details)
+              {isEn ? 'Shop & Contact Details' : 'दुकान एवं सम्पर्क विवरण'}
             </h3>
             
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-bold text-gray-700 mb-1.5">दुकान का नाम (Shop Name) *</label>
+                <label className="block text-xs font-bold text-gray-700 mb-1.5">{isEn ? 'Shop Name (Hindi) *' : 'दुकान का नाम - हिंदी *'}</label>
                 <input
                   type="text"
                   required
                   value={shopName}
                   onChange={(e) => setShopName(e.target.value)}
-                  placeholder="जैसे: Nishad Beej Bhandar"
+                  placeholder={isEn ? "e.g., निषाद बीज भंडार" : "जैसे: निषाद बीज भंडार"}
                   className="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm font-sans focus:outline-none focus:border-agri-green-800"
                 />
               </div>
               <div>
-                <label className="block text-xs font-bold text-gray-700 mb-1.5">संचालक का नाम (Owner Name) *</label>
+                <label className="block text-xs font-bold text-gray-700 mb-1.5">{isEn ? 'Shop Name (English) *' : 'दुकान का नाम - English *'}</label>
+                <input
+                  type="text"
+                  required
+                  value={shopNameEn}
+                  onChange={(e) => setShopNameEn(e.target.value)}
+                  placeholder="e.g., Nishad Beej Bhandar"
+                  className="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm font-sans focus:outline-none focus:border-agri-green-800"
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-xs font-bold text-gray-700 mb-1.5">{isEn ? 'Owner Name (Hindi) *' : 'संचालक का नाम - हिंदी *'}</label>
                 <input
                   type="text"
                   required
                   value={ownerName}
                   onChange={(e) => setOwnerName(e.target.value)}
-                  placeholder="जैसे: Abhay Nishad (B.Sc Ag)"
+                  placeholder={isEn ? "e.g., अभय निषाद" : "जैसे: अभय निषाद"}
+                  className="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm font-sans focus:outline-none focus:border-agri-green-800"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-bold text-gray-700 mb-1.5">{isEn ? 'Owner Name (English) *' : 'संचालक का नाम - English *'}</label>
+                <input
+                  type="text"
+                  required
+                  value={ownerNameEn}
+                  onChange={(e) => setOwnerNameEn(e.target.value)}
+                  placeholder="e.g., Abhay Nishad (B.Sc Ag)"
                   className="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm font-sans focus:outline-none focus:border-agri-green-800"
                 />
               </div>
@@ -275,24 +333,24 @@ export default function SettingsClient({ initialSettings, currentAdminEmail = ''
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-bold text-gray-700 mb-1.5">मोबाइल नंबर (Call Mobile) *</label>
+                <label className="block text-xs font-bold text-gray-700 mb-1.5">{isEn ? 'Call Mobile *' : 'मोबाइल नंबर *'}</label>
                 <input
                   type="text"
                   required
                   value={mobileNumber}
                   onChange={(e) => setMobileNumber(e.target.value)}
-                  placeholder="जैसे: 6387634500"
+                  placeholder="e.g., 6387634500"
                   className="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm font-sans focus:outline-none focus:border-agri-green-800"
                 />
               </div>
               <div>
-                <label className="block text-xs font-bold text-gray-700 mb-1.5">व्हाट्सएप नंबर (WhatsApp Mobile) *</label>
+                <label className="block text-xs font-bold text-gray-700 mb-1.5">{isEn ? 'WhatsApp Number *' : 'व्हाट्सएप नंबर *'}</label>
                 <input
                   type="text"
                   required
                   value={whatsappNumber}
                   onChange={(e) => setWhatsappNumber(e.target.value)}
-                  placeholder="जैसे: 6387634500"
+                  placeholder="e.g., 6387634500"
                   className="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm font-sans focus:outline-none focus:border-agri-green-800"
                 />
               </div>
@@ -300,37 +358,73 @@ export default function SettingsClient({ initialSettings, currentAdminEmail = ''
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-bold text-gray-700 mb-1.5">दुकान का पता (Shop Address) *</label>
+                <label className="block text-xs font-bold text-gray-700 mb-1.5">{isEn ? 'Shop Address (Hindi) *' : 'दुकान का पता - हिंदी *'}</label>
                 <input
                   type="text"
                   required
                   value={address}
                   onChange={(e) => setAddress(e.target.value)}
-                  placeholder="दुकान का पूरा पता दर्ज करें..."
+                  placeholder={isEn ? "Enter address in Hindi..." : "दुकान का पूरा पता हिंदी में दर्ज करें..."}
                   className="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm font-sans focus:outline-none focus:border-agri-green-800"
                 />
               </div>
               <div>
-                <label className="block text-xs font-bold text-gray-700 mb-1.5">कार्यकाल समय (Business Hours)</label>
+                <label className="block text-xs font-bold text-gray-700 mb-1.5">{isEn ? 'Shop Address (English) *' : 'दुकान का पता - English *'}</label>
                 <input
                   type="text"
-                  value={businessHours}
-                  onChange={(e) => setBusinessHours(e.target.value)}
-                  placeholder="जैसे: Monday - Sunday: 8:00 AM - 8:00 PM"
+                  required
+                  value={addressEn}
+                  onChange={(e) => setAddressEn(e.target.value)}
+                  placeholder="Enter full address in English..."
                   className="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm font-sans focus:outline-none focus:border-agri-green-800"
                 />
               </div>
             </div>
 
-            <div>
-              <label className="block text-xs font-bold text-gray-700 mb-1.5">परिचय विवरण (About Text Bio)</label>
-              <textarea
-                value={aboutText}
-                onChange={(e) => setAboutText(e.target.value)}
-                rows={4}
-                placeholder="दुकान के बारे में और आप किसानों को कैसे लाभ पहुंचाते हैं..."
-                className="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm font-sans focus:outline-none focus:border-agri-green-800 resize-none"
-              />
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-xs font-bold text-gray-700 mb-1.5">{isEn ? 'Business Hours (Hindi)' : 'कार्यकाल समय - हिंदी'}</label>
+                <input
+                  type="text"
+                  value={businessHours}
+                  onChange={(e) => setBusinessHours(e.target.value)}
+                  placeholder={isEn ? "e.g., सोमवार - रविवार: सुबह 7:00 बजे - रात 8:00 बजे" : "जैसे: सोमवार - रविवार: सुबह 7:00 बजे - रात 8:00 बजे"}
+                  className="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm font-sans focus:outline-none focus:border-agri-green-800"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-bold text-gray-700 mb-1.5">{isEn ? 'Business Hours (English)' : 'कार्यकाल समय - English'}</label>
+                <input
+                  type="text"
+                  value={businessHoursEn}
+                  onChange={(e) => setBusinessHoursEn(e.target.value)}
+                  placeholder="e.g., Monday - Sunday: 7:00 AM - 8:00 PM"
+                  className="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm font-sans focus:outline-none focus:border-agri-green-800"
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-xs font-bold text-gray-700 mb-1.5">{isEn ? 'About Bio (Hindi)' : 'परिचय विवरण - हिंदी'}</label>
+                <textarea
+                  value={aboutText}
+                  onChange={(e) => setAboutText(e.target.value)}
+                  rows={4}
+                  placeholder={isEn ? "Describe your shop in Hindi..." : "दुकान के बारे में और आप किसानों को कैसे लाभ पहुंचाते हैं..."}
+                  className="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm font-sans focus:outline-none focus:border-agri-green-800 resize-none"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-bold text-gray-700 mb-1.5">{isEn ? 'About Bio (English)' : 'परिचय विवरण - English'}</label>
+                <textarea
+                  value={aboutTextEn}
+                  onChange={(e) => setAboutTextEn(e.target.value)}
+                  rows={4}
+                  placeholder="Enter shop description in English..."
+                  className="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm font-sans focus:outline-none focus:border-agri-green-800 resize-none"
+                />
+              </div>
             </div>
           </div>
 
@@ -338,24 +432,24 @@ export default function SettingsClient({ initialSettings, currentAdminEmail = ''
           <div className="space-y-4 pt-4 border-t border-gray-100">
             <h3 className="font-display font-bold text-sm text-agri-green-800 flex items-center">
               <ImageIcon className="h-4.5 w-4.5 mr-1.5 shrink-0" />
-              <span>होमपेज बैनर टेक्स्ट (Homepage Hero Banner)</span>
+              <span>{isEn ? 'Homepage Hero Banner' : 'होमपेज बैनर टेक्स्ट'}</span>
             </h3>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-bold text-gray-700 mb-1.5">मुख्य हेडिंग - हिंदी (Hero Title - Hindi) *</label>
+                <label className="block text-xs font-bold text-gray-700 mb-1.5">{isEn ? 'Hero Title (Hindi) *' : 'मुख्य हेडिंग - हिंदी *'}</label>
                 <input
                   type="text"
                   required
                   value={heroTitle}
                   onChange={(e) => setHeroTitle(e.target.value)}
-                  placeholder="जैसे: अच्छे बीज, अच्छी फसल की शुरुआत"
+                  placeholder={isEn ? "e.g., अच्छे बीज, अच्छी फसल की शुरुआत" : "जैसे: अच्छे बीज, अच्छी फसल की शुरुआत"}
                   className="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm font-sans focus:outline-none focus:border-agri-green-800"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-gray-700 mb-1.5">मुख्य हेडिंग - English (Hero Title - English) *</label>
+                <label className="block text-xs font-bold text-gray-700 mb-1.5">{isEn ? 'Hero Title (English) *' : 'मुख्य हेडिंग - English *'}</label>
                 <input
                   type="text"
                   required
@@ -369,19 +463,19 @@ export default function SettingsClient({ initialSettings, currentAdminEmail = ''
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-bold text-gray-700 mb-1.5">उप-हेडिंग - हिंदी (Hero Subtitle - Hindi) *</label>
+                <label className="block text-xs font-bold text-gray-700 mb-1.5">{isEn ? 'Hero Subtitle (Hindi) *' : 'उप-हेडिंग - हिंदी *'}</label>
                 <textarea
                   required
                   value={heroSubtitle}
                   onChange={(e) => setHeroSubtitle(e.target.value)}
                   rows={3}
-                  placeholder="धान, गेहूं, मक्का, सरसों, सब्जियों के बीज..."
+                  placeholder={isEn ? "Paddy, wheat, maize, mustard, vegetable seeds..." : "धान, गेहूं, मक्का, सरसों, सब्जियों के बीज..."}
                   className="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm font-sans focus:outline-none focus:border-agri-green-800 resize-none"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-gray-700 mb-1.5">उप-हेडिंग - English (Hero Subtitle - English) *</label>
+                <label className="block text-xs font-bold text-gray-700 mb-1.5">{isEn ? 'Hero Subtitle (English) *' : 'उप-हेडिंग - English *'}</label>
                 <textarea
                   required
                   value={heroSubtitleEn}
@@ -398,14 +492,14 @@ export default function SettingsClient({ initialSettings, currentAdminEmail = ''
           {shopSaveStatus === 'success' && (
             <div className="bg-green-50 text-green-800 border border-green-200 p-4 rounded-xl text-sm font-semibold flex items-center space-x-2">
               <Check className="h-5 w-5 shrink-0" />
-              <span>✓ दुकान की सभी सेटिंग्स सफलतापूर्वक सहेज ली गई हैं!</span>
+              <span>{isEn ? '✓ Shop settings saved successfully!' : '✓ दुकान की सभी सेटिंग्स सफलतापूर्वक सहेज ली गई हैं!'}</span>
             </div>
           )}
 
           {shopSaveStatus === 'error' && (
             <div className="bg-red-50 text-red-800 border border-red-200 p-4 rounded-xl text-sm font-semibold flex items-center space-x-2">
               <AlertCircle className="h-5 w-5 shrink-0" />
-              <span>⚠ सेटिंग्स अपडेट करने में तकनीकी समस्या आई।</span>
+              <span>{isEn ? '⚠ Error updating settings. Please try again.' : '⚠ सेटिंग्स अपडेट करने में तकनीकी समस्या आई।'}</span>
             </div>
           )}
 
@@ -421,7 +515,7 @@ export default function SettingsClient({ initialSettings, currentAdminEmail = ''
               ) : (
                 <Save className="h-4.5 w-4.5" />
               )}
-              <span>दुकान सेटिंग्स सहेजें (Save Shop Settings)</span>
+              <span>{isEn ? 'Save Shop Settings' : 'दुकान सेटिंग्स सहेजें'}</span>
             </button>
           </div>
         </form>
@@ -432,9 +526,11 @@ export default function SettingsClient({ initialSettings, currentAdminEmail = ''
         <div className="border-b border-gray-100 pb-4">
           <h2 className="font-display font-extrabold text-lg text-agri-dark flex items-center">
             <Lock className="h-5 w-5 text-red-500 mr-2" />
-            <span>🔐 एडमिन अकाउंट सेटिंग्स (Admin Account Settings)</span>
+            <span>{isEn ? '🔐 Admin Account Settings' : '🔐 एडमिन अकाउंट सेटिंग्स'}</span>
           </h2>
-          <p className="text-xs text-gray-400 mt-0.5">एडमिनिस्ट्रेटर लॉगिन क्रेडेंशियल बदलें (Supabase Auth)</p>
+          <p className="text-xs text-gray-400 mt-0.5">
+            {isEn ? 'Change administrator login credentials (Supabase Auth)' : 'एडमिनिस्ट्रेटर लॉगिन क्रेडेंशियल बदलें (Supabase Auth)'}
+          </p>
         </div>
 
         {/* Current Admin Email Info */}
@@ -444,8 +540,8 @@ export default function SettingsClient({ initialSettings, currentAdminEmail = ''
               <Mail className="h-5 w-5" />
             </div>
             <div>
-              <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Current Admin Email</p>
-              <p className="text-sm font-sans font-bold text-blue-900">{currentAdminEmail || 'लोड हो रहा है...'}</p>
+              <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider">{isEn ? 'Current Admin Email' : 'वर्तमान एडमिन ईमेल'}</p>
+              <p className="text-sm font-sans font-bold text-blue-900">{currentAdminEmail || (isEn ? 'Loading...' : 'लोड हो रहा है...')}</p>
             </div>
           </div>
           <div className="hidden sm:flex items-center space-x-1.5 text-xs text-blue-700 font-bold bg-blue-100/50 px-3 py-1.5 rounded-lg border border-blue-100">
@@ -461,13 +557,13 @@ export default function SettingsClient({ initialSettings, currentAdminEmail = ''
           <div className="space-y-4 border border-gray-100 p-5 rounded-2xl bg-gray-50/50">
             <h3 className="font-display font-extrabold text-sm text-agri-dark border-b border-gray-100 pb-2 flex items-center">
               <Mail className="h-4.5 w-4.5 text-agri-green-800 mr-1.5" />
-              <span>ईमेल बदलें (Change Email)</span>
+              <span>{isEn ? 'Change Email' : 'ईमेल बदलें'}</span>
             </h3>
 
             <form onSubmit={handleUpdateEmail} className="space-y-4">
               {/* Current Password Field */}
               <div>
-                <label className="block text-xs font-bold text-gray-700 mb-1.5">वर्तमान पासवर्ड (Current Password) *</label>
+                <label className="block text-xs font-bold text-gray-700 mb-1.5">{isEn ? 'Current Password *' : 'वर्तमान पासवर्ड *'}</label>
                 <div className="relative">
                   <input
                     type={showPasswordEmailCurrent ? 'text' : 'password'}
@@ -489,7 +585,7 @@ export default function SettingsClient({ initialSettings, currentAdminEmail = ''
 
               {/* New Email Field */}
               <div>
-                <label className="block text-xs font-bold text-gray-700 mb-1.5">नया ईमेल (New Email Address) *</label>
+                <label className="block text-xs font-bold text-gray-700 mb-1.5">{isEn ? 'New Email Address *' : 'नया ईमेल *'}</label>
                 <input
                   type="email"
                   required
@@ -511,7 +607,7 @@ export default function SettingsClient({ initialSettings, currentAdminEmail = ''
               {emailStatus === 'success' && (
                 <div className="bg-green-50 text-green-800 border border-green-200 p-3 rounded-xl text-xs font-semibold flex items-center space-x-2">
                   <Check className="h-4.5 w-4.5 shrink-0" />
-                  <span>ईमेल बदला गया! लॉगआउट किया जा रहा है...</span>
+                  <span>{isEn ? 'Email updated! Logging out...' : 'ईमेल बदला गया! लॉगआउट किया जा रहा है...'}</span>
                 </div>
               )}
 
@@ -525,7 +621,7 @@ export default function SettingsClient({ initialSettings, currentAdminEmail = ''
                 ) : (
                   <Mail className="h-4 w-4" />
                 )}
-                <span>ईमेल अपडेट करें (Update Email)</span>
+                <span>{isEn ? 'Update Email' : 'ईमेल अपडेट करें'}</span>
               </button>
             </form>
           </div>
@@ -534,13 +630,13 @@ export default function SettingsClient({ initialSettings, currentAdminEmail = ''
           <div className="space-y-4 border border-gray-100 p-5 rounded-2xl bg-gray-50/50">
             <h3 className="font-display font-extrabold text-sm text-agri-dark border-b border-gray-100 pb-2 flex items-center">
               <Key className="h-4.5 w-4.5 text-agri-green-800 mr-1.5" />
-              <span>पासवर्ड बदलें (Change Password)</span>
+              <span>{isEn ? 'Change Password' : 'पासवर्ड बदलें'}</span>
             </h3>
 
             <form onSubmit={handleUpdatePassword} className="space-y-4">
               {/* Current Password Field */}
               <div>
-                <label className="block text-xs font-bold text-gray-700 mb-1.5">वर्तमान पासवर्ड (Current Password) *</label>
+                <label className="block text-xs font-bold text-gray-700 mb-1.5">{isEn ? 'Current Password *' : 'वर्तमान पासवर्ड *'}</label>
                 <div className="relative">
                   <input
                     type={showPasswordPassCurrent ? 'text' : 'password'}
@@ -562,7 +658,7 @@ export default function SettingsClient({ initialSettings, currentAdminEmail = ''
 
               {/* New Password Field */}
               <div>
-                <label className="block text-xs font-bold text-gray-700 mb-1.5">नया पासवर्ड (New Password) *</label>
+                <label className="block text-xs font-bold text-gray-700 mb-1.5">{isEn ? 'New Password *' : 'नया पासवर्ड *'}</label>
                 <div className="relative">
                   <input
                     type={showPasswordNew ? 'text' : 'password'}
@@ -584,7 +680,7 @@ export default function SettingsClient({ initialSettings, currentAdminEmail = ''
 
               {/* Confirm Password Field */}
               <div>
-                <label className="block text-xs font-bold text-gray-700 mb-1.5">नए पासवर्ड की पुष्टि (Confirm New Password) *</label>
+                <label className="block text-xs font-bold text-gray-700 mb-1.5">{isEn ? 'Confirm New Password *' : 'नए पासवर्ड की पुष्टि *'}</label>
                 <div className="relative">
                   <input
                     type={showPasswordConfirm ? 'text' : 'password'}
@@ -615,7 +711,7 @@ export default function SettingsClient({ initialSettings, currentAdminEmail = ''
               {passwordStatus === 'success' && (
                 <div className="bg-green-50 text-green-800 border border-green-200 p-3 rounded-xl text-xs font-semibold flex items-center space-x-2">
                   <Check className="h-4.5 w-4.5 shrink-0" />
-                  <span>पासवर्ड बदला गया! लॉगआउट किया जा रहा है...</span>
+                  <span>{isEn ? 'Password updated! Logging out...' : 'पासवर्ड बदला गया! लॉगआउट किया जा रहा है...'}</span>
                 </div>
               )}
 
@@ -629,7 +725,7 @@ export default function SettingsClient({ initialSettings, currentAdminEmail = ''
                 ) : (
                   <Key className="h-4 w-4" />
                 )}
-                <span>पासवर्ड अपडेट करें (Update Password)</span>
+                <span>{isEn ? 'Update Password' : 'पासवर्ड अपडेट करें'}</span>
               </button>
             </form>
           </div>

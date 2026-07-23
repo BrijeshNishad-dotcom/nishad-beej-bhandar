@@ -9,6 +9,7 @@ import {
   AreaChart, Area, XAxis, YAxis, CartesianGrid, 
   Tooltip, ResponsiveContainer 
 } from 'recharts';
+import { useTranslation } from 'react-i18next';
 
 type Enquiry = {
   id: number;
@@ -36,6 +37,8 @@ type DashboardOverviewProps = {
 export default function DashboardOverview({ stats, recentEnquiries }: DashboardOverviewProps) {
   const [enquiries, setEnquiries] = useState<Enquiry[]>(recentEnquiries);
   const [isUpdating, setIsUpdating] = useState<number | null>(null);
+  const { i18n } = useTranslation();
+  const isEn = i18n.language === 'en';
 
   const handleMarkContacted = async (id: number) => {
     setIsUpdating(id);
@@ -50,18 +53,18 @@ export default function DashboardOverview({ stats, recentEnquiries }: DashboardO
           prev.map((e) => (e.id === id ? { ...e, status: 'CONTACTED' } : e))
         );
       } else {
-        alert('अपडेट करने में विफल।');
+        alert(isEn ? 'Failed to update.' : 'अपडेट करने में विफल।');
       }
     } catch (err) {
       console.error(err);
-      alert('एक त्रुटि आई।');
+      alert(isEn ? 'An error occurred.' : 'एक त्रुटि आई।');
     } finally {
       setIsUpdating(null);
     }
   };
 
   const handleDeleteEnquiry = async (id: number) => {
-    if (!confirm('क्या आप इस पूछताछ को हटाना चाहते हैं?')) return;
+    if (!confirm(isEn ? 'Do you want to delete this enquiry?' : 'क्या आप इस पूछताछ को हटाना चाहते हैं?')) return;
     setIsUpdating(id);
     try {
       const res = await fetch(`/api/enquiries/${id}`, {
@@ -70,21 +73,21 @@ export default function DashboardOverview({ stats, recentEnquiries }: DashboardO
       if (res.ok) {
         setEnquiries((prev) => prev.filter((e) => e.id !== id));
       } else {
-        alert('हटाने में विफल।');
+        alert(isEn ? 'Failed to delete.' : 'हटाने में विफल।');
       }
     } catch (err) {
       console.error(err);
-      alert('एक त्रुटि आई।');
+      alert(isEn ? 'An error occurred.' : 'एक त्रुटि आई।');
     } finally {
       setIsUpdating(null);
     }
   };
 
   const statCards = [
-    { name: 'कुल उत्पाद (Products)', value: stats.totalProducts, icon: ShoppingBag, color: 'text-blue-600 bg-blue-50 border-blue-100' },
-    { name: 'श्रेणियां (Categories)', value: stats.totalCategories, icon: FolderOpen, color: 'text-amber-600 bg-amber-50 border-amber-100' },
-    { name: 'प्राप्त पूछताछ (Enquiries)', value: stats.totalEnquiries, icon: MailOpen, color: 'text-green-600 bg-green-50 border-green-100' },
-    { name: 'कुल विज़िटर्स (Visitors)', value: stats.totalVisitors, icon: Users, color: 'text-indigo-600 bg-indigo-50 border-indigo-100', subText: `आज: ${stats.visitorsToday} नए` },
+    { name: isEn ? 'Total Products' : 'कुल उत्पाद', value: stats.totalProducts, icon: ShoppingBag, color: 'text-blue-600 bg-blue-50 border-blue-100' },
+    { name: isEn ? 'Categories' : 'श्रेणियां', value: stats.totalCategories, icon: FolderOpen, color: 'text-amber-600 bg-amber-50 border-amber-100' },
+    { name: isEn ? 'Received Enquiries' : 'प्राप्त पूछताछ', value: stats.totalEnquiries, icon: MailOpen, color: 'text-green-600 bg-green-50 border-green-100' },
+    { name: isEn ? 'Total Visitors' : 'कुल विज़िटर्स', value: stats.totalVisitors, icon: Users, color: 'text-indigo-600 bg-indigo-50 border-indigo-100', subText: isEn ? `Today: ${stats.visitorsToday} new` : `आज: ${stats.visitorsToday} नए` },
   ];
 
   return (
@@ -93,10 +96,10 @@ export default function DashboardOverview({ stats, recentEnquiries }: DashboardO
       {/* Page Title */}
       <div>
         <h1 className="font-display text-2xl sm:text-3xl font-extrabold text-agri-dark">
-          एडमिन डैशबोर्ड (Dashboard Overview)
+          {isEn ? 'Dashboard Overview' : 'डैशबोर्ड ओवरव्यू'}
         </h1>
         <p className="font-sans text-sm text-gray-500 mt-1">
-          Nishad Beej Bhandar स्टोर के आंकड़े एवं ग्राहक गतिविधियाँ
+          {isEn ? 'Nishad Beej Bhandar store analytics and customer activity' : 'निषाद बीज भंडार स्टोर के आंकड़े एवं ग्राहक गतिविधियाँ'}
         </p>
       </div>
 
@@ -123,13 +126,13 @@ export default function DashboardOverview({ stats, recentEnquiries }: DashboardO
       <div className="bg-white border border-gray-150 rounded-3xl p-6 shadow-sm">
         <h3 className="font-display font-bold text-base text-agri-dark mb-6 flex items-center">
           <Calendar className="h-5 w-5 text-agri-yellow-500 mr-2" />
-          <span>विज़िटर ग्राफ़ (Last 10 Days Visitors)</span>
+          <span>{isEn ? 'Visitor Graph (Last 10 Days)' : 'विज़िटर ग्राफ़ (पिछले 10 दिन)'}</span>
         </h3>
         
         <div className="h-80 w-full font-sans text-xs">
           {stats.visitorHistory.length === 0 ? (
             <div className="h-full flex items-center justify-center text-gray-400">
-              अभी पर्याप्त विज़िटर डाटा उपलब्ध नहीं है।
+              {isEn ? 'Not enough visitor data available yet.' : 'अभी पर्याप्त विज़िटर डाटा उपलब्ध नहीं है।'}
             </div>
           ) : (
             <ResponsiveContainer width="100%" height="100%">
@@ -150,7 +153,7 @@ export default function DashboardOverview({ stats, recentEnquiries }: DashboardO
                 <Area 
                   type="monotone" 
                   dataKey="count" 
-                  name="Visitors"
+                  name={isEn ? 'Visitors' : 'विज़िटर्स'}
                   stroke="#2e7d32" 
                   strokeWidth={2}
                   fillOpacity={1} 
@@ -166,27 +169,27 @@ export default function DashboardOverview({ stats, recentEnquiries }: DashboardO
       <div className="bg-white border border-gray-150 rounded-3xl overflow-hidden shadow-sm">
         <div className="p-6 border-b border-gray-100 flex items-center justify-between">
           <h3 className="font-display font-bold text-base text-agri-dark">
-            हालिया पूछताछ (Recent Farmer Enquiries)
+            {isEn ? 'Recent Farmer Enquiries' : 'हालिया पूछताछ'}
           </h3>
           <span className="bg-agri-green-50 text-agri-green-800 text-xs font-bold px-2.5 py-1 rounded-lg">
-            अंतिम 5 सन्देश
+            {isEn ? 'Last 5 Messages' : 'अंतिम 5 सन्देश'}
           </span>
         </div>
 
         <div className="overflow-x-auto">
           {enquiries.length === 0 ? (
             <div className="p-12 text-center text-gray-400 font-sans text-sm">
-              कोई भी नई पूछताछ लंबित नहीं है।
+              {isEn ? 'No pending enquiries.' : 'कोई भी नई पूछताछ लंबित नहीं है।'}
             </div>
           ) : (
             <table className="w-full text-left font-sans text-sm border-collapse">
               <thead>
                 <tr className="bg-gray-50 border-b border-gray-100 text-gray-500 font-bold text-xs uppercase">
-                  <th className="p-4">किसान विवरण (Farmer)</th>
-                  <th className="p-4">फसल (Crop)</th>
-                  <th className="p-4">सन्देश (Message)</th>
-                  <th className="p-4">स्थिति (Status)</th>
-                  <th className="p-4 text-center">क्रियाएं (Actions)</th>
+                  <th className="p-4">{isEn ? 'Farmer Details' : 'किसान विवरण'}</th>
+                  <th className="p-4">{isEn ? 'Crop' : 'फसल'}</th>
+                  <th className="p-4">{isEn ? 'Message' : 'सन्देश'}</th>
+                  <th className="p-4">{isEn ? 'Status' : 'स्थिति'}</th>
+                  <th className="p-4 text-center">{isEn ? 'Actions' : 'क्रियाएं'}</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100">
@@ -198,7 +201,7 @@ export default function DashboardOverview({ stats, recentEnquiries }: DashboardO
                         <span className="font-bold text-agri-dark block">{enq.name}</span>
                         <div className="flex flex-col text-xs text-gray-400 space-y-0.5 mt-1">
                           <span className="flex items-center">
-                            <MapPin className="h-3 w-3 mr-1" /> ग्राम: {enq.village}
+                            <MapPin className="h-3 w-3 mr-1" /> {isEn ? 'Village' : 'ग्राम'}: {enq.village}
                           </span>
                           <span className="flex items-center">
                             <Phone className="h-3 w-3 mr-1" /> {enq.mobile}
@@ -210,7 +213,7 @@ export default function DashboardOverview({ stats, recentEnquiries }: DashboardO
                     {/* Crop */}
                     <td className="p-4">
                       <span className="bg-agri-green-50 text-agri-green-850 text-xs font-semibold px-2 py-0.5 rounded-md">
-                        {enq.cropName || 'सामान्य सलाह'}
+                        {enq.cropName || (isEn ? 'General Advice' : 'सामान्य सलाह')}
                       </span>
                     </td>
 
@@ -225,11 +228,11 @@ export default function DashboardOverview({ stats, recentEnquiries }: DashboardO
                     <td className="p-4">
                       {enq.status === 'PENDING' ? (
                         <span className="bg-yellow-50 text-yellow-700 text-xs font-bold px-2.5 py-0.5 rounded-full border border-yellow-250">
-                          लंबित (Pending)
+                          {isEn ? 'Pending' : 'लंबित'}
                         </span>
                       ) : (
                         <span className="bg-green-50 text-green-700 text-xs font-bold px-2.5 py-0.5 rounded-full border border-green-250">
-                          संपर्कित
+                          {isEn ? 'Contacted' : 'संपर्कित'}
                         </span>
                       )}
                     </td>
@@ -242,7 +245,7 @@ export default function DashboardOverview({ stats, recentEnquiries }: DashboardO
                             disabled={isUpdating === enq.id}
                             onClick={() => handleMarkContacted(enq.id)}
                             className="bg-green-600 hover:bg-green-750 text-white p-2 rounded-lg transition-colors cursor-pointer"
-                            title="Mark Contacted"
+                            title={isEn ? 'Mark Contacted' : 'संपर्कित मार्क करें'}
                           >
                             {isUpdating === enq.id ? (
                               <RefreshCw className="h-4 w-4 animate-spin" />
@@ -255,7 +258,7 @@ export default function DashboardOverview({ stats, recentEnquiries }: DashboardO
                           disabled={isUpdating === enq.id}
                           onClick={() => handleDeleteEnquiry(enq.id)}
                           className="border border-red-200 hover:bg-red-50 text-red-600 p-2 rounded-lg transition-colors cursor-pointer"
-                          title="Delete Enquiry"
+                          title={isEn ? 'Delete Enquiry' : 'पूछताछ हटाएं'}
                         >
                           {isUpdating === enq.id ? (
                             <RefreshCw className="h-4 w-4 animate-spin" />

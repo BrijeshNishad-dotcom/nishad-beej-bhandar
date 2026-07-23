@@ -5,7 +5,8 @@ import Image from 'next/image';
 import { MessageSquare, Phone, ArrowLeft, ShieldCheck, HelpCircle, Check, Award, Sprout } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import Breadcrumbs from '@/components/Breadcrumbs';
-import { useSettings } from '@/components/SettingsProvider';
+import { useLocalizedSettings } from '@/components/SettingsProvider';
+import { formatTerm } from '@/lib/translation';
 
 interface Category {
   id: number;
@@ -54,8 +55,8 @@ interface ProductDetailClientProps {
 }
 
 export default function ProductDetailClient({ product, type }: ProductDetailClientProps) {
-  const settings = useSettings();
-  const { t } = useTranslation();
+  const settings = useLocalizedSettings();
+  const { t, i18n } = useTranslation();
 
   const getTranslatedCategoryName = (slug: string, defaultName: string) => {
     const keyMap: { [key: string]: string } = {
@@ -98,10 +99,10 @@ export default function ProductDetailClient({ product, type }: ProductDetailClie
     : 0;
 
   const currentDetails = isSeed 
-    ? (product.variety ? `${t('productDetails.variety')}: ${product.variety}` : product.company)
+    ? (product.variety ? `${t('productDetails.variety')}: ${formatTerm(product.variety, i18n.language)}` : product.company)
     : isFertilizer
-      ? `${t('productDetails.packaging')}: ${product.weight || ''}`
-      : `${t('productDetails.diseaseControl')}: ${product.targetDisease || ''}`;
+      ? `${t('productDetails.packaging')}: ${formatTerm(product.weight, i18n.language)}`
+      : `${t('productDetails.diseaseControl')}: ${formatTerm(product.targetDisease, i18n.language)}`;
 
   const whatsappMsg = encodeURIComponent(
     t('productDetails.whatsappQuery', 'नमस्ते अभय जी, मुझे आपके दुकान पर उपलब्ध "{{name}}" के बारे में अधिक जानकारी चाहिए और मैं इसे खरीदना चाहता हूँ।')
@@ -192,17 +193,17 @@ export default function ProductDetailClient({ product, type }: ProductDetailClie
             </h1>
             {isSeed && product.variety && (
               <p className="font-sans text-sm font-semibold text-agri-yellow-700 mt-1">
-                {t('productDetails.variety')}: {product.variety}
+                {t('productDetails.variety')}: {formatTerm(product.variety, i18n.language)}
               </p>
             )}
             {isFertilizer && product.weight && (
               <p className="font-sans text-sm font-semibold text-agri-yellow-700 mt-1">
-                {t('productDetails.packaging')}: {product.weight}
+                {t('productDetails.packaging')}: {formatTerm(product.weight, i18n.language)}
               </p>
             )}
             {isPesticide && product.targetDisease && (
               <p className="font-sans text-sm font-semibold text-red-600 mt-1">
-                {t('productDetails.diseaseControl')}: {product.targetDisease}
+                {t('productDetails.diseaseControl')}: {formatTerm(product.targetDisease, i18n.language)}
               </p>
             )}
           </div>
@@ -251,7 +252,7 @@ export default function ProductDetailClient({ product, type }: ProductDetailClie
               {t('productDetails.description')}
             </h3>
             <p className="font-sans text-sm sm:text-base text-gray-600 leading-relaxed">
-              {product.description || t('productDetails.noDescFallback', 'इस उत्पाद के लिए कोई अतिरिक्त विवरण उपलब्ध नहीं है। अधिक जानकारी के लिए सीधे संपर्क करें।')}
+              {formatTerm(product.description, i18n.language) || t('productDetails.noDescFallback', 'इस उत्पाद के लिए कोई अतिरिक्त विवरण उपलब्ध नहीं है। अधिक जानकारी के लिए सीधे संपर्क करें।')}
             </p>
           </div>
 
@@ -266,7 +267,14 @@ export default function ProductDetailClient({ product, type }: ProductDetailClie
                 {product.cropType && (
                   <div className="flex justify-between border-b border-gray-200/50 pb-2">
                     <span className="text-gray-500">{t('productDetails.cropSeason', 'फसल का मौसम:')}</span>
-                    <span className="font-bold text-agri-dark">{product.cropType}</span>
+                    <span className="font-bold text-agri-dark">
+                      {product.cropType === 'Kharif' 
+                        ? (i18n.language === 'hi' ? 'खरीफ (Kharif)' : 'Kharif')
+                        : product.cropType === 'Rabi'
+                          ? (i18n.language === 'hi' ? 'रबी (Rabi)' : 'Rabi')
+                          : (i18n.language === 'hi' ? 'जायद (Zaid)' : 'Zaid')
+                      }
+                    </span>
                   </div>
                 )}
                 {product.germination && (
@@ -278,19 +286,34 @@ export default function ProductDetailClient({ product, type }: ProductDetailClie
                 {product.seedRate && (
                   <div className="flex justify-between border-b border-gray-200/50 pb-2">
                     <span className="text-gray-500">{t('productDetails.seedRatePerAcre', 'बीज दर (प्रति एकड़):')}</span>
-                    <span className="font-bold text-agri-dark">{product.seedRate}</span>
+                    <span className="font-bold text-agri-dark">
+                      {i18n.language === 'hi'
+                        ? product.seedRate.replace('kg / acre', 'किग्रा / एकड़').replace('kg per acre nursery', 'किग्रा प्रति एकड़ नर्सरी')
+                        : product.seedRate
+                      }
+                    </span>
                   </div>
                 )}
                 {product.maturityDuration && (
                   <div className="flex justify-between border-b border-gray-200/50 pb-2">
                     <span className="text-gray-500">{t('productDetails.maturityDurationLabel', 'तैयार होने की अवधि:')}</span>
-                    <span className="font-bold text-agri-dark">{product.maturityDuration}</span>
+                    <span className="font-bold text-agri-dark">
+                      {i18n.language === 'hi'
+                        ? product.maturityDuration.replace('Days', 'दिन').replace('Days (after transplanting)', 'दिन (रोपाई के बाद)')
+                        : product.maturityDuration
+                      }
+                    </span>
                   </div>
                 )}
                 {product.yield && (
                   <div className="flex justify-between border-b border-gray-200/50 pb-2">
                     <span className="text-gray-500">{t('productDetails.averageYield', 'औसत पैदावार:')}</span>
-                    <span className="font-bold text-agri-green-900">{product.yield}</span>
+                    <span className="font-bold text-agri-green-900">
+                      {i18n.language === 'hi'
+                        ? product.yield.replace('Quintals / Acre', 'क्विंटल / एकड़')
+                        : product.yield
+                      }
+                    </span>
                   </div>
                 )}
               </div>
@@ -303,7 +326,7 @@ export default function ProductDetailClient({ product, type }: ProductDetailClie
                     {product.benefits.split(',').map((b: string, i: number) => (
                       <span key={i} className="bg-agri-green-50 text-agri-green-800 text-xs font-semibold px-2.5 py-1 rounded-lg border border-agri-green-100 flex items-center">
                         <Check className="h-3.5 w-3.5 mr-1" />
-                        <span>{b.trim()}</span>
+                        <span>{formatTerm(b.trim(), i18n.language)}</span>
                       </span>
                     ))}
                   </div>
@@ -313,14 +336,14 @@ export default function ProductDetailClient({ product, type }: ProductDetailClie
               {product.usageInstructions && (
                 <div className="pt-2 text-sm">
                   <span className="font-bold text-agri-dark block mb-1">{t('productDetails.usageInstructions', 'बुवाई के निर्देश:')}</span>
-                  <p className="text-gray-500 text-xs leading-relaxed">{product.usageInstructions}</p>
+                  <p className="text-gray-500 text-xs leading-relaxed">{formatTerm(product.usageInstructions, i18n.language)}</p>
                 </div>
               )}
 
               {product.dosage && (
                 <div className="pt-2 text-sm">
                   <span className="font-bold text-agri-dark block mb-1">{t('productDetails.seedDosage', 'बीज उपचार / खुराक:')}</span>
-                  <p className="text-gray-500 text-xs leading-relaxed">{product.dosage}</p>
+                  <p className="text-gray-500 text-xs leading-relaxed">{formatTerm(product.dosage, i18n.language)}</p>
                 </div>
               )}
             </div>
@@ -337,13 +360,20 @@ export default function ProductDetailClient({ product, type }: ProductDetailClie
                 {product.pesticideType && (
                   <div className="flex justify-between border-b border-gray-200/50 pb-2">
                     <span className="text-gray-500">{t('productDetails.type')}:</span>
-                    <span className="font-bold text-agri-dark">{product.pesticideType}</span>
+                    <span className="font-bold text-agri-dark">
+                      {product.pesticideType === 'Insecticide' 
+                        ? (i18n.language === 'hi' ? 'कीटनाशक (Insecticide)' : 'Insecticide')
+                        : product.pesticideType === 'Fungicide'
+                          ? (i18n.language === 'hi' ? 'कवकनाशी (Fungicide)' : 'Fungicide')
+                          : formatTerm(product.pesticideType, i18n.language)
+                      }
+                    </span>
                   </div>
                 )}
                 {product.activeIngredient && (
                   <div className="flex justify-between border-b border-gray-200/50 pb-2">
                     <span className="text-gray-500">{t('productDetails.activeIngredient')}:</span>
-                    <span className="font-bold text-agri-dark">{product.activeIngredient}</span>
+                    <span className="font-bold text-agri-dark">{formatTerm(product.activeIngredient, i18n.language)}</span>
                   </div>
                 )}
                 {product.formulation && (
@@ -355,43 +385,48 @@ export default function ProductDetailClient({ product, type }: ProductDetailClie
                 {product.targetCrop && (
                   <div className="flex justify-between border-b border-gray-200/50 pb-2">
                     <span className="text-gray-500">{t('productDetails.targetCrop')}:</span>
-                    <span className="font-bold text-agri-dark">{product.targetCrop}</span>
+                    <span className="font-bold text-agri-dark">{formatTerm(product.targetCrop, i18n.language)}</span>
                   </div>
                 )}
                 {product.targetDisease && (
                   <div className="flex justify-between border-b border-gray-200/50 pb-2">
                     <span className="text-gray-500">{t('productDetails.targetDisease')}:</span>
-                    <span className="font-bold text-red-600">{product.targetDisease}</span>
+                    <span className="font-bold text-red-600">{formatTerm(product.targetDisease, i18n.language)}</span>
                   </div>
                 )}
                 {product.dosage && (
                   <div className="flex justify-between border-b border-gray-200/50 pb-2">
                     <span className="text-gray-500">{t('productDetails.dosage')}:</span>
-                    <span className="font-bold text-agri-dark">{product.dosage}</span>
+                    <span className="font-bold text-agri-dark">{formatTerm(product.dosage, i18n.language)}</span>
                   </div>
                 )}
                 {product.applicationMethod && (
                   <div className="flex justify-between border-b border-gray-200/50 pb-2">
                     <span className="text-gray-500">{t('productDetails.applicationMethod')}:</span>
-                    <span className="font-bold text-agri-dark">{product.applicationMethod}</span>
+                    <span className="font-bold text-agri-dark">{formatTerm(product.applicationMethod, i18n.language)}</span>
                   </div>
                 )}
                 {product.waitingPeriod && (
                   <div className="flex justify-between border-b border-gray-200/50 pb-2">
                     <span className="text-gray-500">{t('productDetails.waitingPeriod')}:</span>
-                    <span className="font-bold text-agri-dark">{product.waitingPeriod}</span>
+                    <span className="font-bold text-agri-dark">{formatTerm(product.waitingPeriod, i18n.language)}</span>
                   </div>
                 )}
                 {product.toxicityClass && (
                   <div className="flex justify-between border-b border-gray-200/50 pb-2">
                     <span className="text-gray-500">{t('productDetails.toxicityClass')}:</span>
-                    <span className="font-bold text-agri-dark">{product.toxicityClass}</span>
+                    <span className="font-bold text-agri-dark">
+                      {i18n.language === 'hi'
+                        ? product.toxicityClass.replace('Green (Slightly Toxic)', 'हरा (कम विषैला)').replace('Blue (Moderately Toxic)', 'नीला (मध्यम विषैला)').replace('Yellow (Highly Toxic)', 'पीला (अत्यंत विषैला)')
+                        : product.toxicityClass
+                      }
+                    </span>
                   </div>
                 )}
                 {product.packSize && (
                   <div className="flex justify-between border-b border-gray-200/50 pb-2">
                     <span className="text-gray-500">{t('productDetails.packSizeSpec')}:</span>
-                    <span className="font-bold text-agri-dark">{product.packSize}</span>
+                    <span className="font-bold text-agri-dark">{formatTerm(product.packSize, i18n.language)}</span>
                   </div>
                 )}
                 {product.registrationNumber && (
@@ -405,14 +440,14 @@ export default function ProductDetailClient({ product, type }: ProductDetailClie
               {product.safetyPrecautions && (
                 <div className="pt-2 text-sm">
                   <span className="font-bold text-red-600 block mb-1">{t('productDetails.safetyPrecautionsLabel')}:</span>
-                  <p className="text-gray-500 text-xs leading-relaxed">{product.safetyPrecautions}</p>
+                  <p className="text-gray-500 text-xs leading-relaxed">{formatTerm(product.safetyPrecautions, i18n.language)}</p>
                 </div>
               )}
 
               {product.storageInstructions && (
                 <div className="pt-2 text-sm">
                   <span className="font-bold text-agri-dark block mb-1">{t('productDetails.storageInstructionsLabel')}:</span>
-                  <p className="text-gray-500 text-xs leading-relaxed">{product.storageInstructions}</p>
+                  <p className="text-gray-500 text-xs leading-relaxed">{formatTerm(product.storageInstructions, i18n.language)}</p>
                 </div>
               )}
             </div>
@@ -443,7 +478,7 @@ export default function ProductDetailClient({ product, type }: ProductDetailClie
           <div className="bg-agri-green-50/30 rounded-xl p-4 border border-agri-green-100/30 text-xs sm:text-sm text-gray-500 flex items-start space-x-2.5">
             <HelpCircle className="h-5 w-5 text-agri-green-800 shrink-0 mt-0.5" />
             <p className="leading-normal">
-              <strong>{t('productDetails.expertAdviceNoteLabel', 'कृषि सलाह नोट:')}</strong> {t('productDetails.expertAdviceNoteText', 'बीजों की बुवाई के समय मिट्टी की नमी और तापमान का विशेष ध्यान रखें। किसी भी प्रकार की बीमारी के लक्षण दिखने पर संचालक अभय निषाद (B.Sc Ag) को कॉल करें।').replace('अभय निषाद (B.Sc Ag)', settings.ownerName).replace('Abhay Nishad', settings.ownerName)}
+              <strong>{t('productDetails.expertAdviceNoteLabel', 'कृषि सलाह नोट:')}</strong> {t('productDetails.expertAdviceNoteText', { ownerName: settings.ownerName })}
             </p>
           </div>
 

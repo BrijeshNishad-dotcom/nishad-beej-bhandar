@@ -6,10 +6,10 @@ import Image from 'next/image';
 import { Phone, MapPin, Clock, ArrowRight, MessageSquare, Facebook, Youtube, Lock } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useSession, signOut } from 'next-auth/react';
-import { useSettings, getLocalizedAddress, getLocalizedBusinessHours } from '@/components/SettingsProvider';
+import { useLocalizedSettings } from '@/components/SettingsProvider';
 
 export default function Footer() {
-  const settings = useSettings();
+  const settings = useLocalizedSettings();
   const currentYear = new Date().getFullYear();
   const { t, i18n } = useTranslation();
   const { data: session, status } = useSession();
@@ -54,17 +54,12 @@ export default function Footer() {
               </div>
               <div className="flex flex-col">
                 <span className="font-display text-base font-bold text-white leading-none">
-                  Nishad Beej Bhandar
+                {settings.shopName}
                 </span>
-                {t('logo.subtitle') !== 'Nishad Beej Bhandar' && (
-                  <span className="font-sans text-xs text-agri-yellow-500 font-semibold mt-1">
-                    {t('logo.subtitle')}
-                  </span>
-                )}
               </div>
             </Link>
             <p className="font-sans text-sm text-gray-400 leading-relaxed">
-              {t('footer.aboutText') || settings.aboutText}
+              {settings.aboutText}
             </p>
             <div className="flex space-x-4 pt-2">
               <a
@@ -156,11 +151,10 @@ export default function Footer() {
               <li className="flex items-start space-x-3">
                 <MapPin className="h-5 w-5 text-agri-yellow-500 shrink-0 mt-0.5" />
                 <span>
-                  <strong className="block text-white font-bold">Nishad Beej Bhandar</strong>
-                  {t('logo.subtitle') !== 'Nishad Beej Bhandar' && (
-                    <span className="text-xs text-gray-400 block mb-1">{t('logo.subtitle')}</span>
-                  )}
-                  {getLocalizedAddress(settings.address, i18n.language)}
+                  <strong className="block text-white font-bold">
+                    {settings.shopName}
+                  </strong>
+                  {settings.address}
                 </span>
               </li>
               <li className="flex items-center space-x-3">
@@ -187,7 +181,7 @@ export default function Footer() {
 
         {/* Bottom Bar */}
         <div className="border-t border-gray-800 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center text-sm text-gray-500">
-          <p>© {currentYear} Nishad Beej Bhandar. {t('footer.allRightsReservedText', 'All Rights Reserved.')}</p>
+          <p>© {currentYear} {settings.shopName}. {t('footer.allRightsReservedText', 'All Rights Reserved.')}</p>
           <div className="flex space-x-6 mt-4 md:mt-0">
             <span className="text-xs">
               {t('footer.guidanceByLabel', 'Expert Guidance by')} {settings.ownerName}

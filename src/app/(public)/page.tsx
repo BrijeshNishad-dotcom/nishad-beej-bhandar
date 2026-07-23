@@ -1,41 +1,58 @@
 import HomeClient from './HomeClient';
 import { Metadata } from 'next';
 import { prisma } from '@/lib/db';
+import { cookies } from 'next/headers';
 
 export const revalidate = 0; // Disable cache so changes reflect immediately
 
 export async function generateMetadata(): Promise<Metadata> {
+  const cookieStore = await cookies();
+  const language = cookieStore.get('language')?.value || 'hi';
+  const isEn = language === 'en';
+
   const settingsList = await prisma.setting.findMany();
   const settings: Record<string, string> = {};
   settingsList.forEach((s: { key: string; value: string }) => {
     settings[s.key] = s.value;
   });
 
-  const shopName = settings.shopName || "Nishad Beej Bhandar";
-  const heroTitle = settings.heroTitle || "अच्छे बीज, अच्छी फसल की शुरुआत";
-  const heroSubtitle = settings.heroSubtitle || "धान, गेहूं, मक्का, सरसों, और सब्जियों के उन्नत बीज, सर्वोत्तम उर्वरक खाद एवं उच्च गुणवत्ता वाली कीटनाशक दवाइयाँ उचित सरकारी रेट पर उपलब्ध हैं।";
-  const ownerName = settings.ownerName || "Abhay Nishad (B.Sc Agriculture)";
+  const shopName = isEn ? (settings.shopNameEn || "Nishad Beej Bhandar") : (settings.shopName || "निषाद बीज भंडार");
+  const heroTitle = isEn ? (settings.heroTitleEn || "Good Seeds, Beginning of a Good Crop") : (settings.heroTitle || "अच्छे बीज, अच्छी फसल की शुरुआत");
+  const heroSubtitle = isEn ? (settings.heroSubtitleEn || "High-quality seeds for paddy, wheat, maize, mustard, and vegetables, along with premium fertilizers and top-grade pesticides are available at reasonable prices.") : (settings.heroSubtitle || "धान, गेहूं, मक्का, सरसों, और सब्जियों के उन्नत बीज, सर्वोत्तम उर्वरक खाद एवं उच्च गुणवत्ता वाली कीटनाशक दवाइयाँ उचित सरकारी रेट पर उपलब्ध हैं।");
+  const ownerName = isEn ? (settings.ownerNameEn || "Abhay Nishad (B.Sc Agriculture)") : (settings.ownerName || "अभय निषाद (B.Sc Agriculture)");
+
+  const title = isEn 
+    ? `${shopName} - ${heroTitle} | Certified Agriculture Seeds & Fertilizers Store`
+    : `${shopName} - ${heroTitle} | प्रमाणित कृषि बीज एवं उर्वरक भंडार`;
+
+  const description = isEn 
+    ? `${heroSubtitle} Owner: ${ownerName}`
+    : `${heroSubtitle} संचालक: ${ownerName}`;
 
   return {
-    title: `${shopName} - ${heroTitle} | Certified Agriculture Seeds & Fertilizers Store`,
-    description: `${heroSubtitle} संचालक: ${ownerName}`,
+    title,
+    description,
     alternates: {
       canonical: '/',
     },
     openGraph: {
-      title: `${shopName} - ${heroTitle}`,
-      description: `${heroSubtitle} संचालक: ${ownerName}`,
+      title,
+      description,
       url: 'https://nishadbeejbhandar.com',
       type: 'website',
     },
     twitter: {
-      title: `${shopName} - ${heroTitle}`,
-      description: `${heroSubtitle} संचालक: ${ownerName}`,
+      title,
+      description,
     }
   };
 }
 
 export default async function HomePage() {
+  const cookieStore = await cookies();
+  const language = cookieStore.get('language')?.value || 'hi';
+  const isEn = language === 'en';
+
   const settings: Record<string, string> = {};
   try {
     const settingsList = await prisma.setting.findMany();
@@ -46,11 +63,11 @@ export default async function HomePage() {
     // DB unavailable — use defaults
   }
 
-  const shopName = settings.shopName || "Nishad Beej Bhandar";
-  const ownerName = settings.ownerName || "Abhay Nishad";
+  const shopName = isEn ? (settings.shopNameEn || "Nishad Beej Bhandar") : (settings.shopName || "निषाद बीज भंडार");
+  const ownerName = isEn ? (settings.ownerNameEn || "Abhay Nishad") : (settings.ownerName || "अभय निषाद");
   const mobileNumber = settings.mobileNumber || "6387634500";
-  const address = settings.address || "Main Market Road, Near Agriculture Office, Uttar Pradesh, India";
-  const businessHours = settings.businessHours || "Monday - Sunday: 7:00 AM - 8:00 PM";
+  const address = isEn ? (settings.addressEn || "Main Market Road, Near Agriculture Office, Uttar Pradesh, India") : (settings.address || "मुख्य बाजार मार्ग, कृषि कार्यालय के पास, उत्तर प्रदेश, भारत");
+  const businessHours = isEn ? (settings.businessHoursEn || "Monday - Sunday: 7:00 AM - 8:00 PM") : (settings.businessHours || "सोमवार - रविवार: सुबह 7:00 बजे - रात 8:00 बजे");
 
   const orgJsonLd = {
     '@context': 'https://schema.org',
@@ -79,15 +96,15 @@ export default async function HomePage() {
     'address': {
       '@type': 'PostalAddress',
       'streetAddress': address,
-      'addressLocality': 'Rampur',
-      'addressRegion': 'Uttar Pradesh',
-      'postalCode': '274204',
+      'addressLocality': isEn ? 'Sultanpur' : 'सुल्तानपुर',
+      'addressRegion': isEn ? 'Uttar Pradesh' : 'उत्तर प्रदेश',
+      'postalCode': '228001',
       'addressCountry': 'IN'
     },
     'geo': {
       '@type': 'GeoCoordinates',
-      'latitude': 26.8467,
-      'longitude': 80.9462
+      'latitude': 26.2648,
+      'longitude': 82.0727
     },
     'url': 'https://nishadbeejbhandar.com',
     'openingHoursSpecification': {
@@ -106,7 +123,36 @@ export default async function HomePage() {
     }
   };
 
-  const faqJsonLd = {
+  const faqJsonLd = isEn ? {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    'mainEntity': [
+      {
+        '@type': 'Question',
+        'name': 'Are all the seeds at your store certified according to government standards?',
+        'acceptedAnswer': {
+          '@type': 'Answer',
+          'text': `Yes, all seeds (such as Paddy, Wheat, Mustard, and vegetable seeds) available at ${shopName} are certified by the Agriculture Department and sealed by registered companies with a minimum guaranteed germination rate of 85%.`
+        }
+      },
+      {
+        '@type': 'Question',
+        'name': 'Do you offer expert agricultural advice on crop diseases and fertilizers?',
+        'acceptedAnswer': {
+          '@type': 'Answer',
+          'text': `Yes, our owner ${ownerName} is a B.Sc Agriculture graduate, and he provides farmers with free scientific advice on crop protection, proper fertilizer schedules (NPK, DAP), and disease prevention at every stage from sowing to harvest.`
+        }
+      },
+      {
+        '@type': 'Question',
+        'name': 'What is the address and opening hours of the store?',
+        'acceptedAnswer': {
+          '@type': 'Answer',
+          'text': `${shopName} is located at ${address}. The store remains open ${businessHours}.`
+        }
+      }
+    ]
+  } : {
     '@context': 'https://schema.org',
     '@type': 'FAQPage',
     'mainEntity': [

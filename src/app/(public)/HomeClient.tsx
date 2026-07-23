@@ -9,7 +9,7 @@ import {
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
-import { useSettings, getLocalizedAddress, getLocalizedBusinessHours } from '@/components/SettingsProvider';
+import { useLocalizedSettings } from '@/components/SettingsProvider';
 
 interface GalleryItem {
   id: number;
@@ -32,7 +32,7 @@ interface HomeClientProps {
 }
 
 export default function HomeClient({ galleryItems = [], categories }: HomeClientProps) {
-  const settings = useSettings();
+  const settings = useLocalizedSettings();
   const { t, i18n } = useTranslation();
 
   const getInitials = (name: string) => {
@@ -44,9 +44,7 @@ export default function HomeClient({ galleryItems = [], categories }: HomeClient
   };
 
   const renderHeroTitle = () => {
-    const title = i18n.language === 'hi'
-      ? (settings.heroTitle || `${t('hero.heading1') || 'अच्छे बीज,'} ${t('hero.heading2') || 'अच्छी फसल की शुरुआत'}`)
-      : (settings.heroTitleEn || `${t('hero.heading1') || 'Good Seeds,'} ${t('hero.heading2') || 'Beginning of a Good Crop'}`);
+    const title = settings.heroTitle;
 
     const parts = title.split(',');
     if (parts.length > 1) {
@@ -268,10 +266,7 @@ export default function HomeClient({ galleryItems = [], categories }: HomeClient
                 <div className="inline-flex items-center bg-agri-green-900/80 border border-agri-yellow-500/50 rounded-2xl px-4 py-2.5 backdrop-blur-sm shadow-lg">
                   <div>
                     <p className="font-display text-sm font-extrabold text-agri-yellow-500 leading-tight tracking-wide">
-                      Nishad Beej Bhandar
-                    </p>
-                    <p className="font-sans text-xs font-semibold text-agri-yellow-100 leading-tight mt-0.5">
-                      निषाद बीज भंडार
+                      {settings.shopName}
                     </p>
                   </div>
                 </div>
@@ -292,9 +287,7 @@ export default function HomeClient({ galleryItems = [], categories }: HomeClient
                 transition={{ duration: 0.5, delay: 0.2 }}
                 className="font-sans text-base sm:text-lg text-gray-200 max-w-xl leading-relaxed"
               >
-                {i18n.language === 'hi' 
-                  ? (settings.heroSubtitle || t('hero.description'))
-                  : (settings.heroSubtitleEn || t('hero.description'))}
+                {settings.heroSubtitle}
               </motion.p>
 
               {/* Owner Badge */}
@@ -468,7 +461,7 @@ export default function HomeClient({ galleryItems = [], categories }: HomeClient
               <div className="h-1.5 w-20 bg-agri-yellow-500 rounded-full" />
               
               <p className="font-sans text-sm sm:text-base text-gray-600 leading-relaxed whitespace-pre-line">
-                {t('about.ownerDescription') || settings.aboutText}
+                {settings.aboutText}
               </p>
 
               {/* Owner Certifications */}
@@ -757,7 +750,7 @@ export default function HomeClient({ galleryItems = [], categories }: HomeClient
                   <div>
                     <h4 className="text-xs text-gray-400 uppercase font-sans">{t('contact.addressLabel')}</h4>
                     <p className="text-xs sm:text-sm font-semibold text-agri-dark">
-                      {getLocalizedAddress(settings.address, i18n.language)}
+                      {settings.address}
                     </p>
                   </div>
                 </div>
@@ -879,7 +872,7 @@ export default function HomeClient({ galleryItems = [], categories }: HomeClient
                 {submitStatus === 'success' && (
                   <div className="bg-green-50 text-green-800 border border-green-200 p-4 rounded-xl text-sm font-semibold flex items-center space-x-2 animate-fade-in">
                     <CheckCircle className="h-5 w-5 shrink-0" />
-                    <span>{t('enquiry.success', 'अभय निषाद').replace('अभय निषाद', settings.ownerName).replace('Abhay Nishad', settings.ownerName)}</span>
+                    <span>{t('enquiry.success', { ownerName: settings.ownerName })}</span>
                   </div>
                 )}
 

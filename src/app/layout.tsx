@@ -6,6 +6,7 @@ import AuthProvider from "@/components/SessionProvider";
 import LanguageProvider from "@/components/LanguageProvider";
 import SettingsProvider from "@/components/SettingsProvider";
 import { prisma } from "@/lib/db";
+import { cookies } from "next/headers";
 
 const inter = Inter({
   variable: "--font-sans",
@@ -21,6 +22,10 @@ const poppins = Poppins({
 export const revalidate = 0; // Ensure layout is always dynamic
 
 export async function generateMetadata(): Promise<Metadata> {
+  const cookieStore = await cookies();
+  const language = cookieStore.get('language')?.value || 'hi';
+  const isEn = language === 'en';
+
   const settings: Record<string, string> = {};
   try {
     const settingsList = await prisma.setting.findMany();
@@ -31,11 +36,11 @@ export async function generateMetadata(): Promise<Metadata> {
     // DB unavailable — use defaults
   }
 
-  const shopName = settings.shopName || "Nishad Beej Bhandar";
-  const heroTitle = settings.heroTitle || "अच्छे बीज, अच्छी फसल की शुरुआत";
-  const ownerName = settings.ownerName || "Abhay Nishad";
+  const shopName = isEn ? (settings.shopNameEn || "Nishad Beej Bhandar") : (settings.shopName || "निषाद बीज भंडार");
+  const heroTitle = isEn ? (settings.heroTitleEn || "Good Seeds, Beginning of a Good Crop") : (settings.heroTitle || "अच्छे बीज, अच्छी फसल की शुरुआत");
+  const ownerName = isEn ? (settings.ownerNameEn || "Abhay Nishad (B.Sc Ag)") : (settings.ownerName || "अभय निषाद");
   const mobileNumber = settings.mobileNumber || "6387634500";
-  const heroSubtitle = settings.heroSubtitle || "धान, गेहूं, मक्का, सरसों, सब्जियों के बीज, उर्वरक खाद एवं कीटनाशक दवाइयाँ उचित मूल्य पर उपलब्ध हैं।";
+  const heroSubtitle = isEn ? (settings.heroSubtitleEn || "High-quality seeds for paddy, wheat, maize, mustard, and vegetables, along with premium fertilizers and top-grade pesticides are available at reasonable prices.") : (settings.heroSubtitle || "धान, गेहूं, मक्का, सरसों, और सब्जियों के उन्नत बीज, सर्वोत्तम उर्वरक खाद एवं कीटनाशक दवाइयाँ उचित सरकारी रेट पर उपलब्ध हैं।");
 
   return {
     title: {
@@ -117,6 +122,8 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const gaId = process.env.NEXT_PUBLIC_GA_ID;
+  const cookieStore = await cookies();
+  const language = cookieStore.get('language')?.value || 'hi';
 
   // Fetch settings dynamically
   const settings: Record<string, string> = {};
@@ -131,7 +138,7 @@ export default async function RootLayout({
 
   return (
     <html
-      lang="hi"
+      lang={language}
       className={`${inter.variable} ${poppins.variable} h-full antialiased`}
       suppressHydrationWarning
     >
