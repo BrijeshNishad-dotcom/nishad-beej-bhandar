@@ -1,38 +1,26 @@
 import type { Metadata } from "next";
-import { Inter, Poppins } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
 import AuthProvider from "@/components/SessionProvider";
 import LanguageProvider from "@/components/LanguageProvider";
-import SettingsProvider, { DEFAULT_SETTINGS } from "@/components/SettingsProvider";
+import SettingsProvider from "@/components/SettingsProvider";
 import { getSettings } from "@/lib/settings";
 import { cookies } from "next/headers";
-
-const inter = Inter({
-  variable: "--font-sans",
-  subsets: ["latin"],
-});
-
-const poppins = Poppins({
-  variable: "--font-display",
-  weight: ["400", "500", "600", "700", "800"],
-  subsets: ["latin"],
-});
+import { getTranslationServer } from "@/lib/translationServer";
 
 export const revalidate = 0; // Ensure layout is always dynamic
 
 export async function generateMetadata(): Promise<Metadata> {
   const cookieStore = await cookies();
   const language = cookieStore.get('language')?.value || 'hi';
-  const isEn = language === 'en';
+  const { t } = await getTranslationServer(language);
 
-  const settings = await getSettings();
-
-  const shopName = isEn ? (settings.shopNameEn || DEFAULT_SETTINGS.shopNameEn) : (settings.shopName || DEFAULT_SETTINGS.shopName);
-  const heroTitle = isEn ? (settings.heroTitleEn || DEFAULT_SETTINGS.heroTitleEn) : (settings.heroTitle || DEFAULT_SETTINGS.heroTitle);
-  const ownerName = isEn ? (settings.ownerNameEn || DEFAULT_SETTINGS.ownerNameEn) : (settings.ownerName || DEFAULT_SETTINGS.ownerName);
-  const mobileNumber = settings.mobileNumber || DEFAULT_SETTINGS.mobileNumber;
-  const heroSubtitle = isEn ? (settings.heroSubtitleEn || DEFAULT_SETTINGS.heroSubtitleEn) : (settings.heroSubtitle || DEFAULT_SETTINGS.heroSubtitle);
+  const shopName = t('shopName');
+  const heroTitle = t('heroTitle');
+  const ownerName = t('ownerName');
+  const mobileNumber = t('mobileNumber');
+  const heroSubtitle = t('heroSubtitle');
+  const logoPath = t('logoPath');
 
   return {
     title: {
@@ -64,7 +52,7 @@ export async function generateMetadata(): Promise<Metadata> {
       siteName: shopName,
       images: [
         {
-          url: settings.logoPath || "/android-chrome-512x512.png",
+          url: logoPath || "/android-chrome-512x512.png",
           width: 512,
           height: 512,
           alt: `${shopName} Logo`,
@@ -77,7 +65,7 @@ export async function generateMetadata(): Promise<Metadata> {
       card: "summary_large_image",
       title: `${shopName} - ${heroTitle}`,
       description: heroSubtitle,
-      images: [settings.logoPath || "/android-chrome-512x512.png"],
+      images: [logoPath || "/android-chrome-512x512.png"],
     },
     verification: {
       google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION || "",
@@ -123,9 +111,20 @@ export default async function RootLayout({
   return (
     <html
       lang={language}
-      className={`${inter.variable} ${poppins.variable} h-full antialiased`}
+      className="h-full antialiased"
       suppressHydrationWarning
     >
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+        <style dangerouslySetInnerHTML={{ __html: `
+          :root {
+            --font-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            --font-display: 'Poppins', system-ui, sans-serif;
+          }
+        `}} />
+      </head>
       <body className="min-h-full flex flex-col bg-[#fbfdf9] text-[#1f2c16]" suppressHydrationWarning>
         <AuthProvider>
           <SettingsProvider initialSettings={settings}>

@@ -1,22 +1,19 @@
-import { useTranslation as useI18nTranslation } from 'react-i18next';
-import { useSettings } from '@/components/SettingsProvider';
+import hiTranslations from './translations/hi.json';
+import enTranslations from './translations/en.json';
+import { getSettings } from '@/lib/settings';
 import { DEFAULT_SETTINGS } from '@/lib/constants';
-import { useLanguage } from '@/components/LanguageProvider';
-import { formatTerm, getLocalizedField, getLocalizedCategory } from './translationUtils';
-
-export { formatTerm, getLocalizedField, getLocalizedCategory };
+import { getLocalizedField, getLocalizedCategory } from './translationUtils';
 
 /**
- * Custom React hook for client-side translation of both UI strings and shop settings.
- * Returns a unified `t(key)` function to get values from standard i18n or from dynamic DB settings.
+ * Server-side helper to fetch localized settings and translations without React Context.
  */
-export function useAppTranslation() {
-  const { t: i18nT, i18n } = useI18nTranslation();
-  const settings = useSettings();
-  const { language, setLanguage } = useLanguage();
-  const isHi = language === 'hi';
+export async function getTranslationServer(language: string) {
+  const settings = await getSettings();
+  const translations = language === 'en' ? enTranslations : hiTranslations;
   
   const t = (key: string, options?: any): string => {
+    const isHi = language === 'hi';
+    
     // 1. Resolve shop settings keys dynamically
     if (key === 'shopName') return (isHi ? (settings.shopName || DEFAULT_SETTINGS.shopName) : (settings.shopNameEn || DEFAULT_SETTINGS.shopNameEn)) as string;
     if (key === 'ownerName') return (isHi ? (settings.ownerName || DEFAULT_SETTINGS.ownerName) : (settings.ownerNameEn || DEFAULT_SETTINGS.ownerNameEn)) as string;
@@ -26,13 +23,35 @@ export function useAppTranslation() {
     if (key === 'heroTitle') return (isHi ? (settings.heroTitle || DEFAULT_SETTINGS.heroTitle) : (settings.heroTitleEn || DEFAULT_SETTINGS.heroTitleEn)) as string;
     if (key === 'heroSubtitle') return (isHi ? (settings.heroSubtitle || DEFAULT_SETTINGS.heroSubtitle) : (settings.heroSubtitleEn || DEFAULT_SETTINGS.heroSubtitleEn)) as string;
     
-    // 2. Direct settings (numbers/URLs) that don't vary by language
+    // 2. Direct settings that don't vary by language
     if (settings[key] !== undefined) {
       return (settings[key] || DEFAULT_SETTINGS[key] || '') as string;
     }
     
-    // 3. Fall back to standard react-i18next translation
-    return i18nT(key, options) as string;
+    // 3. Look up path inside static JSON translation resources
+    const keys = key.split('.');
+    let result: any = translations;
+    for (const k of keys) {
+      if (result && typeof result === 'object' && k in result) {
+        result = result[k];
+      } else {
+        result = undefined;
+        break;
+      }
+    }
+    
+    if (typeof result === 'string') {
+      if (options) {
+        let val = result;
+        Object.entries(options).forEach(([k, v]) => {
+          val = val.replace(`{{${k}}}`, String(v));
+        });
+        return val as string;
+      }
+      return result as string;
+    }
+    
+    return key;
   };
   
   const tField = (obj: any, fieldName: string) => {
@@ -43,6 +62,5 @@ export function useAppTranslation() {
     return getLocalizedCategory(cat, language, t);
   };
   
-  return { t, tField, tCategory, language, setLanguage, i18n };
+  return { t, tField, tCategory };
 }
-

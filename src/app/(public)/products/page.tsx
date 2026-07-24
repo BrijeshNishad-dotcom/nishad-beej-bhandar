@@ -1,26 +1,23 @@
 import { Metadata } from 'next';
 import { prisma } from '@/lib/db';
-import { getSettings } from '@/lib/settings';
-import { DEFAULT_SETTINGS } from '@/components/SettingsProvider';
 import ProductsClient from '@/components/ProductsClient';
 import { cookies } from 'next/headers';
+import { getTranslationServer } from '@/lib/translationServer';
 
 export const revalidate = 0; // Force dynamic rendering for fresh settings/products
 
 export async function generateMetadata(): Promise<Metadata> {
   const cookieStore = await cookies();
   const language = cookieStore.get('language')?.value || 'hi';
-  const isEn = language === 'en';
+  const { t } = await getTranslationServer(language);
 
-  const settings = await getSettings();
+  const shopName = t('shopName');
 
-  const shopName = isEn ? (settings.shopNameEn || DEFAULT_SETTINGS.shopNameEn) : (settings.shopName || DEFAULT_SETTINGS.shopName);
-
-  const title = isEn
+  const title = language === 'en'
     ? `Agricultural Products Catalog - Seeds, Fertilizers & Pesticides | ${shopName}`
     : `कृषि उत्पाद सूची - बीज, खाद और कीटनाशक दवाइयाँ | ${shopName}`;
 
-  const description = isEn
+  const description = language === 'en'
     ? `Browse premium quality paddy, wheat, vegetable seeds, genuine fertilizers, and branded pesticides available at ${shopName} at reasonable prices.`
     : `हमारे यहाँ उपलब्ध उच्च गुणवत्ता वाले धान, गेहूं, मक्का, सरसों व सब्जी के उन्नत हाइब्रिड बीज, रासायनिक और जैविक खाद, एवं ब्रांडेड कंपनियों की कीटनाशक दवाइयाँ देखें।`;
 

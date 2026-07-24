@@ -5,15 +5,14 @@ import { signIn, useSession } from 'next-auth/react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Leaf, Lock, Mail, AlertCircle, ArrowLeft, Eye, EyeOff, Check } from 'lucide-react';
 import Link from 'next/link';
-import { useTranslation } from 'react-i18next';
+import { useAppTranslation } from '@/lib/translation';
 
 function AdminLoginForm() {
   const { status } = useSession();
   const router = useRouter();
   const searchParams = useSearchParams();
   const message = searchParams.get('message');
-  const { i18n } = useTranslation();
-  const isEn = i18n.language === 'en';
+  const { t } = useAppTranslation();
   
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -31,7 +30,7 @@ function AdminLoginForm() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email || !password) {
-      setError(isEn ? 'Please enter both email and password.' : 'कृपया ईमेल और पासवर्ड दोनों भरें।');
+      setError(t('admin.login.errorRequired'));
       return;
     }
 
@@ -46,13 +45,13 @@ function AdminLoginForm() {
       });
 
       if (res?.error) {
-        setError(isEn ? 'Invalid email or password. Please check again.' : 'अमान्य ईमेल या पासवर्ड। कृपया दोबारा जांचें।');
+        setError(t('admin.login.errorInvalid'));
       } else if (res?.ok) {
         router.replace('/admin/dashboard');
       }
     } catch (err) {
       console.error(err);
-      setError(isEn ? 'A technical error occurred during login.' : 'लॉगिन करते समय कोई तकनीकी समस्या आई।');
+      setError(t('admin.login.errorTechnical'));
     } finally {
       setIsLoading(false);
     }
@@ -63,7 +62,7 @@ function AdminLoginForm() {
       <div className="min-h-screen bg-[#f1f8e9] flex items-center justify-center font-sans">
         <div className="text-center space-y-3">
           <Leaf className="h-10 w-10 text-agri-green-800 animate-bounce mx-auto" />
-          <p className="text-sm font-semibold text-gray-500">{isEn ? 'Please wait...' : 'प्रतीक्षा करें...'}</p>
+          <p className="text-sm font-semibold text-gray-500">{t('admin.login.pleaseWait')}</p>
         </div>
       </div>
     );
@@ -84,7 +83,7 @@ function AdminLoginForm() {
           className="inline-flex items-center space-x-1.5 text-xs font-bold text-gray-400 hover:text-agri-green-800 mb-6 transition-colors"
         >
           <ArrowLeft className="h-4 w-4" />
-          <span>{isEn ? 'Go to Home Website' : 'मुख्य वेबसाइट पर जाएं'}</span>
+          <span>{t('admin.login.goHome')}</span>
         </Link>
 
         {/* Logo and Header */}
@@ -93,10 +92,10 @@ function AdminLoginForm() {
             <Leaf className="h-8 w-8" />
           </div>
           <h1 className="font-display text-2xl font-extrabold text-agri-dark">
-            {isEn ? 'Nishad Beej Bhandar' : 'निषाद बीज भंडार'}
+            {t('shopName')}
           </h1>
           <p className="font-sans text-xs font-semibold text-agri-yellow-700">
-            {isEn ? 'Admin Portal Login' : 'एडमिन पोर्टल लॉगिन'}
+            {t('admin.login.portal')}
           </p>
         </div>
 
@@ -113,7 +112,7 @@ function AdminLoginForm() {
           
           {/* Email field */}
           <div>
-            <label className="block text-xs font-bold text-gray-700 mb-1.5">{isEn ? 'Email Address' : 'ईमेल पता'}</label>
+            <label className="block text-xs font-bold text-gray-700 mb-1.5">{t('admin.login.email')}</label>
             <div className="relative">
               <span className="absolute left-3 top-2.5 text-gray-400">
                 <Mail className="h-5 w-5" />
@@ -131,7 +130,7 @@ function AdminLoginForm() {
 
           {/* Password field */}
           <div>
-            <label className="block text-xs font-bold text-gray-700 mb-1.5">{isEn ? 'Password' : 'पासवर्ड'}</label>
+            <label className="block text-xs font-bold text-gray-700 mb-1.5">{t('admin.login.password')}</label>
             <div className="relative">
               <span className="absolute left-3 top-2.5 text-gray-400">
                 <Lock className="h-5 w-5" />
@@ -148,7 +147,7 @@ function AdminLoginForm() {
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
                 className="absolute right-3 top-2.5 text-gray-400 hover:text-gray-600 focus:outline-none transition-colors cursor-pointer"
-                title={showPassword ? (isEn ? 'Hide password' : 'पासवर्ड छिपाएं') : (isEn ? 'Show password' : 'पासवर्ड देखें')}
+                title={showPassword ? t('admin.login.hidePassword') : t('admin.login.showPassword')}
                 aria-label={showPassword ? 'Hide password' : 'Show password'}
               >
                 {showPassword ? (
@@ -175,8 +174,8 @@ function AdminLoginForm() {
             className="w-full bg-agri-green-800 hover:bg-agri-green-900 text-white font-sans font-bold py-3 rounded-xl transition-colors text-sm shadow-md flex items-center justify-center space-x-1.5 cursor-pointer disabled:bg-gray-400"
           >
             {isLoading 
-              ? (isEn ? 'Verifying...' : 'सत्यापित किया जा रहा है...') 
-              : (isEn ? 'Sign In' : 'लॉगिन करें')
+              ? t('admin.login.verifying') 
+              : t('admin.login.signIn')
             }
           </button>
         </form>
@@ -187,15 +186,14 @@ function AdminLoginForm() {
 }
 
 export default function AdminLoginPage() {
-  const { i18n } = useTranslation();
-  const isEn = i18n.language === 'en';
+  const { t } = useAppTranslation();
   
   return (
     <Suspense fallback={
       <div className="min-h-screen bg-[#f1f8e9] flex items-center justify-center font-sans">
         <div className="text-center space-y-3">
           <Leaf className="h-10 w-10 text-agri-green-800 animate-bounce mx-auto" />
-          <p className="text-sm font-semibold text-gray-500">{isEn ? 'Please wait...' : 'प्रतीक्षा करें...'}</p>
+          <p className="text-sm font-semibold text-gray-500">{t('admin.login.pleaseWait')}</p>
         </div>
       </div>
     }>

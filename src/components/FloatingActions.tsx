@@ -3,13 +3,11 @@
 import { useState, useEffect } from 'react';
 import { Phone, MessageSquare, ArrowUp } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useTranslation } from 'react-i18next';
-import { useSettings } from '@/components/SettingsProvider';
+import { useAppTranslation } from '@/lib/translation';
 
 export default function FloatingActions() {
-  const settings = useSettings();
+  const { t } = useAppTranslation();
   const [isVisible, setIsVisible] = useState(false);
-  const { t } = useTranslation();
 
   // Show button when page is scrolled down
   useEffect(() => {
@@ -31,10 +29,8 @@ export default function FloatingActions() {
     });
   };
 
-  const whatsappNumber = settings.whatsappNumber;
-  const whatsappMessage = encodeURIComponent(
-    t('whatsappMessage', 'नमस्ते, मुझे बीज एवं कृषि उत्पादों के बारे में जानकारी चाहिए।')
-  );
+  const whatsappNumber = t('whatsappNumber');
+  const whatsappMessage = encodeURIComponent(t('whatsappMessage'));
   const whatsappUrl = `https://wa.me/91${whatsappNumber}?text=${whatsappMessage}`;
 
   return (
@@ -55,7 +51,7 @@ export default function FloatingActions() {
 
       {/* Direct Call Button */}
       <motion.a
-        href={`tel:${settings.mobileNumber}`}
+        href={`tel:${t('mobileNumber')}`}
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.9 }}
         className="w-12 h-12 bg-agri-yellow-500 hover:bg-agri-yellow-600 text-agri-dark rounded-full flex items-center justify-center shadow-lg transition-colors cursor-pointer"

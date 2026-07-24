@@ -4,14 +4,12 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Phone, MapPin, Clock, ArrowRight, MessageSquare, Facebook, Youtube, Lock } from 'lucide-react';
-import { useTranslation } from 'react-i18next';
+import { useAppTranslation } from '@/lib/translation';
 import { useSession, signOut } from 'next-auth/react';
-import { useLocalizedSettings } from '@/components/SettingsProvider';
 
 export default function Footer() {
-  const settings = useLocalizedSettings();
+  const { t } = useAppTranslation();
   const currentYear = new Date().getFullYear();
-  const { t, i18n } = useTranslation();
   const { data: session, status } = useSession();
   const [mounted, setMounted] = useState(false);
 
@@ -45,7 +43,7 @@ export default function Footer() {
             <Link href="/" className="flex items-center space-x-2">
               <div className="relative h-10 w-10 overflow-hidden rounded-xl shadow-sm">
                 <Image
-                  src={settings.logoPath}
+                  src={t('logoPath')}
                   alt={`${t('logo.subtitle')} Logo`}
                   fill
                   sizes="40px"
@@ -54,16 +52,16 @@ export default function Footer() {
               </div>
               <div className="flex flex-col">
                 <span className="font-display text-base font-bold text-white leading-none">
-                {settings.shopName}
+                {t('shopName')}
                 </span>
               </div>
             </Link>
             <p className="font-sans text-sm text-gray-400 leading-relaxed">
-              {settings.aboutText}
+              {t('aboutText')}
             </p>
             <div className="flex space-x-4 pt-2">
               <a
-                href={`https://wa.me/91${settings.whatsappNumber}`}
+                href={`https://wa.me/91${t('whatsappNumber')}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-9 h-9 rounded-full bg-agri-green-900/50 hover:bg-agri-green-800 flex items-center justify-center text-green-400 hover:text-white transition-colors"
@@ -73,7 +71,7 @@ export default function Footer() {
                 <MessageSquare className="h-5 w-5" />
               </a>
               <a
-                href={`tel:${settings.mobileNumber}`}
+                href={`tel:${t('mobileNumber')}`}
                 className="w-9 h-9 rounded-full bg-agri-green-900/50 hover:bg-agri-green-800 flex items-center justify-center text-agri-yellow-500 hover:text-white transition-colors"
                 title="Call"
                 aria-label="Call Phone Number"
@@ -81,7 +79,7 @@ export default function Footer() {
                 <Phone className="h-5 w-5" />
               </a>
               <a
-                href={settings.facebookUrl}
+                href={t('facebookUrl')}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-9 h-9 rounded-full bg-agri-green-900/50 hover:bg-agri-green-800 flex items-center justify-center text-blue-400 hover:text-white transition-colors"
@@ -91,7 +89,7 @@ export default function Footer() {
                 <Facebook className="h-5 w-5" />
               </a>
               <a
-                href={settings.youtubeUrl}
+                href={t('youtubeUrl')}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-9 h-9 rounded-full bg-agri-green-900/50 hover:bg-agri-green-800 flex items-center justify-center text-red-500 hover:text-white transition-colors"
@@ -152,26 +150,26 @@ export default function Footer() {
                 <MapPin className="h-5 w-5 text-agri-yellow-500 shrink-0 mt-0.5" />
                 <span>
                   <strong className="block text-white font-bold">
-                    {settings.shopName}
+                    {t('shopName')}
                   </strong>
-                  {settings.address}
+                  {t('address')}
                 </span>
               </li>
               <li className="flex items-center space-x-3">
                 <Phone className="h-5 w-5 text-agri-yellow-500 shrink-0" />
                 <div>
-                  <a href={`tel:${settings.mobileNumber}`} className="hover:text-white text-gray-300 font-bold block">
-                    {settings.mobileNumber}
+                  <a href={`tel:${t('mobileNumber')}`} className="hover:text-white text-gray-300 font-bold block">
+                    {t('mobileNumber')}
                   </a>
                   <span className="text-xs">
-                    {t('footer.ownerLabel', 'Owner:')} {settings.ownerName}
+                    {t('footer.ownerLabel', 'Owner:')} {t('ownerName')}
                   </span>
                 </div>
               </li>
               <li className="flex items-start space-x-3">
                 <Clock className="h-5 w-5 text-agri-yellow-500 shrink-0 mt-0.5" />
                 <span className="whitespace-pre-line">
-                  {settings.businessHours}
+                  {t('businessHours')}
                 </span>
               </li>
             </ul>
@@ -181,10 +179,10 @@ export default function Footer() {
 
         {/* Bottom Bar */}
         <div className="border-t border-gray-800 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center text-sm text-gray-500">
-          <p>© {currentYear} {settings.shopName}. {t('footer.allRightsReservedText', 'All Rights Reserved.')}</p>
+          <p>© {currentYear} {t('shopName')}. {t('footer.allRightsReservedText', 'All Rights Reserved.')}</p>
           <div className="flex space-x-6 mt-4 md:mt-0">
             <span className="text-xs">
-              {t('footer.guidanceByLabel', 'Expert Guidance by')} {settings.ownerName}
+              {t('footer.guidanceByLabel', 'Expert Guidance by')} {t('ownerName')}
             </span>
             {isAdmin ? (
               <div className="flex items-center space-x-4">

@@ -5,9 +5,8 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { MessageSquare, Eye, Search, Leaf, AlertCircle } from 'lucide-react';
-import { useTranslation } from 'react-i18next';
+import { useAppTranslation } from '@/lib/translation';
 import Breadcrumbs from '@/components/Breadcrumbs';
-import { useLocalizedSettings } from '@/components/SettingsProvider';
 
 interface Category {
   id: number;
@@ -50,46 +49,9 @@ export default function ProductsClient({
   selectedCategory,
   searchQuery,
 }: ProductsClientProps) {
-  const settings = useLocalizedSettings();
-  const { t, i18n } = useTranslation();
+  const { t, tField, tCategory } = useAppTranslation();
   const router = useRouter();
   const [searchVal, setSearchVal] = useState(searchQuery || '');
-
-  const getTranslatedCategoryName = (slug: string, defaultName: string, nameEn?: string | null) => {
-    const isEn = i18n.language === 'en';
-    if (isEn && nameEn) {
-      return nameEn;
-    }
-    const keyMap: { [key: string]: string } = {
-      'paddy-seeds': 'categories.paddy',
-      'wheat-seeds': 'categories.wheat',
-      'maize-seeds': 'categories.maize',
-      'vegetable-seeds': 'categories.vegetable',
-      'fruit-seeds': 'categories.fruit',
-      'mustard-seeds': 'categories.mustard',
-      'pulse-seeds': 'categories.pulse',
-      'onion-seeds': 'categories.onion',
-      'tomato-seeds': 'categories.tomato',
-      'cucumber-seeds': 'categories.cucumber',
-      'carrot-seeds': 'categories.carrot',
-      'millet-seeds': 'categories.millet',
-      'fodder-seeds': 'categories.fodder',
-      'fertilizers': 'categories.fertilizers',
-      'urea': 'categories.urea',
-      'dap': 'categories.dap',
-      'muriate-of-potash-mop': 'categories.mop',
-      'single-super-phosphate-ssp': 'categories.ssp',
-      'npk-fertilizers': 'categories.npk',
-      'zinc-sulphate': 'categories.zinc',
-      'gypsum': 'categories.gypsum',
-      'farmyard-manure-fym': 'categories.fym',
-      'vermicompost': 'categories.vermicompost',
-      'pesticides': 'categories.pesticides',
-      'plant-growth-promoters': 'categories.growthPromoters',
-    };
-    const key = keyMap[slug];
-    return key ? t(key) : defaultName;
-  };
 
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -168,7 +130,7 @@ export default function ProductsClient({
                       : 'text-gray-600 hover:bg-agri-green-50 hover:text-agri-green-800'
                   }`}
                 >
-                  <span>{cat.icon} {getTranslatedCategoryName(cat.slug, cat.name, cat.nameEn)}</span>
+                  <span>{cat.icon} {tCategory(cat)}</span>
                 </Link>
               ))}
             </div>
@@ -190,19 +152,18 @@ export default function ProductsClient({
                 <Link href="/products" className="bg-agri-green-800 text-white px-4 py-2 rounded-lg text-sm font-semibold">
                   {t('productsPage.browseAll')}
                 </Link>
-                <a href={`tel:${settings.mobileNumber}`} className="border border-gray-200 text-gray-700 px-4 py-2 rounded-lg text-sm font-semibold">
-                  {t('productsPage.callStore', 'कॉल करें: 6387634500').replace('6387634500', settings.mobileNumber)}
+                <a href={`tel:${t('mobileNumber')}`} className="border border-gray-200 text-gray-700 px-4 py-2 rounded-lg text-sm font-semibold">
+                  {t('productsPage.callStore', 'कॉल करें: 6387634500').replace('6387634500', t('mobileNumber'))}
                 </a>
               </div>
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {products.map((prod) => {
-                const isEn = i18n.language === 'en';
-                const productName = isEn ? (prod.nameEn || prod.name) : prod.name;
-                const categoryName = isEn ? (prod.categoryNameEn || prod.categoryName) : prod.categoryName;
-                const varietyName = isEn ? (prod.varietyEn || prod.variety) : prod.variety;
-                const targetDiseaseName = isEn ? (prod.targetDiseaseEn || prod.targetDisease) : prod.targetDisease;
+                const productName = tField(prod, 'name');
+                const categoryName = tField(prod, 'categoryName');
+                const varietyName = tField(prod, 'variety');
+                const targetDiseaseName = tField(prod, 'targetDisease');
 
                 const discountPercent = prod.discountPrice 
                   ? Math.round(((prod.price - prod.discountPrice) / prod.price) * 100)
@@ -222,7 +183,7 @@ export default function ProductsClient({
                     .replace('{{name}}', productName)
                     .replace('{{details}}', subText)
                 );
-                const whatsappUrl = `https://wa.me/91${settings.whatsappNumber}?text=${whatsappMsg}`;
+                const whatsappUrl = `https://wa.me/91${t('whatsappNumber')}?text=${whatsappMsg}`;
 
                 return (
                   <div 
@@ -252,7 +213,7 @@ export default function ProductsClient({
                         </span>
                       )}
                       <span className="absolute top-3 right-3 bg-agri-green-900/80 text-white text-[10px] font-bold font-sans px-2 py-0.5 rounded-full backdrop-blur-sm z-10">
-                        {getTranslatedCategoryName(prod.categorySlug, prod.categoryName, prod.categoryNameEn)}
+                        {tCategory({ slug: prod.categorySlug, name: prod.categoryName, nameEn: prod.categoryNameEn })}
                       </span>
                     </div>
 

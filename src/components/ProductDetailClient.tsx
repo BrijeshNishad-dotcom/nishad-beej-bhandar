@@ -3,10 +3,8 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { MessageSquare, Phone, ArrowLeft, ShieldCheck, HelpCircle, Check, Award, Sprout } from 'lucide-react';
-import { useTranslation } from 'react-i18next';
 import Breadcrumbs from '@/components/Breadcrumbs';
-import { useLocalizedSettings } from '@/components/SettingsProvider';
-import { formatTerm } from '@/lib/translation';
+import { useAppTranslation, formatTerm } from '@/lib/translation';
 
 interface Category {
   id: number;
@@ -59,53 +57,15 @@ interface ProductDetailClientProps {
 }
 
 export default function ProductDetailClient({ product, type }: ProductDetailClientProps) {
-  const settings = useLocalizedSettings();
-  const { t, i18n } = useTranslation();
-
-  const getTranslatedCategoryName = (slug: string, defaultName: string, nameEn?: string | null) => {
-    const isEn = i18n.language === 'en';
-    if (isEn && nameEn) {
-      return nameEn;
-    }
-    const keyMap: { [key: string]: string } = {
-      'paddy-seeds': 'categories.paddy',
-      'wheat-seeds': 'categories.wheat',
-      'maize-seeds': 'categories.maize',
-      'vegetable-seeds': 'categories.vegetable',
-      'fruit-seeds': 'categories.fruit',
-      'mustard-seeds': 'categories.mustard',
-      'pulse-seeds': 'categories.pulse',
-      'onion-seeds': 'categories.onion',
-      'tomato-seeds': 'categories.tomato',
-      'cucumber-seeds': 'categories.cucumber',
-      'carrot-seeds': 'categories.carrot',
-      'millet-seeds': 'categories.millet',
-      'fodder-seeds': 'categories.fodder',
-      'fertilizers': 'categories.fertilizers',
-      'urea': 'categories.urea',
-      'dap': 'categories.dap',
-      'muriate-of-potash-mop': 'categories.mop',
-      'single-super-phosphate-ssp': 'categories.ssp',
-      'npk-fertilizers': 'categories.npk',
-      'zinc-sulphate': 'categories.zinc',
-      'gypsum': 'categories.gypsum',
-      'farmyard-manure-fym': 'categories.fym',
-      'vermicompost': 'categories.vermicompost',
-      'pesticides': 'categories.pesticides',
-      'plant-growth-promoters': 'categories.growthPromoters',
-    };
-    const key = keyMap[slug];
-    return key ? t(key) : defaultName;
-  };
+  const { t, tField, tCategory, i18n } = useAppTranslation();
 
   const isSeed = type === 'seed';
   const isFertilizer = type === 'fertilizer';
   const isPesticide = type === 'pesticide';
 
-  const isEn = i18n.language === 'en';
-  const productName = isEn ? (product.nameEn || product.name) : product.name;
-  const varietyName = isEn ? (product.varietyEn || product.variety) : product.variety;
-  const targetDiseaseName = isEn ? (product.targetDiseaseEn || product.targetDisease) : product.targetDisease;
+  const productName = tField(product, 'name');
+  const varietyName = tField(product, 'variety');
+  const targetDiseaseName = tField(product, 'targetDisease');
 
   const discountPercent = product.discountPrice
     ? Math.round(((product.price - product.discountPrice) / product.price) * 100)
@@ -122,7 +82,7 @@ export default function ProductDetailClient({ product, type }: ProductDetailClie
       .replace('{{name}}', productName)
       .replace('{{details}}', currentDetails)
   );
-  const whatsappUrl = `https://wa.me/91${settings.whatsappNumber}?text=${whatsappMsg}`;
+  const whatsappUrl = `https://wa.me/91${t('whatsappNumber')}?text=${whatsappMsg}`;
 
   const breadcrumbItems = [
     { label: t('breadcrumbs.products'), href: '/products' },
@@ -192,7 +152,7 @@ export default function ProductDetailClient({ product, type }: ProductDetailClie
           {/* Company and Category Header */}
           <div className="flex items-center space-x-2">
             <span className="bg-agri-green-800 text-white text-xs font-bold font-sans px-2.5 py-0.5 rounded-full">
-              {getTranslatedCategoryName(product.category.slug, product.category.name, product.category.nameEn)}
+              {tCategory(product.category)}
             </span>
             <span className="text-sm text-gray-400 font-sans">
               {t('productDetails.manufacturer')}{product.company}
@@ -479,7 +439,7 @@ export default function ProductDetailClient({ product, type }: ProductDetailClie
             </a>
 
             <a
-              href={`tel:${settings.mobileNumber}`}
+              href={`tel:${t('mobileNumber')}`}
               className="flex-1 bg-agri-yellow-500 hover:bg-agri-yellow-600 text-agri-dark font-sans font-bold py-3.5 rounded-xl shadow-md text-center transition-colors flex items-center justify-center space-x-2 cursor-pointer"
             >
               <Phone className="h-4.5 w-4.5 shrink-0" />
@@ -491,7 +451,7 @@ export default function ProductDetailClient({ product, type }: ProductDetailClie
           <div className="bg-agri-green-50/30 rounded-xl p-4 border border-agri-green-100/30 text-xs sm:text-sm text-gray-500 flex items-start space-x-2.5">
             <HelpCircle className="h-5 w-5 text-agri-green-800 shrink-0 mt-0.5" />
             <p className="leading-normal">
-              <strong>{t('productDetails.expertAdviceNoteLabel', 'कृषि सलाह नोट:')}</strong> {t('productDetails.expertAdviceNoteText', { ownerName: settings.ownerName })}
+              <strong>{t('productDetails.expertAdviceNoteLabel', 'कृषि सलाह नोट:')}</strong> {t('productDetails.expertAdviceNoteText', { ownerName: t('ownerName') })}
             </p>
           </div>
 

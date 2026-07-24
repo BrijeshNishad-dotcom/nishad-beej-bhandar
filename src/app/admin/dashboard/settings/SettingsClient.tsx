@@ -8,7 +8,7 @@ import {
   Image as ImageIcon, Lock, Mail, Eye, EyeOff, ShieldCheck, Key 
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { DEFAULT_SETTINGS } from '@/components/SettingsProvider';
+import { DEFAULT_SETTINGS } from '@/lib/constants';
 
 type SettingsClientProps = {
   initialSettings: Record<string, string>;

@@ -1,5 +1,5 @@
 import { prisma } from '@/lib/db';
-import { DEFAULT_SETTINGS } from '@/components/SettingsProvider';
+import { DEFAULT_SETTINGS } from '@/lib/constants';
 import { cache } from 'react';
 
 /**

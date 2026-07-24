@@ -2,28 +2,7 @@
 
 import React, { createContext, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
-
-export const DEFAULT_SETTINGS: Record<string, string> = {
-  shopName: "निषाद बीज भंडार",
-  shopNameEn: "Nishad Beej Bhandar",
-  ownerName: "अभय निषाद",
-  ownerNameEn: "Abhay Nishad",
-  mobileNumber: "6387634500",
-  whatsappNumber: "6387634500",
-  address: "बिरमलपुर रोड, कोरोना चौराहा, सुल्तानपुर, उत्तर प्रदेश, भारत",
-  addressEn: "Birlmalpur Road, Korona Chauraha, Sultanpur, Uttar Pradesh, India",
-  businessHours: "सोमवार - रविवार: सुबह 7:00 बजे - रात 8:00 बजे",
-  businessHoursEn: "Monday - Sunday: 7:00 AM - 8:00 PM",
-  aboutText: "हम भारतीय किसानों को उनकी उपज बढ़ाने में मदद करने के लिए उत्कृष्ट गुणवत्ता वाले बीज, अत्यधिक प्रभावी उर्वरक और असली कीटनाशक प्रदान करते हैं। कृषि स्नातक (B.Sc Agriculture) अभय निषाद के नेतृत्व में, हम वैज्ञानिक मार्गदर्शन और असली ब्रांडेड उत्पाद प्रदान करते हैं।",
-  aboutTextEn: "We provide premium quality seeds, highly effective fertilizers, and original pesticides to help Indian farmers maximize their yield. Led by Abhay Nishad, a B.Sc Agriculture graduate, we offer expert scientific guidance and genuine brand-name products.",
-  heroTitle: "अच्छे बीज, अच्छी फसल की शुरुआत",
-  heroSubtitle: "धान, गेहूं, मक्का, सरसों, और सब्जियों के उन्नत बीज, सर्वोत्तम उर्वरक खाद एवं कीटनाशक दवाइयाँ उचित सरकारी रेट पर उपलब्ध हैं।",
-  heroTitleEn: "Good Seeds, Beginning of a Good Crop",
-  heroSubtitleEn: "High-quality seeds for paddy, wheat, maize, mustard, and vegetables, along with premium fertilizers and top-grade pesticides are available at reasonable prices.",
-  logoPath: "/brand-logo.png",
-  facebookUrl: "https://facebook.com",
-  youtubeUrl: "https://youtube.com",
-};
+import { DEFAULT_SETTINGS } from '@/lib/constants';
 
 const SettingsContext = createContext<Record<string, string>>(DEFAULT_SETTINGS);
 

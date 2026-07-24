@@ -1,29 +1,26 @@
 import HomeClient from './HomeClient';
 import { Metadata } from 'next';
 import { prisma } from '@/lib/db';
-import { getSettings } from '@/lib/settings';
-import { DEFAULT_SETTINGS } from '@/components/SettingsProvider';
 import { cookies } from 'next/headers';
+import { getTranslationServer } from '@/lib/translationServer';
 
 export const revalidate = 0; // Disable cache so changes reflect immediately
 
 export async function generateMetadata(): Promise<Metadata> {
   const cookieStore = await cookies();
   const language = cookieStore.get('language')?.value || 'hi';
-  const isEn = language === 'en';
+  const { t } = await getTranslationServer(language);
 
-  const settings = await getSettings();
+  const shopName = t('shopName');
+  const heroTitle = t('heroTitle');
+  const heroSubtitle = t('heroSubtitle');
+  const ownerName = t('ownerName');
 
-  const shopName = isEn ? (settings.shopNameEn || DEFAULT_SETTINGS.shopNameEn) : (settings.shopName || DEFAULT_SETTINGS.shopName);
-  const heroTitle = isEn ? (settings.heroTitleEn || DEFAULT_SETTINGS.heroTitleEn) : (settings.heroTitle || DEFAULT_SETTINGS.heroTitle);
-  const heroSubtitle = isEn ? (settings.heroSubtitleEn || DEFAULT_SETTINGS.heroSubtitleEn) : (settings.heroSubtitle || DEFAULT_SETTINGS.heroSubtitle);
-  const ownerName = isEn ? (settings.ownerNameEn || DEFAULT_SETTINGS.ownerNameEn) : (settings.ownerName || DEFAULT_SETTINGS.ownerName);
-
-  const title = isEn 
+  const title = language === 'en' 
     ? `${shopName} - ${heroTitle} | Certified Agriculture Seeds & Fertilizers Store`
     : `${shopName} - ${heroTitle} | प्रमाणित कृषि बीज एवं उर्वरक भंडार`;
 
-  const description = isEn 
+  const description = language === 'en' 
     ? `${heroSubtitle} Owner: ${ownerName}`
     : `${heroSubtitle} संचालक: ${ownerName}`;
 
@@ -49,22 +46,21 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function HomePage() {
   const cookieStore = await cookies();
   const language = cookieStore.get('language')?.value || 'hi';
-  const isEn = language === 'en';
+  const { t } = await getTranslationServer(language);
 
-  const settings = await getSettings();
-
-  const shopName = isEn ? (settings.shopNameEn || DEFAULT_SETTINGS.shopNameEn) : (settings.shopName || DEFAULT_SETTINGS.shopName);
-  const ownerName = isEn ? (settings.ownerNameEn || DEFAULT_SETTINGS.ownerNameEn) : (settings.ownerName || DEFAULT_SETTINGS.ownerName);
-  const mobileNumber = settings.mobileNumber || DEFAULT_SETTINGS.mobileNumber;
-  const address = isEn ? (settings.addressEn || DEFAULT_SETTINGS.addressEn) : (settings.address || DEFAULT_SETTINGS.address);
-  const businessHours = isEn ? (settings.businessHoursEn || DEFAULT_SETTINGS.businessHoursEn) : (settings.businessHours || DEFAULT_SETTINGS.businessHours);
+  const shopName = t('shopName');
+  const ownerName = t('ownerName');
+  const mobileNumber = t('mobileNumber');
+  const address = t('address');
+  const businessHours = t('businessHours');
+  const logoPath = t('logoPath');
 
   const orgJsonLd = {
     '@context': 'https://schema.org',
     '@type': 'Organization',
     'name': shopName,
     'url': 'https://nishadbeejbhandar.com',
-    'logo': `https://nishadbeejbhandar.com${settings.logoPath || DEFAULT_SETTINGS.logoPath}`,
+    'logo': `https://nishadbeejbhandar.com${logoPath}`,
     'contactPoint': {
       '@type': 'ContactPoint',
       'telephone': `+91-${mobileNumber}`,
@@ -79,15 +75,15 @@ export default async function HomePage() {
     '@type': 'LocalBusiness',
     'name': shopName,
     'image': [
-      `https://nishadbeejbhandar.com${settings.logoPath || DEFAULT_SETTINGS.logoPath}`
+      `https://nishadbeejbhandar.com${logoPath}`
     ],
     'telephone': `+91-${mobileNumber}`,
     'priceRange': '$$',
     'address': {
       '@type': 'PostalAddress',
       'streetAddress': address,
-      'addressLocality': isEn ? 'Sultanpur' : 'सुल्तानपुर',
-      'addressRegion': isEn ? 'Uttar Pradesh' : 'उत्तर प्रदेश',
+      'addressLocality': language === 'en' ? 'Sultanpur' : 'सुल्तानपुर',
+      'addressRegion': language === 'en' ? 'Uttar Pradesh' : 'उत्तर प्रदेश',
       'postalCode': '228001',
       'addressCountry': 'IN'
     },
@@ -113,7 +109,7 @@ export default async function HomePage() {
     }
   };
 
-  const faqJsonLd = isEn ? {
+  const faqJsonLd = language === 'en' ? {
     '@context': 'https://schema.org',
     '@type': 'FAQPage',
     'mainEntity': [

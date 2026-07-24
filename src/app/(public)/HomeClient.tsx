@@ -8,8 +8,7 @@ import {
   MapPin, Phone, MessageSquare, Clock, Calendar, Star, ChevronRight, Leaf
 } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { useTranslation } from 'react-i18next';
-import { useLocalizedSettings } from '@/components/SettingsProvider';
+import { useAppTranslation } from '@/lib/translation';
 
 interface GalleryItem {
   id: number;
@@ -33,8 +32,7 @@ interface HomeClientProps {
 }
 
 export default function HomeClient({ galleryItems = [], categories }: HomeClientProps) {
-  const settings = useLocalizedSettings();
-  const { t, i18n } = useTranslation();
+  const { t, tField, tCategory, i18n } = useAppTranslation();
 
   const getInitials = (name: string) => {
     if (!name) return 'AN';
@@ -45,7 +43,7 @@ export default function HomeClient({ galleryItems = [], categories }: HomeClient
   };
 
   const renderHeroTitle = () => {
-    const title = settings.heroTitle;
+    const title = t('heroTitle');
 
     const parts = title.split(',');
     if (parts.length > 1) {
@@ -117,41 +115,7 @@ export default function HomeClient({ galleryItems = [], categories }: HomeClient
     }
   };
 
-  const getTranslatedCategoryName = (slug: string, defaultName: string, nameEn?: string | null) => {
-    const isEn = i18n.language === 'en';
-    if (isEn && nameEn) {
-      return nameEn;
-    }
-    const keyMap: { [key: string]: string } = {
-      'paddy-seeds': 'categories.paddy',
-      'wheat-seeds': 'categories.wheat',
-      'maize-seeds': 'categories.maize',
-      'vegetable-seeds': 'categories.vegetable',
-      'mustard-seeds': 'categories.mustard',
-      'pulse-seeds': 'categories.pulse',
-      'onion-seeds': 'categories.onion',
-      'tomato-seeds': 'categories.tomato',
-      'cucumber-seeds': 'categories.cucumber',
-      'carrot-seeds': 'categories.carrot',
-      'millet-seeds': 'categories.millet',
-      'fodder-seeds': 'categories.fodder',
-      'fertilizers': 'categories.fertilizers',
-      'urea': 'categories.urea',
-      'dap': 'categories.dap',
-      'muriate-of-potash-mop': 'categories.mop',
-      'single-super-phosphate-ssp': 'categories.ssp',
-      'npk-fertilizers': 'categories.npk',
-      'zinc-sulphate': 'categories.zinc',
-      'gypsum': 'categories.gypsum',
-      'farmyard-manure-fym': 'categories.fym',
-      'vermicompost': 'categories.vermicompost',
-      'pesticides': 'categories.pesticides',
-      'plant-growth-promoters': 'categories.growthPromoters',
-      'fruit-seeds': 'categories.fruit',
-    };
-    const key = keyMap[slug];
-    return key ? t(key) : defaultName;
-  };
+
 
   const getCategoryCountText = (slug: string, count: number) => {
     if (slug.includes('seeds')) {
@@ -271,7 +235,7 @@ export default function HomeClient({ galleryItems = [], categories }: HomeClient
                 <div className="inline-flex items-center bg-agri-green-900/80 border border-agri-yellow-500/50 rounded-2xl px-4 py-2.5 backdrop-blur-sm shadow-lg">
                   <div>
                     <p className="font-display text-sm font-extrabold text-agri-yellow-500 leading-tight tracking-wide">
-                      {settings.shopName}
+                      {t('shopName')}
                     </p>
                   </div>
                 </div>
@@ -292,7 +256,7 @@ export default function HomeClient({ galleryItems = [], categories }: HomeClient
                 transition={{ duration: 0.5, delay: 0.2 }}
                 className="font-sans text-base sm:text-lg text-gray-200 max-w-xl leading-relaxed"
               >
-                {settings.heroSubtitle}
+                {t('heroSubtitle')}
               </motion.p>
 
               {/* Owner Badge */}
@@ -303,11 +267,11 @@ export default function HomeClient({ galleryItems = [], categories }: HomeClient
                 className="flex items-center space-x-3 bg-white/10 backdrop-blur-sm p-3 rounded-xl border border-white/10 max-w-sm"
               >
                 <div className="w-10 h-10 rounded-full bg-agri-yellow-500 flex items-center justify-center font-display font-bold text-agri-dark text-sm">
-                  {getInitials(settings.ownerName)}
+                  {getInitials(t('ownerName'))}
                 </div>
                 <div>
                   <h4 className="text-sm font-bold text-white">
-                    {settings.ownerName}
+                    {t('ownerName')}
                   </h4>
                   <p className="text-xs text-agri-yellow-500 font-semibold">{t('hero.ownerTitle')}</p>
                 </div>
@@ -334,7 +298,7 @@ export default function HomeClient({ galleryItems = [], categories }: HomeClient
                   <span>{t('hero.contact')}</span>
                 </a>
                 <a
-                  href={`https://wa.me/91${settings.whatsappNumber}?text=${encodeURIComponent(t('whatsappMessage'))}`}
+                  href={`https://wa.me/91${t('whatsappNumber')}?text=${encodeURIComponent(t('whatsappMessage'))}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="bg-green-600 hover:bg-green-700 text-white font-sans font-bold px-6 py-3.5 rounded-lg text-sm sm:text-base transition-colors shadow-md flex items-center space-x-1.5"
@@ -420,7 +384,7 @@ export default function HomeClient({ galleryItems = [], categories }: HomeClient
                   {cat.icon}
                 </div>
                 <h3 className="font-display text-base sm:text-lg font-bold text-agri-dark">
-                  {getTranslatedCategoryName(cat.slug, cat.name, cat.nameEn)}
+                  {tCategory(cat)}
                 </h3>
                 <span className="text-xs text-gray-400 block mt-1">{getCategoryCountText(cat.slug, cat.count)}</span>
                 <Link
@@ -461,12 +425,12 @@ export default function HomeClient({ galleryItems = [], categories }: HomeClient
                 {t('about.label')}
               </span>
               <h2 className="font-display text-3xl sm:text-4xl font-extrabold text-agri-dark">
-                {settings.ownerName}
+                {t('ownerName')}
               </h2>
               <div className="h-1.5 w-20 bg-agri-yellow-500 rounded-full" />
               
               <p className="font-sans text-sm sm:text-base text-gray-600 leading-relaxed whitespace-pre-line">
-                {settings.aboutText}
+                {t('aboutText')}
               </p>
 
               {/* Owner Certifications */}
@@ -732,7 +696,7 @@ export default function HomeClient({ galleryItems = [], categories }: HomeClient
                   </div>
                   <div>
                     <h4 className="text-xs text-gray-400 uppercase font-sans">{t('contact.specialistLabel')}</h4>
-                    <p className="text-sm sm:text-base font-bold text-agri-dark">{settings.ownerName}</p>
+                    <p className="text-sm sm:text-base font-bold text-agri-dark">{t('ownerName')}</p>
                   </div>
                 </div>
 
@@ -742,8 +706,8 @@ export default function HomeClient({ galleryItems = [], categories }: HomeClient
                   </div>
                   <div>
                     <h4 className="text-xs text-gray-400 uppercase font-sans">{t('contact.callLabel')}</h4>
-                    <a href={`tel:${settings.mobileNumber}`} className="text-sm sm:text-base font-bold text-agri-dark hover:underline hover:text-agri-green-800">
-                      {settings.mobileNumber}
+                    <a href={`tel:${t('mobileNumber')}`} className="text-sm sm:text-base font-bold text-agri-dark hover:underline hover:text-agri-green-800">
+                      {t('mobileNumber')}
                     </a>
                   </div>
                 </div>
@@ -755,7 +719,7 @@ export default function HomeClient({ galleryItems = [], categories }: HomeClient
                   <div>
                     <h4 className="text-xs text-gray-400 uppercase font-sans">{t('contact.addressLabel')}</h4>
                     <p className="text-xs sm:text-sm font-semibold text-agri-dark">
-                      {settings.address}
+                      {t('address')}
                     </p>
                   </div>
                 </div>
@@ -766,7 +730,7 @@ export default function HomeClient({ galleryItems = [], categories }: HomeClient
                   </div>
                   <div>
                     <h4 className="text-xs text-gray-400 uppercase font-sans">{t('contact.hoursLabel')}</h4>
-                    <p className="text-sm font-semibold text-agri-dark">{settings.businessHours}</p>
+                    <p className="text-sm font-semibold text-agri-dark">{t('businessHours')}</p>
                   </div>
                 </div>
               </div>
@@ -774,14 +738,14 @@ export default function HomeClient({ galleryItems = [], categories }: HomeClient
               {/* Instant Call & WhatsApp Large Buttons */}
               <div className="flex gap-4 pt-4">
                 <a
-                  href={`tel:${settings.mobileNumber}`}
+                  href={`tel:${t('mobileNumber')}`}
                   className="flex-1 flex items-center justify-center space-x-2 bg-agri-yellow-500 hover:bg-agri-yellow-600 text-agri-dark font-sans font-bold py-3.5 px-4 rounded-xl shadow-md text-center transition-all"
                 >
                   <Phone className="h-5 w-5 shrink-0" />
                   <span>{t('contact.callBtn')}</span>
                 </a>
                 <a
-                  href={`https://wa.me/91${settings.whatsappNumber}?text=${encodeURIComponent(t('whatsappMessage'))}`}
+                  href={`https://wa.me/91${t('whatsappNumber')}?text=${encodeURIComponent(t('whatsappMessage'))}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex-1 flex items-center justify-center space-x-2 bg-green-500 hover:bg-green-600 text-white font-sans font-bold py-3.5 px-4 rounded-xl shadow-md text-center transition-all"
@@ -877,7 +841,7 @@ export default function HomeClient({ galleryItems = [], categories }: HomeClient
                 {submitStatus === 'success' && (
                   <div className="bg-green-50 text-green-800 border border-green-200 p-4 rounded-xl text-sm font-semibold flex items-center space-x-2 animate-fade-in">
                     <CheckCircle className="h-5 w-5 shrink-0" />
-                    <span>{t('enquiry.success', { ownerName: settings.ownerName })}</span>
+                    <span>{t('enquiry.success', { ownerName: t('ownerName') })}</span>
                   </div>
                 )}
 

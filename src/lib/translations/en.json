@@ -18,7 +18,8 @@
     "pesticides": "Pesticides",
     "adminDashboard": "Admin Dashboard",
     "adminLogin": "Admin Login",
-    "logout": "Logout"
+    "logout": "Logout",
+    "whatsappMessage": "Hello {{shopName}}, I have an enquiry..."
   },
   "breadcrumbs": {
     "home": "Home",
@@ -268,7 +269,13 @@
     "usageInstructions": "Sowing Instructions:",
     "seedDosage": "Seed Treatment / Dosage:",
     "expertAdviceNoteLabel": "Expert Advisory Note:",
-    "expertAdviceNoteText": "Pay special attention to soil moisture and temperature during sowing. In case of any disease symptoms, call {{ownerName}} immediately."
+    "expertAdviceNoteText": "Pay special attention to soil moisture and temperature during sowing. In case of any disease symptoms, call {{ownerName}} immediately.",
+    "cropSeasonKharif": "Kharif",
+    "cropSeasonRabi": "Rabi",
+    "cropSeasonZaid": "Zaid",
+    "pesticideTypeInsecticide": "Insecticide",
+    "pesticideTypeFungicide": "Fungicide",
+    "pesticideTypeHerbicide": "Herbicide"
   },
   "footer": {
     "aboutText": "Center for reliable and advanced agricultural products. We provide Indian farmers with high-yielding seeds, excellent fertilizers, and genuine pesticides.",
@@ -298,6 +305,53 @@
     "enquiries": "Customer Enquiries",
     "gallery": "Gallery & Banners",
     "settings": "Shop Settings",
-    "viewSite": "View Main Website"
+    "viewSite": "View Main Website",
+    "login": {
+      "goHome": "Go to Home Website",
+      "portal": "Admin Portal Login",
+      "email": "Email Address",
+      "password": "Password",
+      "hidePassword": "Hide password",
+      "showPassword": "Show password",
+      "verifying": "Verifying...",
+      "signIn": "Sign In",
+      "pleaseWait": "Please wait...",
+      "errorRequired": "Please enter both email and password.",
+      "errorInvalid": "Invalid email or password. Please check again.",
+      "errorTechnical": "A technical error occurred during login."
+    },
+    "dashboard": {
+      "title": "Dashboard Overview",
+      "subtitle": "Nishad Beej Bhandar store analytics and customer activity",
+      "totalProducts": "Total Products",
+      "categories": "Categories",
+      "receivedEnquiries": "Received Enquiries",
+      "totalVisitors": "Total Visitors",
+      "todayVisitors": "Today: {{count}} new",
+      "visitorGraph": "Visitor Graph (Last 10 Days)",
+      "noVisitorData": "Not enough visitor data available yet.",
+      "recentEnquiries": "Recent Enquiries",
+      "farmerName": "Farmer Name",
+      "mobile": "Mobile",
+      "village": "Village",
+      "crop": "Crop",
+      "date": "Date",
+      "message": "Enquiry Message",
+      "status": "Status",
+      "contacted": "Contacted",
+      "pending": "Pending",
+      "markContacted": "Mark Contacted",
+      "delete": "Delete",
+      "confirmDelete": "Do you want to delete this enquiry?",
+      "errorUpdate": "Failed to update.",
+      "errorDelete": "Failed to delete.",
+      "errorGeneric": "An error occurred.",
+      "lastMessages": "Last 5 Messages",
+      "noPending": "No pending enquiries.",
+      "generalAdvice": "General Advice",
+      "farmerDetails": "Farmer Details",
+      "actions": "Actions",
+      "villageLabel": "Village"
+    }
   }
 }

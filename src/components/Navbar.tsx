@@ -8,9 +8,7 @@ import {
   Home, ShoppingBag, BookOpen, Phone, Search, ChevronDown, Menu, X
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useTranslation } from 'react-i18next';
-import { useLanguage } from '@/components/LanguageProvider';
-import { useLocalizedSettings } from '@/components/SettingsProvider';
+import { useAppTranslation } from '@/lib/translation';
 
 // Premium WhatsApp SVG Icon
 const WhatsAppIcon = (props: React.SVGProps<SVGSVGElement>) => (
@@ -20,7 +18,7 @@ const WhatsAppIcon = (props: React.SVGProps<SVGSVGElement>) => (
 );
 
 export default function Navbar() {
-  const settings = useLocalizedSettings();
+  const { t, language, setLanguage, i18n } = useAppTranslation();
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [isProductsOpen, setIsProductsOpen] = useState(false);
@@ -31,9 +29,6 @@ export default function Navbar() {
 
   const pathname = usePathname();
   const router = useRouter();
-
-  const { t, i18n } = useTranslation();
-  const { language, setLanguage } = useLanguage();
 
 
 
@@ -101,8 +96,8 @@ export default function Navbar() {
             <Link href="/" className="flex items-center space-x-2 group shrink-0">
               <div className="relative h-10 w-10 overflow-hidden transition-all duration-300 group-hover:scale-105 shadow-sm rounded-xl">
                 <Image
-                  src={settings.logoPath}
-                  alt={`${settings.shopName} Logo`}
+                  src={t('logoPath')}
+                  alt={`${t('shopName')} Logo`}
                   fill
                   sizes="40px"
                   className="object-contain"
@@ -110,7 +105,7 @@ export default function Navbar() {
               </div>
               <div className="hidden sm:block">
                 <span className="font-display text-base lg:text-lg font-extrabold text-agri-green-900 leading-none block">
-                  {settings.shopName}
+                  {t('shopName')}
                 </span>
               </div>
             </Link>
@@ -227,10 +222,8 @@ export default function Navbar() {
               
               {/* WhatsApp Button */}
               <a
-                href={`https://wa.me/91${settings.whatsappNumber}?text=${encodeURIComponent(
-                  i18n.language === 'hi' 
-                    ? `नमस्ते ${settings.shopName}, मुझे पूछताछ करनी है...`
-                    : `Hello ${settings.shopName}, I have an enquiry...`
+                href={`https://wa.me/91${t('whatsappNumber')}?text=${encodeURIComponent(
+                  t('navbar.whatsappMessage', { shopName: t('shopName') })
                 )}`}
                 target="_blank"
                 rel="noopener noreferrer"
@@ -242,7 +235,7 @@ export default function Navbar() {
 
               {/* Call Store Button */}
               <a
-                href={`tel:${settings.mobileNumber}`}
+                href={`tel:${t('mobileNumber')}`}
                 className="flex items-center space-x-1.5 bg-agri-yellow-500 hover:bg-agri-yellow-600 text-agri-dark font-sans font-bold px-3.5 py-2 rounded-full text-xs lg:text-sm shadow-sm hover:shadow transition-all hover:scale-102 active:scale-95 duration-200"
               >
                 <Phone className="h-3.5 w-3.5 lg:h-4 lg:w-4" />
@@ -316,8 +309,8 @@ export default function Navbar() {
                   <Link href="/" onClick={() => setIsOpen(false)} className="flex items-center space-x-2 group">
                     <div className="relative h-10 w-10 overflow-hidden rounded-xl shadow-sm">
                       <Image
-                        src={settings.logoPath}
-                        alt={`${settings.shopName} Logo`}
+                        src={t('logoPath')}
+                        alt={`${t('shopName')} Logo`}
                         fill
                         sizes="40px"
                         className="object-contain"
@@ -325,7 +318,7 @@ export default function Navbar() {
                     </div>
                     <div>
                       <span className="font-display text-sm font-extrabold text-agri-green-900 leading-none block">
-                        {settings.shopName}
+                        {t('shopName')}
                       </span>
                     </div>
                   </Link>
@@ -459,7 +452,7 @@ export default function Navbar() {
               <div className="border-t border-gray-100 pt-6 mt-6 space-y-3 font-sans">
                 <div className="flex gap-2.5">
                   <a
-                    href={`https://wa.me/91${settings.whatsappNumber}`}
+                    href={`https://wa.me/91${t('whatsappNumber')}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex-1 flex items-center justify-center space-x-2 bg-[#25D366] hover:bg-[#20ba5a] text-white py-3 rounded-xl shadow-sm text-sm font-bold transition-colors"
@@ -468,7 +461,7 @@ export default function Navbar() {
                     <span>{t('navbar.whatsapp')}</span>
                   </a>
                   <a
-                    href={`tel:${settings.mobileNumber}`}
+                    href={`tel:${t('mobileNumber')}`}
                     className="flex-1 flex items-center justify-center space-x-2 bg-agri-yellow-500 hover:bg-agri-yellow-600 text-agri-dark py-3 rounded-xl shadow-sm text-sm font-bold transition-colors"
                   >
                     <Phone className="h-4 w-4" />
@@ -476,7 +469,7 @@ export default function Navbar() {
                   </a>
                 </div>
                 <div className="text-center">
-                  <p className="text-[10px] text-gray-400">© 2026 {settings.shopName}. {t('footer.allRightsReservedText', 'All Rights Reserved.')}</p>
+                  <p className="text-[10px] text-gray-400">© 2026 {t('shopName')}. {t('footer.allRightsReservedText', 'All Rights Reserved.')}</p>
                 </div>
               </div>
 

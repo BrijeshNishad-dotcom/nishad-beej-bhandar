@@ -18,7 +18,8 @@
     "pesticides": "कीटनाशक (Pesticides)",
     "adminDashboard": "एडमिन डैशबोर्ड",
     "adminLogin": "एडमिन लॉगिन",
-    "logout": "लॉगआउट"
+    "logout": "लॉगआउट",
+    "whatsappMessage": "नमस्ते {{shopName}}, मुझे पूछताछ करनी है..."
   },
   "breadcrumbs": {
     "home": "मुख्य पृष्ठ",
@@ -268,7 +269,13 @@
     "usageInstructions": "बुवाई के निर्देश:",
     "seedDosage": "बीज उपचार / खुराक:",
     "expertAdviceNoteLabel": "कृषि सलाह नोट:",
-    "expertAdviceNoteText": "बीजों की बुवाई के समय मिट्टी की नमी और तापमान का विशेष ध्यान रखें। किसी भी प्रकार की बीमारी के लक्षण दिखने पर संचालक {{ownerName}} को कॉल करें।"
+    "expertAdviceNoteText": "बीजों की बुवाई के समय मिट्टी की नमी और तापमान का विशेष ध्यान रखें। किसी भी प्रकार की बीमारी के लक्षण दिखने पर संचालक {{ownerName}} को कॉल करें।",
+    "cropSeasonKharif": "खरीफ (Kharif)",
+    "cropSeasonRabi": "रबी (Rabi)",
+    "cropSeasonZaid": "जायद (Zaid)",
+    "pesticideTypeInsecticide": "कीटनाशक (Insecticide)",
+    "pesticideTypeFungicide": "कवकनाशी (Fungicide)",
+    "pesticideTypeHerbicide": "खरपतवार नाशक (Herbicide)"
   },
   "footer": {
     "aboutText": "विश्वसनीय एवं उन्नत कृषि उत्पादों का केंद्र। हम भारतीय किसानों को उच्च पैदावार वाले बीज, उत्तम उर्वरक और असली कीटनाशक दवाइयाँ प्रदान करते हैं।",
@@ -298,6 +305,53 @@
     "enquiries": "ग्राहक पूछताछ",
     "gallery": "गैलरी और बैनर",
     "settings": "दुकान सेटिंग्स",
-    "viewSite": "मुख्य वेबसाइट देखें"
+    "viewSite": "मुख्य वेबसाइट देखें",
+    "login": {
+      "goHome": "मुख्य वेबसाइट पर जाएं",
+      "portal": "एडमिन पोर्टल लॉगिन",
+      "email": "ईमेल पता",
+      "password": "पासवर्ड",
+      "hidePassword": "पासवर्ड छिपाएं",
+      "showPassword": "पासवर्ड देखें",
+      "verifying": "सत्यापित किया जा रहा है...",
+      "signIn": "लॉगिन करें",
+      "pleaseWait": "प्रतीक्षा करें...",
+      "errorRequired": "कृपया ईमेल और पासवर्ड दोनों भरें।",
+      "errorInvalid": "अमान्य ईमेल या पासवर्ड। कृपया दोबारा जांचें।",
+      "errorTechnical": "लॉगिन करते समय कोई तकनीकी समस्या आई।"
+    },
+    "dashboard": {
+      "title": "डैशबोर्ड ओवरव्यू",
+      "subtitle": "निषाद बीज भंडार स्टोर के आंकड़े एवं ग्राहक गतिविधियाँ",
+      "totalProducts": "कुल उत्पाद",
+      "categories": "श्रेणियां",
+      "receivedEnquiries": "प्राप्त पूछताछ",
+      "totalVisitors": "कुल विज़िटर्स",
+      "todayVisitors": "आज: {{count}} नए",
+      "visitorGraph": "विज़िटर ग्राफ़ (पिछले 10 दिन)",
+      "noVisitorData": "अभी पर्याप्त विज़िटर डाटा उपलब्ध नहीं है।",
+      "recentEnquiries": "हालिया पूछताछ",
+      "farmerName": "किसान का नाम",
+      "mobile": "मोबाइल",
+      "village": "गाँव",
+      "crop": "फसल",
+      "date": "दिनांक",
+      "message": "पूछताछ संदेश",
+      "status": "स्थिति",
+      "contacted": "सम्पर्क किया गया",
+      "pending": "लंबित",
+      "markContacted": "सम्पर्कित मार्क करें",
+      "delete": "हटाएं",
+      "confirmDelete": "क्या आप इस पूछताछ को हटाना चाहते हैं?",
+      "errorUpdate": "अपडेट करने में विफल।",
+      "errorDelete": "हटाने में विफल।",
+      "errorGeneric": "एक त्रुटि आई।",
+      "lastMessages": "अंतिम 5 सन्देश",
+      "noPending": "कोई भी नई पूछताछ लंबित नहीं है।",
+      "generalAdvice": "सामान्य सलाह",
+      "farmerDetails": "किसान विवरण",
+      "actions": "क्रियाएं",
+      "villageLabel": "ग्राम"
+    }
   }
 }
