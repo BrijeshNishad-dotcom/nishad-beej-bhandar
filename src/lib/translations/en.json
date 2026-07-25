@@ -318,7 +318,35 @@
       "pleaseWait": "Please wait...",
       "errorRequired": "Please enter both email and password.",
       "errorInvalid": "Invalid email or password. Please check again.",
-      "errorTechnical": "A technical error occurred during login."
+      "errorTechnical": "A technical error occurred during login.",
+      "forgotPasswordLink": "Forgot Password?"
+    },
+    "forgotPassword": {
+      "title": "Forgot Password",
+      "subtitle": "Enter your registered admin email to receive a recovery link.",
+      "emailLabel": "Admin Email",
+      "placeholder": "admin@example.com",
+      "sendButton": "Send Recovery Email",
+      "sending": "Sending...",
+      "successMessage": "A password recovery email has been sent. Please check your inbox.",
+      "backToLogin": "Back to Login",
+      "errorEmail": "Please enter a valid email address.",
+      "errorFailed": "Failed to send recovery email. Please try again."
+    },
+    "resetPassword": {
+      "title": "Reset Password",
+      "subtitle": "Set a new secure password for your administrator account.",
+      "newPasswordLabel": "New Password",
+      "confirmPasswordLabel": "Confirm New Password",
+      "passwordPlaceholder": "••••••••",
+      "resetButton": "Reset Password",
+      "resetting": "Resetting...",
+      "successMessage": "Your password has been reset successfully. Redirecting you to login...",
+      "errorRequired": "Please fill in all fields.",
+      "errorMatch": "Passwords do not match.",
+      "errorLength": "Password must be at least 8 characters long and contain uppercase, lowercase, numbers, and special characters.",
+      "errorInvalidToken": "Invalid or expired recovery session. Please request a new recovery link.",
+      "errorFailed": "Failed to reset password. Please try again."
     },
     "dashboard": {
       "title": "Dashboard Overview",

@@ -157,6 +157,16 @@ function AdminLoginForm() {
                 )}
               </button>
             </div>
+            
+            {/* Forgot Password Link */}
+            <div className="text-right mt-1.5">
+              <Link
+                href="/admin/forgot-password"
+                className="text-xs font-bold text-agri-green-800 hover:text-agri-green-950 transition-colors"
+              >
+                {t('admin.login.forgotPasswordLink')}
+              </Link>
+            </div>
           </div>
 
           {/* Error Message */}
