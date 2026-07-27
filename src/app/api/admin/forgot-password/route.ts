@@ -54,7 +54,8 @@ export async function POST(req: NextRequest) {
     }
 
     // 3. Check if Supabase client keys are configured
-    if (!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+    const currentAnonKey = process.env['NEXT_PUBLIC_SUPABASE_ANON_KEY'];
+    if (!currentAnonKey) {
       return NextResponse.json(
         { error: 'Supabase Anon Key is not configured on the server.' },
         { status: 500 }
