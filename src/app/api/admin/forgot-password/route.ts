@@ -70,9 +70,15 @@ export async function POST(req: NextRequest) {
 
     if (resetError) {
       console.error('Supabase reset password error:', resetError);
+      
+      let clientErrorMessage = resetError.message;
+      if (clientErrorMessage === '{}' || !clientErrorMessage || resetError.name === 'AuthRetryableFetchError') {
+        clientErrorMessage = 'Unable to send recovery email. This is typically caused by Supabase SMTP rate limits (max 3 emails per hour on the free tier) or misconfigured SMTP credentials in your Supabase project dashboard.';
+      }
+      
       return NextResponse.json(
-        { error: resetError.message || 'Failed to send recovery email via Supabase.' },
-        { status: 500 }
+        { error: clientErrorMessage },
+        { status: resetError.status || 500 }
       );
     }
 
@@ -83,8 +89,12 @@ export async function POST(req: NextRequest) {
 
   } catch (error: any) {
     console.error('Forgot password API error:', error);
+    let clientErrorMessage = error.message;
+    if (clientErrorMessage === '{}' || !clientErrorMessage) {
+      clientErrorMessage = 'An internal server error occurred while processing the request.';
+    }
     return NextResponse.json(
-      { error: error.message || 'An internal server error occurred.' },
+      { error: clientErrorMessage },
       { status: 500 }
     );
   }
