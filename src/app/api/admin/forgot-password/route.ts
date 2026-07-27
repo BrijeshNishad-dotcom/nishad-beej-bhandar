@@ -63,7 +63,8 @@ export async function POST(req: NextRequest) {
     }
 
     // 4. Trigger Supabase Auth Password Recovery Email
-    const redirectTo = `${req.nextUrl.origin}/admin/reset-password`;
+    const siteUrl = process.env['NEXT_PUBLIC_SITE_URL'] || req.nextUrl.origin;
+    const redirectTo = `${siteUrl}/admin/reset-password`;
     
     const { error: resetError } = await supabase.auth.resetPasswordForEmail(trimmedEmail, {
       redirectTo,
